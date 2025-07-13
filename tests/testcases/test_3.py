@@ -19,10 +19,14 @@ from pages.main_navigation_bar import MainNavigationBar
 # Import for beautiful reporting
 from rich.traceback import install
 install()
+<<<<<<< HEAD
 
 req_num = ''
 approver_id = ''
 approver_id2 = ''
+=======
+req_num =""
+>>>>>>> a2d54907d43b2a5a587b156352b1d9761aaf91f0
 
 def test_one(page):
     s_page  = LoginPage(page)
@@ -55,7 +59,11 @@ def test_four(page):
     c_page.setting_requisition_for_details("[5102010107-05] Remuneration","gl remarks","30-07-2025", "Head Office", "ABC Road")
     c_page.get_full_page_screenshot('full_page_screenshot_1')
     global req_num
+<<<<<<< HEAD
     req_num = c_page.submit_requisition()
+=======
+    req_num = c_page.save_requisition()
+>>>>>>> a2d54907d43b2a5a587b156352b1d9761aaf91f0
     print("REQ NUM:", req_num)
     c_page.get_full_page_screenshot('full_page_screenshot_2')
 
