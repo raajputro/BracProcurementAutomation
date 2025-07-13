@@ -11,7 +11,7 @@ class BasicActions:
         self.page.screenshot(path=os.getcwd() + "/screenshots/" + name + ".png")
 
     def get_full_page_screenshot(self, name):
-        self.page.screenshot(path=os.getcwd() + "/screenshots/" + name + ".png", full_page=True)
+        self.page.screenshot(path=os.getcwd() + "/screenshots_taken/" + name + ".png", full_page=True)
 
     def navigate_to_url(self, given_url):
         self.page.goto(given_url, wait_until="networkidle")
@@ -28,7 +28,7 @@ class BasicActions:
     @staticmethod
     def wait_to_load_element(elem):
         elem.wait_for(state='visible')
-        print('waited for the elem')
+        #print('waited for the elem')
 
     def is_element_visible(self, elem):
         return elem.is_visible()
@@ -64,3 +64,14 @@ class BasicActions:
         self.page.get_by_text(text, exact=True).click()
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
+
+    
+    def select_option_from_dropdown(self, elem, text):
+        elem.wait_for(state='visible')
+        elem.click()
+        elem.fill(text)
+        # Wait for the dropdown options to appear
+        self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
+        # Click on the first matching option
+        self.page.get_by_text(text).click()       
+        

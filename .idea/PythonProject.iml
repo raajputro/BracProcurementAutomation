@@ -3,8 +3,16 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/report" />
+      <excludeFolder url="file://$MODULE_DIR$/screenshots" />
+      <excludeFolder url="file://$MODULE_DIR$/traces" />
+      <excludeFolder url="file://$MODULE_DIR$/videos" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.13 (PythonProject)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
   </component>
 </module>

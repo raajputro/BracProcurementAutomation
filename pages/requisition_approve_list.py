@@ -1,5 +1,5 @@
 # this is an object of samplePage to automate, which contains all elementsAdd commentMore actions
-# and actions could be performed, like input, verify etc.
+# and actions could be performed, like input, verify, etc.
 import re
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
@@ -44,7 +44,7 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
         #self.page.wait_for_timeout(1000)
 
     def approve_requisition(self):
-        # Click the approve button
+        # Click the approval button
         self.approve.click()
         self.page.wait_for_timeout(5000)
         # Verify the requisition number is displayed in the message

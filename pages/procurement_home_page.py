@@ -1,5 +1,5 @@
 # this is an object of samplePage to automate, which contains all elements
-# and actions could be performed, like input, verify etc.
+# and actions could be performed, like input, verify, etc.
 from utils.basic_actions import BasicActions
 from playwright.sync_api import expect
 
