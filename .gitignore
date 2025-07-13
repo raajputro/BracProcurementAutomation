@@ -10,7 +10,6 @@ __pychache__
 **/__pycache__
 **/.pyc
 *.png
-/__pychache__
 *.pyc
 /artifacts
 **/.pytest_cache
