@@ -17,7 +17,7 @@ from pages.cr3_page import CreateReqPage
 # Import for beautiful reporting
 from rich.traceback import install
 install()
-
+req_num =""
 
 def test_one(page):
     s_page  = LoginPage(page)
@@ -52,6 +52,7 @@ def test_four(page):
     c_page.setting_requisition_details("glue","[19193]-Glue Stick (Fevi Stick)-(Supplies and Stationeries->Supplies and Stationeries->Stationery)", "Tor for Item","1000","25")
     c_page.setting_requisition_for_details("[5102010107-05] Remuneration","gl remarks","30-07-2025", "Head Office", "ABC Road")
     c_page.get_full_page_screenshot('full_page_screenshot_1')
+    global req_num
     req_num = c_page.save_requisition()
     print("REQ NUM:", req_num)
     c_page.get_full_page_screenshot('full_page_screenshot_2')
