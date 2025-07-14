@@ -11,13 +11,24 @@ class RequisitionList(BasicActions):
         self.logout_btn = page.locator("//a[@id='btn_login']")
 
 
-    def search_requisition(self, requisition_number) -> str:
+    def search_requisition(self, requisition_number):
         self.input_in_element(self.requisition_search_box, requisition_number)
         self.click_on_btn(self.requisition_search_btn)
         self.wait_for_timeout(5000)
+        # status_value = self.requisition_status.text_content()
+        # approver_id = status_value.split('[')[-1].split(']')[0]
+        # print("Approver ID: " + approver_id)
+        # # self.logout_btn.click()
+        # # self.page.get_by_text(" Logout", exact=True).click()
+        # return approver_id
+
+    def find_approver_id(self) -> str:
         status_value = self.requisition_status.text_content()
         approver_id = status_value.split('[')[-1].split(']')[0]
         print("Approver ID: " + approver_id)
-        # self.logout_btn.click()
-        # self.page.get_by_text(" Logout", exact=True).click()
         return approver_id
+
+    def find_requisition_status(self) -> str:
+        status_value = self.requisition_status.text_content()
+        print("Requisition Status: " + status_value)
+        return status_value

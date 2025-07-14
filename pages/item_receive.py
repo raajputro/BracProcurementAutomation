@@ -1,4 +1,4 @@
-mport re
+import re
 from resources.resource_file import TestResources
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
