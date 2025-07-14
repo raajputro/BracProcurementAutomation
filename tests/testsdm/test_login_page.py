@@ -3,9 +3,11 @@ import pytest
 
 from rich.traceback import install
 
+from pages.digital_marketplace.checkout_page import CheckoutPage
 from pages.digital_marketplace.home_page import HomePage
 from pages.digital_marketplace.login_page import LoginPage
 from pages.digital_marketplace.main_navigation_menu import MainNavigationMenu
+from pages.digital_marketplace.shopping_cart import ShoppingCart
 from resources.DMResourceFile import TestResourcesDM
 from utils.basic_actionsdm import BasicActionsDM
 from playwright.sync_api import sync_playwright
@@ -48,4 +50,18 @@ def test_three(resource):
     print("Test Three")
     l_page = MainNavigationMenu(resource)
     l_page.exit_button.click()
+
+def test_four(resource):
+    print("Test Four")
+    v_page = ShoppingCart(resource)
+    v_page.select_vendor()
+
+def test_five(resource):
+    print("Test Five")
+    c_page = CheckoutPage(resource)
+    c_page.confirm_Order(
+        location=TestResourcesDM.test_location,
+        user_PIN=TestResourcesDM.test_receiving_person_PIN
+    )
+
 

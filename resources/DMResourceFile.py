@@ -6,7 +6,8 @@ class TestResourcesDM:
     test_commonLogin = ""
     test_username = "00006008"
     test_userpass = "abc123$"
-
+    test_location = "Gulshan 1, Dhaka"
+    test_receiving_person_PIN = "00000761"
     # test_requisition_initiator = "761"
     # test_requisition_budget_recommender = "15370"
     # test_requisition_approver = "138486"
