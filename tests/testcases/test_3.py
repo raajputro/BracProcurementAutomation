@@ -25,9 +25,10 @@ from playwright.sync_api import expect
 # Import for beautiful reporting
 from rich.traceback import install
 install()
+
 req_num = ''
 approver_id = ''
-approver_id2 = ''
+approver_id_2 = ''
 
 
 def test_1_login_to_create_requisition(page):
@@ -85,7 +86,6 @@ def test_5_find_approver_of_the_requisition(page):
 
 def test_6_login_as_approver_and_approve(page):
     s_page = LoginPage(page)
-    s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         user_name=approver_id,
         pass_word=proj_gen_pass
@@ -108,7 +108,6 @@ def test_6_login_as_approver_and_approve(page):
 
 def test_7_find_approver_of_the_requisition_2(page):
     s_page  = LoginPage(page)
-    s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         user_name=proj_user,
         pass_word=proj_pass
@@ -118,9 +117,9 @@ def test_7_find_approver_of_the_requisition_2(page):
     r_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/requisition/list")
     r_page.get_full_page_screenshot('full_page_screenshot_11')
     r_page.search_requisition(req_num)
-    global approver_id
-    approver_id = str(int(r_page.find_approver_id()))
-    print("APPROVER ID 2:", approver_id)
+    global approver_id_2
+    approver_id_2 = str(int(r_page.find_approver_id()))
+    print("APPROVER ID 2:", approver_id_2)
     r_page.get_full_page_screenshot('full_page_screenshot_12')
 
     r2_page = MainNavigationBar(page)
@@ -134,7 +133,7 @@ def test_8_login_as_approver_and_approve_2(page):
     s_page = LoginPage(page)
     s_page.navigate_to_url(proj_url)
     s_page.perform_login(
-        user_name=approver_id,
+        user_name=approver_id_2,
         pass_word=proj_gen_pass
     )
 

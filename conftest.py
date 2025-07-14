@@ -58,7 +58,7 @@ def playwright() -> Playwright:
 def browser(playwright: Playwright) -> Browser:
     global global_browser
     if global_browser is None:
-        global_browser = playwright.chromium.launch(headless=True, slow_mo=500)
+        global_browser = playwright.chromium.launch(headless=False, slow_mo=500)
     yield global_browser
     if global_browser:
         global_browser.close()

@@ -10,9 +10,11 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
     def __init__(self, page):
         super().__init__(page)
         # write down all the elements here with locator format
-        self.search_box = page.get_by_placeholder("Search Requisition No")
+        self.search_box = page.locator("//input[@name='keyword']")
         self.approve= page.locator("//input[@type='button' and @value='Approve']")
-        self.confirmation_message_approve = page.locator("//button/span[contains(text(),'Approve')]")
+        #self.confirmation_message_approve = page.locator("//button/span[contains(text(),'Approve')]")
+        self.confirmation_message_approve = page.locator(
+            'button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
 
 
     def search_requisition(self, requisition_number):

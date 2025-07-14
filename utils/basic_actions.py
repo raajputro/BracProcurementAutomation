@@ -3,6 +3,10 @@ from playwright.sync_api import expect
 import os
 
 
+def is_element_visible(elem):
+    return elem.is_visible()
+
+
 class BasicActions:
     def __init__(self, page):
         self.page = page
@@ -29,9 +33,6 @@ class BasicActions:
     def wait_to_load_element(elem):
         elem.wait_for(state='visible')
         #print('waited for the elem')
-
-    def is_element_visible(self, elem):
-        return elem.is_visible()
 
     @staticmethod
     def click_on_btn(btn):
