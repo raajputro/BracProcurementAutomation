@@ -43,7 +43,7 @@ class BasicActionsDM:
 
     @staticmethod
     def input_in_element(elem, input_text):
-        #elem.to_be_visible()
+        # elem.to_be_visible()
         elem.click()
         elem.fill(input_text)
 

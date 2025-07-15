@@ -7,6 +7,7 @@ from pages.digital_marketplace.checkout_page import CheckoutPage
 from pages.digital_marketplace.home_page import HomePage
 from pages.digital_marketplace.login_page import LoginPage
 from pages.digital_marketplace.main_navigation_menu import MainNavigationMenu
+from pages.digital_marketplace.pending_approval_orders import PendingApprovalOrders
 from pages.digital_marketplace.shopping_cart import ShoppingCart
 from resources.DMResourceFile import TestResourcesDM
 from utils.basic_actionsdm import BasicActionsDM
@@ -31,37 +32,31 @@ def test_one(resource):
     print("Test One")
     s_page = LoginPage(resource)
     s_page.navigate_to_url(TestResourcesDM.test_url)
-    # s_page.click_on_btn()
-
-    # s_page.click_on_btn(TestResourcesDM.test_commonLogin)
     s_page.perform_login(
-        user_name=TestResourcesDM.test_username,
-        pass_word=TestResourcesDM.test_userpass
+        user_name=TestResourcesDM.order_approver_PIN,
+        pass_word=TestResourcesDM.order_approver_pass
     )
 
 
 def test_two(resource):
     print("Test Two")
     r_page = HomePage(resource)
-    r_page.click_shopping_cart()
+    r_page.goto_order_list()
 
 
 def test_three(resource):
     print("Test Three")
-    l_page = MainNavigationMenu(resource)
-    l_page.exit_button.click()
-
-def test_four(resource):
-    print("Test Four")
-    v_page = ShoppingCart(resource)
-    v_page.select_vendor()
-
-def test_five(resource):
-    print("Test Five")
-    c_page = CheckoutPage(resource)
-    c_page.confirm_Order(
-        location=TestResourcesDM.test_location,
-        user_PIN=TestResourcesDM.test_receiving_person_PIN
+    p_page = PendingApprovalOrders(resource)
+    p_page.goto_pending_approval_orders_list()
+    p_page.check_pending_approval()
+    p_page.uncheck_pending_approval()
+    p_page.search_order_input(
+        order_reference_number=TestResourcesDM.search_order_reference_number
     )
+    p_page.check_pending_approval()
+    p_page.multiselect_approve()
 
-
+# def test_four(resource):
+#     print("Test Four")
+#     p_page = PendingApprovalOrders(resource)
+#     p_page.check_pending_approval()
