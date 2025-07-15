@@ -12,9 +12,9 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
         # write down all the elements here with locator format
         self.search_box = page.locator("//input[@name='keyword']")
         self.approve= page.locator("//input[@type='button' and @value='Approve']")
-        #self.confirmation_message_approve = page.locator("//button/span[contains(text(),'Approve')]")
-        self.confirmation_message_approve = page.locator(
-            'button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
+        self.confirmation_message_approve_locator = page.locator("//button/span[contains(text(),'Approve')]")
+        # self.confirmation_message_approve = page.locator(
+        #     'button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
 
 
     def search_requisition(self, requisition_number):
@@ -39,6 +39,6 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
 
     def confirmation_message_approve(self):
         # Click the confirmation message approve button
-        self.wait_to_load_element(self.confirmation_message_approve)
-        self.confirmation_message_approve.click()
+        self.wait_to_load_element(self.confirmation_message_approve_locator)
+        self.confirmation_message_approve_locator.click()
         self.page.wait_for_timeout(2000)
