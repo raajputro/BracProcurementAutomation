@@ -2,6 +2,9 @@
 #from resources.resource_file import TestResources
 from dotenv import load_dotenv
 import os
+import random
+
+from pages.create_direct_purchase import CreateDirectPurchase
 
 load_dotenv()
 
@@ -9,6 +12,12 @@ proj_url = os.getenv("test_url")
 proj_user = os.getenv("test_user_name")
 proj_pass = os.getenv("test_user_pass")
 proj_gen_pass = os.getenv("test_user_generic_pass")
+admin_user = os.getenv("test_admin")
+assigned_person = os.getenv("test_requisition_assignee")
+vendor_name = os.getenv("test_vendor_name")
+dp_approver = os.getenv("test_dp_approver")
+bill_creator = os.getenv("test_bill_creator")
+
 
 # Page models
 from pages.login_page import LoginPage
@@ -18,6 +27,16 @@ from pages.cr3_page import CreateReqPage
 from pages.requisition_list import RequisitionList
 from pages.main_navigation_bar import MainNavigationBar
 from pages.requisition_approve_list import RequisitionApproveList
+from pages.procurement_page_navigation_bar import ProcurementPageNavigationBar
+from pages.assign_req import AssignRequisition
+from pages.requisition_accept_list import RequisitionAcceptList
+from pages.create_tender_initiation import CreateTenderInitiation
+from pages.create_direct_purchase import CreateDirectPurchase
+from pages.direct_purchase_list import DirectPurchaseList
+from pages.item_receive import ItemReceive
+from pages.create_vendor_bill_payable import CreateVendorBillPayable
+
+
 
 # For validation
 from playwright.sync_api import expect
@@ -29,6 +48,9 @@ install()
 req_num = ''
 approver_id = ''
 approver_id_2 = ''
+purchase_num = ''
+challan_num = str(random.randint(10000,99999))
+bill_num = str(random.randint(10000,99999))
 
 
 def test_1_login_to_create_requisition(page):
@@ -106,6 +128,7 @@ def test_6_login_as_approver_and_approve(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_10')
     r2_page.wait_for_timeout(5000)
 
+
 def test_7_find_approver_of_the_requisition_2(page):
     s_page  = LoginPage(page)
     s_page.perform_login(
@@ -175,3 +198,145 @@ def test_9_check_requisition_approved(page):
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_19')
     r2_page.wait_for_timeout(5000)
+
+
+def test_9_check_requisition_assign(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        user_name=admin_user,
+        pass_word=proj_gen_pass
+    )
+
+    r_page = AssignRequisition(page)
+    r_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/requisition/assignRequisitions")
+    r_page.assigning_person(assigned_person)
+    r_page.search_requisition_for_assigning(req_num)
+    r_page.add_item_to_assign(req_num)
+    r_page.assigning_items()
+    r_page.get_full_page_screenshot('full_page_screenshot_22')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_23')
+    r2_page.wait_for_timeout(5000)
+
+def test_10_requisition_accept(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        user_name=str(int(assigned_person)),
+        pass_word=proj_gen_pass
+    )
+
+    r_page = RequisitionAcceptList(page)
+    r_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/requisition/assignedRequisitionShowList")
+    r_page.search_requisition(req_num)
+    r_page.select_all_requisitions()
+    r_page.accept_requisition()
+    r_page.get_full_page_screenshot('full_page_screenshot_24')
+    r_page.confirm_acceptance()
+
+
+def test_11_create_tender_initiation(page):
+    t_page = CreateTenderInitiation(page)
+    t_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/methodSelection/show")
+    t_page.search_requisition(req_num)
+    t_page.select_all_items()
+    t_page.select_direct_purchase_method()
+    t_page.fill_remarks("Tender initiation done!")
+    t_page.submit_tender_initiation()
+    t_page.confirm_submission()
+    t_page.get_full_page_screenshot('full_page_screenshot_25')
+
+
+def test_12_create_direct_purchase(page):
+    t_page = CreateDirectPurchase(page)
+    t_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/directPurchase/show")
+    t_page.search_vendor(vendor_name)
+    t_page.same_delivery_schedule()
+    t_page.estimated_delivery_date_with_text("31-08-2025")
+    t_page.delivery_location_dropdown_select()
+    t_page.search_item_by_name(req_num)
+    t_page.select_all_items()
+    t_page.save_and_next()
+    global purchase_num
+    purchase_num = t_page.get_purchase_order_number()
+    t_page.template_selection()
+    t_page.direct_purchase_approver_selecting(dp_approver)
+    t_page.get_full_page_screenshot('full_page_screenshot_26')
+    t_page.submit_direct_purchase()
+    t_page.confirm_submission()
+    t_page.get_full_page_screenshot('full_page_screenshot_27')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_28')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_13_approve_direct_purchase(page):
+    t_page = DirectPurchaseList(page)
+    t_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/directPurchase/list")
+    t_page.search_purchase_order(purchase_num)
+    t_page.navigate_to_direct_purchase_detail_page()
+    t_page.approve_direct_purchase_from_details_page()
+    t_page.approve_direct_purchase()
+    t_page.confirmation_message_approve()
+    t_page.get_full_page_screenshot('full_page_screenshot_29')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_30')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_14_item_recieve(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        user_name=str(int(assigned_person)),
+        pass_word=proj_gen_pass
+    )
+
+    t_page = ItemReceive(page)
+    t_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/itemReceive/show")
+    t_page.search_order_for_item_receive(purchase_num)
+    t_page.set_challan_number(challan_num)
+    t_page.challan_date("31-08-2025")
+    t_page.received_date("31-08-2025")
+    t_page.select_all_items()
+    t_page.submit_item_receive()
+    t_page.confirm_submission()
+    t_page.get_full_page_screenshot('full_page_screenshot_31')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_32')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_15_bill_creation_and_submit(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        user_name=str(int(bill_creator)),
+        pass_word=proj_gen_pass
+    )
+
+    t_page = CreateVendorBillPayable(page)
+    t_page.navigate_to_url("https://env28.erp.bracits.net/procurementDashboard/myDashboard#!/thirdPartyBillPayable/show")
+    t_page.search_vendor(vendor_name)
+    t_page.search_challan_number(challan_num)
+    t_page.bill_number(bill_num)
+    t_page.bill_date_with_text("31-08-2025")
+    t_page.bill_receive_date_with_text("31-08-2025")
+    t_page.select_all_items()
+    t_page.submit_bill()
+    t_page.get_full_page_screenshot('full_page_screenshot_33')
+    t_page.confirm_submission()
+    t_page.get_full_page_screenshot('full_page_screenshot_34')

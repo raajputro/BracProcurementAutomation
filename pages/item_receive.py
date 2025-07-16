@@ -30,6 +30,10 @@ class ItemReceive(ProcurementHomePage, BasicActions):
         s_result.hover()
         s_result.click()
 
+    def set_challan_number(self, challan_number):
+        self.challan_no.fill(challan_number)
+        self.wait_for_timeout(2000)
+
     def challan_date(self, date: str):
         # Fill the challan date input field
         self.challan_date.scroll_into_view_if_needed()
