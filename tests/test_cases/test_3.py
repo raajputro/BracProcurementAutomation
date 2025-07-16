@@ -263,6 +263,7 @@ def test_12_create_direct_purchase(page):
     t_page.save_and_next()
     global purchase_num
     purchase_num = t_page.get_purchase_order_number()
+    print("Purchase number: "+purchase_num)
     t_page.template_selection()
     t_page.direct_purchase_approver_selecting(dp_approver)
     t_page.get_full_page_screenshot('full_page_screenshot_26')
