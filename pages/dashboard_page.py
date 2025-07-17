@@ -26,7 +26,14 @@ class DashboardPage(BasicActions):
         self.myDashboardItem_HOFAMS = page.locator('xpath=//*[contains(text(),"HO FAMS")]')
         self.myDashboardItem_MonthlyMFReportingTool = page.locator('xpath=//*[contains(text(),"Monthly MF Reporting Tool")]')
         self.myDashboardItem_BracInventory = page.locator('xpath=//*[contains(text(),"Brac Inventory")]')
+        self.add_bannar = page.locator('#modals')
+
+
+    def closing_add(self) -> None:
+        self.wait_to_load_element(self.add_bannar)
+        self.get_full_page_screenshot('add_bannar')   
+        self.page.keyboard.press('Enter')
+        self.get_full_page_screenshot('add_bannar2')
 
     def goto_procurement(self) -> None:
-        self.page.keyboard.press('Enter')
         self.click_on_btn(self.myDashboardItem_procurement)

@@ -9,6 +9,7 @@
 __pychache__
 **/__pycache__
 **/.pyc
+*.png
 *.pyc
 /artifacts
 **/.pytest_cache

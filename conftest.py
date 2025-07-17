@@ -1,3 +1,5 @@
+from sys import maxsize
+import pyautogui
 import pytest
 from pathlib import Path
 import shutil
@@ -11,6 +13,7 @@ ARTIFACTS_DIR = Path("artifacts")
 VIDEOS_DIR = ARTIFACTS_DIR / "videos"
 TRACES_DIR = ARTIFACTS_DIR / "traces"
 SCREENSHOTS_DIR = ARTIFACTS_DIR / "screenshots"
+screen_width, screen_height = pyautogui.size()
 
 # Globals
 global_browser: Optional[Browser] = None
@@ -18,6 +21,7 @@ global_context: Optional[BrowserContext] = None
 global_page: Optional[Page] = None
 test_failures = []
 
+print(f"Running on screen size: {screen_width}x{screen_height}")
 
 def pytest_configure(config):
     if ARTIFACTS_DIR.exists():
@@ -58,7 +62,12 @@ def playwright() -> Playwright:
 def browser(playwright: Playwright) -> Browser:
     global global_browser
     if global_browser is None:
-        global_browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        global_browser = playwright.chromium.launch(
+            headless=False,
+            slow_mo=500
+            #args=["--start-fullscreen"]
+            #no_viewport=True
+        )
     yield global_browser
     if global_browser:
         global_browser.close()
@@ -70,9 +79,9 @@ def context(browser: Browser) -> BrowserContext:
     global global_context
     if global_context is None:
         global_context = browser.new_context(
-            viewport={"width": 1920, "height": 1080},
+            viewport={"width": screen_width, "height": screen_height},
             record_video_dir=VIDEOS_DIR,
-            record_video_size={"width": 1920, "height": 1080}
+            record_video_size={"width": screen_width, "height": screen_height}
         )
         global_context.tracing.start(screenshots=True, snapshots=True, sources=True)
     yield global_context
