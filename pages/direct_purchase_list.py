@@ -14,11 +14,11 @@ class DirectPurchaseList(CreateDirectPurchase):
         cdp = CreateDirectPurchase(page)
         self.po_value_2 = cdp.po_value
         self.search_box = page.get_by_placeholder("Search Direct Purchase Order No")
-        self.checkbox = page.locator("input[type='checkbox'].isUnderMyAuthority")
+        #self.check_box = page.locator("input[type='checkbox'].isUnderMyAuthority")
         self.approve= page.get_by_role("button", name=re.compile("Approve", re.IGNORECASE))
-        self.navigate_detail_direct_purchase = page.locator('a[style="text-decoration: underline;"]')
+        # self.navigate_detail_direct_purchase = page.locator('a[style="text-decoration: underline;"]')
         self.confirmation_message_approve = page.locator('button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
-        self.direct_purchase_details_page_approve=page.get_by_role("button", name=re.compile("Approve", re.IGNORECASE))
+        self.direct_purchase_details_page_approve=page.get_by_role("button", name=re.compile("approve-button", re.IGNORECASE))
 
     def search_purchase_order(self, purchase_order_number):
         self.search_box.scroll_into_view_if_needed()
@@ -27,9 +27,9 @@ class DirectPurchaseList(CreateDirectPurchase):
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
     
-    def navigate_to_direct_purchase_detail_page(self):
+    def navigate_to_direct_purchase_detail_page(self, purchase_order_number):
         # Click on the direct purchase number link
-        self.navigate_detail_direct_purchase.click()
+        self.page.locator("//a[contains(text(),'"+purchase_order_number+"')]").click()
         self.page.wait_for_timeout(2000)
 
     def approve_direct_purchase_from_details_page(self):
@@ -38,9 +38,10 @@ class DirectPurchaseList(CreateDirectPurchase):
         self.page.wait_for_timeout(2000)
  
         
-    def select_direct_purchase_order(self):
+    def select_direct_purchase_order(self, purchase_order_number):
         # Select the checkbox for the direct purchase order
-        self.checkbox.click()
+        check_box = self.page.locator("//a[contains(text(),'"+purchase_order_number+"')]//parent::td//parent::tr//child::td/input[@type='checkbox']")
+        check_box.click()
         #self.page.wait_for_timeout(1000)
 
     def approve_direct_purchase(self):
