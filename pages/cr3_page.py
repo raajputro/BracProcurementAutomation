@@ -32,6 +32,8 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.add_to_grid_selector = page.get_by_role("button", name="Add to Grid")
         # element to save the requisition
         self.save_btn_selector = page.get_by_role("button", name="Save")
+        self.submit_btn_selector = page.get_by_role("button", name="Submit")
+        self.submit_confirmation_btn_selector = page.locator("//div[@role='dialog']//following::button")
         self.requisition_number = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
 
 
@@ -86,3 +88,14 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         #print(value)
         return value.split(' ')[-1]
         #print("Last Value: " + val[-1])
+
+
+    def submit_requisition(self) -> str:
+        self.add_to_grid_selector.click()
+        self.wait_for_timeout(5000)
+        self.submit_btn_selector.click()
+        self.wait_to_load_element(self.submit_confirmation_btn_selector)
+        self.submit_confirmation_btn_selector.click()
+        self.wait_to_load_element(self.requisition_number)
+        value = self.requisition_number.text_content()
+        return value.split(' ')[-1]

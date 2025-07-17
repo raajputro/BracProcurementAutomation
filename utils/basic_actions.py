@@ -3,6 +3,10 @@ from playwright.sync_api import expect
 import os
 
 
+def is_element_visible(elem):
+    return elem.is_visible()
+
+
 class BasicActions:
     def __init__(self, page):
         self.page = page
