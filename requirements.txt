@@ -1,24 +1,6 @@
 # Core dependencies
 pytest
 playwright
+pytest-playwright
 rich
-
-# Testing utilities
-#pytest-playwright==0.3.0
-#pytest-xdist==3.5.0  # For parallel test execution
-#pytest-html==4.1.1  # For HTML reports
-#pytest-rerunfailures==14.0  # For flaky test retries
-
-# Additional helpful packages
-#python-dotenv==1.0.1  # For environment variables
-#requests==2.31.0  # For API interactions
-#beautifulsoup4==4.12.3  # For HTML parsing
-#lxml==5.1.0  # For faster HTML parsing
-#pandas==2.2.1  # For data handling (optional)
-#openpyxl==3.1.2  # For Excel support (optional)
-
-# Development tools
-#black==24.2.0  # Code formatting
-#flake8==7.0.0  # Linting
-#mypy==1.8.0  # Static type checking
-#pylint==3.0.3  # Additional linting
+python-dotenv

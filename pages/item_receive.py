@@ -1,4 +1,4 @@
-mport re
+import re
 from resources.resource_file import TestResources
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
@@ -28,6 +28,10 @@ class ItemReceive(ProcurementHomePage, BasicActions):
         self.s_result.wait_for(state="visible", timeout=5000)
         self.s_result.hover()
         self.s_result.click()
+
+    def set_challan_number(self, challan_number):
+        self.challan_no.fill(challan_number)
+        self.wait_for_timeout(2000)
 
     def challan_date(self, date: str):
         # Fill the challan date input field
