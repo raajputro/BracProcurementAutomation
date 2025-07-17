@@ -63,6 +63,8 @@ def test_four(resource):
         location=TestResourcesDM.test_location,
         user_pin=TestResourcesDM.test_receiving_person_pin
     )
+    # c_page.fill_delivery_info(text=)
+    # c_page.click_add_schedule_btn()
 
 
 def test_five(resource):

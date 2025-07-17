@@ -7,15 +7,35 @@ from playwright.sync_api import expect
 class CheckoutPage(HomePage, BasicActionsDM):
     def __init__(self, page):
         super().__init__(page)
+        self.page = page
         # write down all the elements here with locator format
         # prepare the delivery schedule
         self.select_schedule_table = page.locator('table#scheduleTable70233439')
         self.enter_quantity = page.locator('td#list70233439')
         self.select_expected_date = page.locator('input[id="date70233439"][class="todayDate"]')
         self.enter_expected_location = page.locator('input#location70233439')
-        self.enter_receiving_person_pin = page.locator('input[id="deliveryInfo70233439"]')
+        self.enter_receiving_person_pin = page.locator('input#deliveryInfo70233439')
+
+        # # Tooltip elements
+        # self.valid_pin_heading = page.locator("div.np-tooltip h3", has_text="Valid PIN")
+        # self.valid_pin_message = page.locator("div.np-tooltip p",
+        #                                       has_text="Receiving Person PIN should be 8-digit numeric and valid")
+        #
+        # # Hidden fields
+        # self.hidden_pin = page.locator("#pin70233439")
+        # self.hidden_name = page.locator("#receivingPersonName70233439")
+        # self.hidden_phone = page.locator("#receivingPersonPhone70233439")
+        # self.hidden_designation = page.locator("#receivingPersonDesignation70233439")
+        # self.hidden_program = page.locator("#receivingPersonProgram70233439")
+        # self.hidden_department = page.locator("#receivingPersonDepartment70233439")
+        # self.hidden_email = page.locator("#receivingPersonEmail70233439")
+        #
+        # # Error message
+        # self.delivery_info_error = page.locator("#errordeliveryInfo70233439")
+
         self.click_add_schedule_button = page.locator('button[id="addScheduleButton70233439"]')
-        # self.click_add_schedule_button_1 = page.locator('button[type="submit"]')
+
+    # self.click_add_schedule_button_1 = page.locator('button[type="submit"]')
 
     def delivery_schedule_preparation(self, location, user_pin):
         self.click_on_btn(self.select_schedule_table)
@@ -24,6 +44,16 @@ class CheckoutPage(HomePage, BasicActionsDM):
         self.input_in_element(self.enter_expected_location, location)
         self.input_in_element(self.enter_receiving_person_pin, user_pin)
         self.page.wait_for_timeout(5000)
+        # self.click_on_btn(self.click_add_schedule_button)
+    # def fill_delivery_info(self, text):
+    #     self.delivery_info_input.fill(text)
+    #
+    # def get_error_message(self):
+    #     if self.delivery_info_error.is_visible():
+    #         return self.delivery_info_error.text_content()
+    #     return None
+
+
 
     def click_add_schedule_btn(self):
         self.click_on_btn(self.click_add_schedule_button)

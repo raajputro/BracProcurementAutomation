@@ -19,7 +19,7 @@ class HomePage(BasicActionsDM):
         # click username go to order list page
         self.click_username = page.locator('a[class="ico-account"]')
 
-        # self.pendingApprovalOrders1 = page.locator("a[href='/customer/pendingApprovalOrders']", has_text="Pending Approval Orders")
+        self.administration_link = page.locator('a[href="/Admin"]')
 
     def click_shopping_cart(self):
         # self.shopping_cart1.click()
@@ -32,3 +32,6 @@ class HomePage(BasicActionsDM):
         self.click_on_btn(self.click_username)
         # self.click_on_btn(self.pendingApprovalOrders1)
         # self.wait_for_timeout(2000)
+
+    def goto_administration(self):
+        self.click_on_btn(self.administration_link)
