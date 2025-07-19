@@ -44,19 +44,79 @@ def test_two(resource):
     r_page.goto_order_list()
 
 
+# Order approval from the pending approval order details page
 def test_three(resource):
     print("Test Three")
     p_page = PendingApprovalOrders(resource)
     p_page.goto_pending_approval_orders_list()
-    p_page.check_pending_approval()
-    p_page.uncheck_pending_approval()
     p_page.search_order_input(
         order_reference_number=TestResourcesDM.search_order_reference_number
     )
-    p_page.check_pending_approval()
-    p_page.multiselect_approve()
+    p_page.goto_pending_approval_order_details()
+    p_page.approve_order()
 
-# def test_four(resource):
-#     print("Test Four")
-#     p_page = PendingApprovalOrders(resource)
-#     p_page.check_pending_approval()
+
+# Review the order with a validation check
+def test_four(resource):
+    print("Test Four")
+    p_page = PendingApprovalOrders(resource)
+    p_page.goto_pending_approval_orders_list()
+    p_page.search_order_input(
+        order_reference_number=TestResourcesDM.search_review_order_reference_number
+    )
+    p_page.goto_pending_approval_order_details()
+    p_page.open_review_popup()
+    p_page.check_review_mandatory_validation()
+    p_page.check_minimum_characters_validation()
+    p_page.remove_review_popup()
+    p_page.order_review()
+
+
+# Preview open for approver
+def test_five(resource):
+    print("Test Five")
+    p_page = PendingApprovalOrders(resource)
+    p_page.goto_pending_approval_orders_list()
+    p_page.search_order_input(
+        order_reference_number=TestResourcesDM.approver_preview_open
+    )
+    p_page.goto_pending_approval_order_details()
+    p_page.open_preview()
+
+
+# Order rejection before approval with a validation check
+def test_six(resource):
+    print("Test Six")
+    p_page = PendingApprovalOrders(resource)
+    p_page.goto_pending_approval_orders_list()
+    p_page.search_order_input(
+        order_reference_number=TestResourcesDM.approver_order_rejection
+    )
+    p_page.goto_pending_approval_order_details()
+    p_page.open_order_rejection_popup()
+    p_page.remove_order_rejection_popup()
+    p_page.open_order_rejection_popup()
+    p_page.check_minimum_characters_validation_for_order_rejection()
+    p_page.rejection_max_characters_input()
+    p_page.confirm_rejection()
+
+
+# Single order approval using the searching parameter from the pending approval orders list page
+def test_seven(resource):
+    print("Test Seven")
+    p_page = PendingApprovalOrders(resource)
+    p_page.goto_pending_approval_orders_list()
+    p_page.search_order_input(
+        order_reference_number=TestResourcesDM.search_order_reference_number
+    )
+    p_page.check_uncheck_order()
+    p_page.confirm_multi_select_approve()
+
+
+# Multiselect approval from the pending approval orders list page
+def test_eight(resource):
+    print("Test Eight")
+    p_page = PendingApprovalOrders(resource)
+    p_page.goto_pending_approval_orders_list()
+    p_page.multi_select_approve1()
+    p_page.confirm_multi_select_approve()

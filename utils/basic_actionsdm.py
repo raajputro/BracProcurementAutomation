@@ -6,7 +6,7 @@ import os
 class BasicActionsDM:
     def __init__(self, page):
         self.page = page
-
+    # Current working directory = cwd
     def get_screen_shot(self, name):
         self.page.screenshot(path=os.getcwd() + "/screenshots/" + name + ".png")
 
