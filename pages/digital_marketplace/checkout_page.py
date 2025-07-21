@@ -10,11 +10,12 @@ class CheckoutPage(HomePage, BasicActionsDM):
         self.page = page
         # write down all the elements here with locator format
         # prepare the delivery schedule
-        self.select_schedule_table = page.locator('table#scheduleTable70233439')
-        self.enter_quantity = page.locator('td#list70233439')
+        self.select_schedule_table = page.locator('table#scheduleTable73003549')
+        self.enter_quantity = page.locator('td#list73003549')
         self.select_expected_date = page.locator('input[id="date70233439"][class="todayDate"]')
-        self.enter_expected_location = page.locator('input#location70233439')
-        self.enter_receiving_person_pin = page.locator('input#deliveryInfo70233439')
+        self.enter_expected_location = page.locator('input#location73003549')
+        # location73003549
+        self.enter_receiving_person_pin = page.locator('input#deliveryInfo73003549')
 
         # # Tooltip elements
         # self.valid_pin_heading = page.locator("div.np-tooltip h3", has_text="Valid PIN")
@@ -33,7 +34,7 @@ class CheckoutPage(HomePage, BasicActionsDM):
         # # Error message
         # self.delivery_info_error = page.locator("#errordeliveryInfo70233439")
 
-        self.click_add_schedule_button = page.locator('button[id="addScheduleButton70233439"]')
+        self.click_add_schedule_button = page.locator('button[id="addScheduleButton73003549"]')
 
     # self.click_add_schedule_button_1 = page.locator('button[type="submit"]')
 
