@@ -10,12 +10,13 @@ class CheckoutPage(HomePage, BasicActionsDM):
         self.page = page
         # write down all the elements here with locator format
         # prepare the delivery schedule
-        self.select_schedule_table = page.locator('table#scheduleTable73003549')
-        self.enter_quantity = page.locator('td#list73003549')
-        self.select_expected_date = page.locator('input[id="date70233439"][class="todayDate"]')
-        self.enter_expected_location = page.locator('input#location73003549')
+        # location73033552 , scheduleTable73003549
+        self.select_schedule_table = page.locator('table#scheduleTable73033552')
+        self.enter_quantity = page.locator('td#list73033552')
+        self.select_expected_date = page.locator('input[id="date73033552"][class="todayDate"]')
+        self.enter_expected_location = page.locator('input#location73033552')
         # location73003549
-        self.enter_receiving_person_pin = page.locator('input#deliveryInfo73003549')
+        self.enter_receiving_person_pin = page.locator('input#deliveryInfo73033552')
 
         # # Tooltip elements
         # self.valid_pin_heading = page.locator("div.np-tooltip h3", has_text="Valid PIN")
@@ -34,27 +35,52 @@ class CheckoutPage(HomePage, BasicActionsDM):
         # # Error message
         # self.delivery_info_error = page.locator("#errordeliveryInfo70233439")
 
-        self.click_add_schedule_button = page.locator('button[id="addScheduleButton73003549"]')
+        self.click_add_schedule_button = page.locator('button[id="addScheduleButton73033552"]')
+        self.continue_button = page.locator('#chkContinue')
+
+        # Confirm order window
+        self.order_remarks = page.locator('#confirmOrderRemarks')
+        self.checkbox = page.locator('#termsofservice')
+        self.confirm = page.get_by_role("button", name="Confirm")
+
 
     # self.click_add_schedule_button_1 = page.locator('button[type="submit"]')
 
-    def delivery_schedule_preparation(self, location, user_pin):
+    def delivery_schedule_preparation(self, location):
         self.click_on_btn(self.select_schedule_table)
         self.click_on_btn(self.enter_quantity)
         self.click_on_btn(self.select_expected_date)
         self.input_in_element(self.enter_expected_location, location)
-        self.input_in_element(self.enter_receiving_person_pin, user_pin)
+        # self.input_in_element(self.enter_receiving_person_pin, user_pin)
+        self.page.keyboard.press('Enter')
         self.page.wait_for_timeout(5000)
-        # self.click_on_btn(self.click_add_schedule_button)
-    # def fill_delivery_info(self, text):
-    #     self.delivery_info_input.fill(text)
-    #
-    # def get_error_message(self):
-    #     if self.delivery_info_error.is_visible():
-    #         return self.delivery_info_error.text_content()
-    #     return None
 
+    def fill_concatenated_pin(self):
+        pin_digits = ['0', '0', '0', '0', '6', '0', '0', '8']
 
+        self.click_on_btn(self.enter_receiving_person_pin)
+
+        for digit in pin_digits:
+            self.enter_receiving_person_pin.type(digit)
+            self.wait_for_timeout(200)
+
+        self.page.keyboard.press("Enter")
+        self.wait_for_timeout(10000)
 
     def click_add_schedule_btn(self):
         self.click_on_btn(self.click_add_schedule_button)
+
+    def filling_order_remarks(self):
+        self.click_on_btn(self.order_remarks)
+        self.input_in_element(self.order_remarks,'The initiator places an order')
+        # self.page.keyboard.press('Enter')
+        self.wait_for_timeout(2000)
+
+    def select_checkbox(self):
+        self.click_on_btn(self.checkbox)
+        self.wait_for_timeout(2000)
+
+    def confirm_order(self):
+        self.click_on_btn(self.confirm)
+        self.wait_for_timeout(2000)
+

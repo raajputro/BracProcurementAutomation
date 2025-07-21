@@ -60,14 +60,13 @@ def test_four(resource):
     print("Test Four")
     c_page = CheckoutPage(resource)
     c_page.delivery_schedule_preparation(
-        location=TestResourcesDM.test_location,
-        user_pin=TestResourcesDM.test_receiving_person_pin
+        location=TestResourcesDM.test_location
+        # user_pin=TestResourcesDM.test_receiving_person_pin
     )
+    c_page.fill_concatenated_pin()
     # c_page.fill_delivery_info(text=)
-    # c_page.click_add_schedule_btn()
-
-
-def test_five(resource):
-    print("Test Five")
-    c_page = CheckoutPage(resource)
     c_page.click_add_schedule_btn()
+    c_page.continue_button.click()
+    c_page.filling_order_remarks()
+    c_page.select_checkbox()
+    c_page.confirm_order()
