@@ -1,8 +1,10 @@
 # Core dependencies
 pytest
 playwright
+pytest-playwright
 rich
-
+pyautogui
+python-dotenv
 # Testing utilities
 #pytest-playwright==0.3.0
 #pytest-xdist==3.5.0  # For parallel test execution
