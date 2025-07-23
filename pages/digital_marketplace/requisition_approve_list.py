@@ -1,12 +1,14 @@
 # this is an object of samplePage to automate, which contains all elementsAdd commentMore actions
 # and actions could be performed, like input, verify etc.
 import re
-from utils.basic_actions import BasicActions
-from pages.procurement_home_page import ProcurementHomePage
+from utils.basic_actionsdm import BasicActionsDM
+from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
 
 
-class RequisitionApproveList(ProcurementHomePage, BasicActions):
+
+
+class RequisitionApproveList(ProcurementHomePage, BasicActionsDM):
     def __init__(self, page):
         super().__init__(page)
         # write down all the elements here with locator format

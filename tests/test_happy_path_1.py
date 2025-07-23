@@ -7,7 +7,7 @@ from pages.digital_marketplace.dashboard_page import DashboardPage
 from pages.login_page import LoginPage
 from resources.resource_file import TestResources
 from playwright.sync_api import sync_playwright
-from pages.procurement_page_navigation_bar import ProcurementPageNavigationBar
+from pages.digital_marketplace.procurement_page_navigation_bar import ProcurementPageNavigationBar
 from pages.create_direct_purchase import CreateDirectPurchase
 from pages.direct_purchase_list import DirectPurchaseList 
 

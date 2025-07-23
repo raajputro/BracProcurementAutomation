@@ -1,8 +1,10 @@
-from utils.basic_actions import BasicActions
+from utils.basic_actionsdm import BasicActionsDM
 from playwright.sync_api import expect
 
 
-class ProcurementHomePage(BasicActions):
+
+
+class ProcurementHomePage(BasicActionsDM):
     def __init__(self, page):
         super().__init__(page)
         # write down all the elements here with locator format

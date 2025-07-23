@@ -1,9 +1,10 @@
 import re
 from playwright.sync_api import expect
-from utils.basic_actions import BasicActions
-from pages.procurement_home_page import ProcurementHomePage
+from utils.basic_actionsdm import BasicActionsDM
+from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
 
-class CreateReqPage(ProcurementHomePage, BasicActions):
+
+class CreateReqPage(ProcurementHomePage, BasicActionsDM):
     def __init__(self, page):
         super().__init__(page)
 
@@ -12,10 +13,13 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         # elements for Requisition For?
         self.head_office_selector = page.locator("#self")
         self.project_name_dropdown_selector = page.locator("#projectInfoDiv_arrow")
+        # project for construction
+        self.selected_project_name = page.locator('//*[@id="projectInfoDiv_hidden"]')
         # elements for Requisition Information
         self.fund_source_selector = page.locator("#sourceOfFundDiv_input")
+        self.fund_source_dropdown_selector = page.locator('#sourceOfFundDiv_arrow')
         self.fund_source_remarks_selector = page.locator("//*[@id='remarks']")
-            #page.get_by_role("textbox", name="remarks").filter(has=page.get_by_placeholder("Max size of requisition remarks 300 characters"))
+        # page.get_by_role("textbox", name="remarks").filter(has=page.get_by_placeholder("Max size of requisition remarks 300 characters"))
         # elements for requisition details
         self.item_info_selector = page.locator("//*[@id='itemInfo']")
         self.item_measure_selector = page.locator("#mUnitDiv_arrow")
@@ -36,23 +40,26 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.submit_confirmation_btn_selector = page.locator("//div[@role='dialog']//following::button")
         self.requisition_number = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
 
-
     def validate(self):
         expect(self.validation_point).to_be_visible()
 
-
     def setting_requisition_for(self, project_name):
-        self.head_office_selector.click()        # selecting Head Office
-        self.project_name_dropdown_selector.click()     # clicking on project name drop down
-        self.page.get_by_text(project_name).click()     # selecting given project name
+        self.head_office_selector.click()  # selecting Head Office
+        self.project_name_dropdown_selector.click()  # clicking on project name dropdown
+        self.page.get_by_text(project_name).click()  # selecting given project name
 
-
-    def setting_requisition_information(self, fund_source, fund_remarks):
-        self.fund_source_selector.fill(fund_source)
-        self.page.keyboard.press(" ")
-        self.page.get_by_text(fund_source, exact=True).click()
+    # def setting_requisition_information(self, fund_source, fund_remarks):
+    # self.fund_source_selector.fill(fund_source)
+    # self.page.keyboard.press('')
+    def setting_requisition_information(self):
+        self.fund_source_selector.click()
+        # self.fund_source_dropdown_selector.click()
+        # self.page.get_by_text(fund_source).click()
+        # self.page.get_by_text(fund_source, exact=True).click()
+        # self.input_in_element(self.)
+        self.input_in_element(self.fund_source_selector, 'BRAC')
+    def funding_remarks(self):
         self.fund_source_remarks_selector.fill(fund_remarks)
-
 
     def setting_requisition_details(self, item_info_1, item_info_2, item_tor, qty, unit_price):
         self.item_info_selector.click()
@@ -66,7 +73,6 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.item_qty_selector.fill(qty)
         self.item_unit_price_selector.fill(unit_price)
 
-
     def setting_requisition_for_details(self, gl_code, gl_remarks, del_date, del_loc, del_loc_details):
         self.gl_code_selector.click()
         self.page.get_by_text(gl_code).click()
@@ -76,8 +82,7 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.delivery_location_selector.select_option(label=del_loc)
         self.delivery_location_details_selector.fill(del_loc_details)
         self.wait_for_timeout(5000)
-        #self.add_to_grid_selector.click()
-
+        # self.add_to_grid_selector.click()
 
     def save_requisition(self) -> str:
         self.add_to_grid_selector.click()
@@ -85,10 +90,9 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.save_btn_selector.click()
         self.wait_to_load_element(self.requisition_number)
         value = self.requisition_number.text_content()
-        #print(value)
+        # print(value)
         return value.split(' ')[-1]
-        #print("Last Value: " + val[-1])
-
+        # print("Last Value: " + val[-1])
 
     def submit_requisition(self) -> str:
         self.add_to_grid_selector.click()

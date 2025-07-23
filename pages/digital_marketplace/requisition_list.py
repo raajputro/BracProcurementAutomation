@@ -1,7 +1,9 @@
 import re
-from utils.basic_actions import BasicActions
 
-class RequisitionList(BasicActions):
+from utils.basic_actionsdm import BasicActionsDM
+
+
+class RequisitionList(BasicActionsDM):
 
     def __init__(self, page):
         super().__init__(page)
