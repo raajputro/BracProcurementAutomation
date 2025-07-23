@@ -9,7 +9,7 @@ class MainNavigationBar(BasicActions):
         super().__init__(page)
         # write down all the elements here with locator format
         self.exit_button = page.locator("a#btn_login.btn_user")
-        
+
         self.logout_button = self.page.locator('a:has-text("Logout")')
 
     # write down all the necessary actions performed on this page as def
@@ -17,5 +17,6 @@ class MainNavigationBar(BasicActions):
         # self.page.locator('#overlay.active').wait_for(state='detached', timeout=10000)
         self.exit_button.click()
         self.wait_for_timeout(1000)
+
     def logout(self):
         self.logout_button.click()
