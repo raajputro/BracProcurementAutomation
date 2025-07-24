@@ -140,7 +140,11 @@
 #         self.wait_for_timeout(5000)
 
 import re
-from resources.resource_file import TestResources
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+test_vendor_name = os.getenv("test_vendor_name")
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
@@ -152,7 +156,7 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
         super().__init__(page)
         self.po_value = ''
         self.vendor_info = page.get_by_role("textbox", name="Min 3 characters")
-        self.search_result = page.get_by_text(TestResources.test_vendor_name)
+        self.search_result = page.get_by_text(test_vendor_name)
         self.select_all_checkbox = page.get_by_role("link", name="Select All", exact=True)
         self.unselect_all_checkbox = page.get_by_role("link", name="Unselect All", exact=True)
         self.search_requisition = page.get_by_role("textbox", name="Please enter item name or REQ")

@@ -1,5 +1,9 @@
 import re
-from resources.resource_file import TestResources
+from dotenv import load_dotenv
+import os
+load_dotenv()
+test_vendor_name = os.getenv("test_vendor_name")
+
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
@@ -11,7 +15,7 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         super().__init__(page)
         self.purchase_order_type = page.locator("#dpmNo")
         self.vendor_info = page.get_by_role("textbox", name="Search by vendor name(Example")
-        self.search_result = page.get_by_text(TestResources.test_vendor_name)
+        self.search_result = page.get_by_text(test_vendor_name)
         self.order_no = page.locator("#woIdDiv_input")
         self.challan_no = page.locator("#challanIdDiv_input")
         self.bill_no = page.locator("#billNo")

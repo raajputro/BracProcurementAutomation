@@ -1,8 +1,12 @@
 import re
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 from typing import Self
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
-from resources.resource_file import TestResources
+
 from playwright.sync_api import expect
 from pages.create_direct_purchase import CreateDirectPurchase
 
