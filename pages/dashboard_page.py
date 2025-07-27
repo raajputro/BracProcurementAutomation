@@ -13,7 +13,10 @@ class DashboardPage(BasicActions):
         self.myDashboardItem_eTender = page.locator('xpath=//*[contains(text(),"E-Tender")]')
         self.myDashboardItem_Marketplace = page.locator('xpath=//*[contains(text(),"Marketplace")]')
         self.myDashboardItem_FIXEDASSET = page.locator('xpath=//*[contains(text(),"FIXED ASSET")]')
-        self.myDashboardItem_MICROFINANCE = page.locator('xpath=//*[contains(text(),"MICROFINANCE")]')
+
+        self.myDashboardItem_MICAROFINANCE = page.locator('//*[@id="module-mf"]/a')
+
+
         self.myDashboardItem_ACCOUNTING = page.locator('xpath=//*[contains(text(),"ACCOUNTING")]')
         self.myDashboardItem_Budget = page.locator('xpath=//*[contains(text(),"Budget")]')
         self.myDashboardItem_FINANCIALCONSOLIDATION = page.locator('xpath=//*[contains(text(),"FINANCIAL CONSOLIDATION")]')
@@ -30,3 +33,7 @@ class DashboardPage(BasicActions):
     def goto_procurement(self) -> None:
         self.page.keyboard.press('Enter')
         self.click_on_btn(self.myDashboardItem_procurement)
+
+    def goto_microfinance(self) -> None:
+       self.page.keyboard.press('Enter')
+       self.click_on_btn(self.myDashboardItem_MICAROFINANCE)

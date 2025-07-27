@@ -27,7 +27,6 @@ def test_one(page):
         pass_word=proj_pass
     )
 
-
 def test_two(page):
     d_page = DashboardPage(page)
     d_page.goto_procurement()
