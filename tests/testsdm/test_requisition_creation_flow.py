@@ -11,6 +11,7 @@ load_dotenv()
 proc_url = os.getenv("test_url")
 proc_user = os.getenv("test_user_name")
 proc_pass = os.getenv("test_user_pass")
+agreement = os.getenv("test_white_listed_agreement")
 proj_gen_pass = os.getenv("test_user_generic_pass")
 admin_user = os.getenv("test_admin")
 assigned_person = os.getenv("test_requisition_assignee")
@@ -76,8 +77,18 @@ def test_4_create_and_submit_requisition(page):
     c_page = CreateReqPage(page)
     # c_page.validate()
     c_page.setting_requisition_for("[H10] - Construction")
-    c_page.setting_requisition_information("BRAC")
-    # c_page.setting_requisition_information("Fund for BRAC")
+    c_page.setting_requisition_information("BRAC Fund", "Remarks for funding")
+    # c_page.setting_requisition_details()
+    c_page.fill_item_information_1()
+    c_page.fill_agreement_information()
+    c_page.finalize_agreement_item_and_quantity()
+    c_page.setting_requisition_for_details()
+    # c_page.setting_white_listed_agreement_item(
+    #     white_listed_agreement = agreement
+    #
+    # )
+    # c_page.select_suggest_item()
+    # c_page.setting_agreement_item(agreement)
     # c_page.setting_requisition_details("glue",
     #                                    "[19193]-Glue Stick (Fevi Stick)-(Supplies and Stationeries->Supplies and Stationeries->Stationery)",
     #                                    "Tor for Item", "1000", "25")

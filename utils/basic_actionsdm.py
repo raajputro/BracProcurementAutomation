@@ -68,3 +68,16 @@ class BasicActionsDM:
         self.page.get_by_text(text, exact=True).click()
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
+
+    def wait_for_selector(self, locator, state='visible', timeout=5000):
+        """
+        Waits for a selector to reach the specified state.
+
+        :param locator: Locator object to wait on.
+        :param state: State to wait for. One of: 'attached', 'detached', 'visible', 'hidden'.
+        :param timeout: Max time to wait in milliseconds.
+        """
+        try:
+            locator.wait_for(state=state, timeout=timeout)
+        except TimeoutError:
+            print(f"Timeout: Locator did not become '{state}' within {timeout}ms.")
