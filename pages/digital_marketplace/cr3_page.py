@@ -1,7 +1,10 @@
 import re
+from operator import index
+
 from playwright.sync_api import expect
 from utils.basic_actionsdm import BasicActionsDM
 from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
+import datetime
 
 
 class CreateReqPage(ProcurementHomePage, BasicActionsDM):
@@ -27,7 +30,8 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         # elements for requisition details
         self.item_info_selector = page.locator("//*[@id='itemInfo']")
         self.item_info = page.locator("//a[@id='ui-active-menuitem' and contains(text(), 'Pen Box')]")
-        self.item_info_for_active = page.locator("/html/body/div[2]/div[2]/div/div[1]/div[1]/form[1]/div[1]/div/div[1]/div[1]/div[2]/div[1]/div/ul/li/a")
+        self.item_info_for_active = page.locator(
+            "/html/body/div[2]/div[2]/div/div[1]/div[1]/form[1]/div[1]/div/div[1]/div[1]/div[2]/div[1]/div/ul/li/a")
         self.item_measure_selector = page.locator("#mUnitDiv_arrow")
         self.item_tor_selector = page.locator("//*[@id='itemSpecification']")
         self.item_qty_selector = page.locator("#quantity")
@@ -36,11 +40,12 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         # all active framework agreement locator
         self.active_agreement_button = page.locator('#check-agreement-button')
         self.fa_agreement_input = page.locator('input#faAgreementNo')
-        self.finalize_dropdown_agreement = page.locator("ul.ui-autocomplete li.ui-menu-item a", has_text="BPD/2024/FA-93")
+        self.finalize_dropdown_agreement = page.locator("ul.ui-autocomplete li.ui-menu-item a",
+                                                        has_text="BPD/2024/FA-93")
         self.find_button = page.locator('//*[@id="find-button-requisitionList"]')
 
         # Item selection
-        self.item_1 =page.locator('tr[id="206158470471"]')
+        self.item_1 = page.locator('tr[id="206158470471"]')
         self.item_2 = page.locator('tr[id="206158470472"]')
         self.item_3 = page.locator('tr[id="206158470473"]')
         self.item_4 = page.locator('tr[id="206158470474"]')
@@ -53,47 +58,29 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         self.gl_info_hidden_input = page.locator("input[id='glInfo_0Div_hidden'][value='1202010501-01]']")
         self.gl_input = page.locator("#glInfo_0Div_input")
         self.dropdown_option = page.locator("div#glInfo_0Div_ctr div.row.ffb-sel", has_text="1202010501-01")
+        self.gl_code = page.locator("div.row", has_text="[1202010501-01] Furniture and Fixture")
+        self.ref_code_dropdown = page.locator("#refCodeId_0Div_arrow")
+        self.ref_code_input = page.locator("#refCodeId_0Div_input")
         self.req_for_remarks_selector = page.locator("#reqDetailsRemarks")
         self.add_to_grid_button = page.locator("input#addToGrid")
 
-        self.schedule_selector = page.get_by_role("checkbox", name="Same schedule")
-        self.date_selector = page.locator("#defaultDeliveryDate")
-        self.delivery_location_selector = page.locator("#defaultDeliveryStoreId")
-        self.delivery_location_details_selector = page.locator("#defaultDeliveryPlace")
+        # Same schedule selector
+        self.select_same_schedule = page.locator('//*[@id="useDefault"]')
+        self.date_picker_icon = page.locator("img.ui-datepicker-trigger")
+        self.today = page.locator(".ui-datepicker-calendar .ui-state-highlight")
+        self.delivery_store_select = page.locator("#defaultDeliveryStoreId")
+        self.location_input = page.locator("#defaultDeliveryPlace")
 
         # element to save the requisition
-        self.save_btn_selector = page.get_by_role("button", name="Save")
-        self.submit_btn_selector = page.get_by_role("button", name="Submit")
+        self.save_button = page.locator("#create-button-requisition")
+        self.submit_button = page.locator("#submit2-button-requisition")
+        self.submit_confirmation_button = page.locator("button:has-text('Submit')")
+
         self.submit_confirmation_btn_selector = page.locator("//div[@role='dialog']//following::button")
         self.requisition_number = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
+        # self.message_text = page.locator('//div[@class="jGrowl-notification"]//div[@class="message"]')
 
-
-
-    def setting_requisition_for_details(self):
-        self.gl_code_dropdown.click()
-        self.gl_input.click()
-        self.input_in_element(self.gl_input, "1202010501-01]")
-        self.wait_for_timeout(5000)
-        self.dropdown_option.click()
-        self.wait_for_timeout(7000)
-        self.req_for_remarks_selector.fill("Item remarks 1")
-        self.wait_for_timeout(5000)
-        self.add_to_grid_button.click()
-        self.wait_for_timeout(5000)
-
-        # dropdown_option.wait_for(state="visible")
-        # self.dropdown_option.click()
-        # self.gl_hidden = page.locator("#glInfo_0Div_hidden")
-        # selected_value = gl_hidden.input_value()
-        # print(selected_value)  # Should be something like '1202010501-01]'
-
-
-        # self.selected_gl_code.click()
-        # self.wait_for_timeout(5000)
-        # self.input_in_element(self.selected_gl_code, "Furniture and Fixture")
-        # self.selected_gl_code.click()
-        # self.gl_info_hidden_input.click()
-
+        self.date_picker_icon = page.locator('xpath=//*[@alt="Select date"]')
 
     def validate(self):
         expect(self.validation_point).to_be_visible()
@@ -122,13 +109,12 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         expect(dropdown_locator).to_be_visible(timeout=5000)
         # Click the matching item
         dropdown_locator.click()
-        # Optional: Wait to ensure it's selected
         self.wait_for_timeout(1000)
 
     def fill_agreement_information(self):
-        whitelisted_agreement = "BPD/2024/FA-93"
+        # whitelisted_agreement = "BPD/2024/FA-93"
         self.click_on_btn(self.active_agreement_button)
-        # Type 'Pen Box' with delay
+        # Type 'agreement no.' with delay
         for char in "BPD/2024/FA-93":
             self.fa_agreement_input.type(char)
             self.wait_for_timeout(200)
@@ -136,7 +122,7 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         self.find_button.click()
         self.wait_for_timeout(2000)
 
-    # Golbally call white listed agreement
+    # Globally call white listed agreement
     # def setting_white_listed_agreement_item(self, white_listed_agreement):
     #     self.active_agreement_button.click()
     #     white_listed_agreement1 = white_listed_agreement + " "
@@ -149,8 +135,56 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         self.item_1.click()
         self.item_qty_selector.fill("100")
 
-    # hbwdicvwd
+    def setting_requisition_for_details(self):
+        self.gl_code_dropdown.click()
+        self.gl_input.click()
+        # Type "202010501-01] Furniture and Fixture": with delay
+        for char in "202010501-01]":
+            self.gl_input.type(char)
+            self.wait_for_timeout(200)
+        self.gl_code.click()
+        self.wait_for_timeout(2000)
+        self.ref_code_dropdown.click()
+        self.ref_code_input.fill("Ref code input")
+        self.req_for_remarks_selector.fill("Item remarks 1")
+        self.wait_for_timeout(5000)
+        self.add_to_grid_button.click()
+        self.wait_for_timeout(5000)
 
+    def setting_same_schedule_for_date(self):
+        # self.select_same_schedule().click()
+        self.click_on_btn(self.select_same_schedule)
+        self.click_on_btn(self.date_picker_icon)
+        self.click_on_btn(self.today)
+        self.wait_for_timeout(5000)
+
+    def setting_same_schedule_for_location(self):
+        self.delivery_store_select.click()
+        self.wait_for_timeout(5000)
+        self.page.select_option("#defaultDeliveryStoreId", value="1")
+        # For central store and other delivery schedule
+        # self.page.select_option("#defaultDeliveryStoreId", value="2")
+        # self.page.select_option("#defaultDeliveryStoreId", value="-1")
+        self.wait_for_timeout(2000)
+        self.location_input.click()
+        self.input_in_element(self.location_input, "Gulshan 1, Head Office, Dhaka - 1200")
+        self.wait_for_timeout(2000)
+
+    def setting_save_requisition(self) -> str:
+        self.save_button.click()
+        self.wait_to_load_element(self.requisition_number)
+        value = self.requisition_number.text_content()
+        print("Draft Requisition Number:" + value)
+        return value.split(' ')[-1]
+        # print("Last Value: " + val[-1])
+
+    def submit_requisition(self) -> str:
+        self.submit_button.click()
+        self.wait_to_load_element(self.submit_confirmation_button)
+        self.submit_confirmation_button.click()
+        self.wait_to_load_element(self.requisition_number)
+        value = self.requisition_number.text_content()
+        return value.split(' ')[-1]
 
     # this is for non-agreement item
     def setting_requisition_details_for_master_item(self, item_info_1, item_info_2, item_tor, qty, unit_price):
@@ -164,34 +198,3 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         self.item_tor_selector.fill(item_tor)
         self.item_qty_selector.fill(qty)
         self.item_unit_price_selector.fill(unit_price)
-
-    def setting_requisition_for_details_1(self, gl_code, gl_remarks, del_date, del_loc, del_loc_details):
-        self.gl_code_selector.click()
-        self.page.get_by_text(gl_code).click()
-        self.req_for_remarks_selector.fill(gl_code)
-        self.schedule_selector.click()
-        self.date_selector.fill(del_date)
-        self.delivery_location_selector.select_option(label=del_loc)
-        self.delivery_location_details_selector.fill(del_loc_details)
-        self.wait_for_timeout(5000)
-        # self.add_to_grid_selector.click()
-
-    def save_requisition(self) -> str:
-        self.add_to_grid_selector.click()
-        self.wait_for_timeout(5000)
-        self.save_btn_selector.click()
-        self.wait_to_load_element(self.requisition_number)
-        value = self.requisition_number.text_content()
-        # print(value)
-        return value.split(' ')[-1]
-        # print("Last Value: " + val[-1])
-
-    def submit_requisition(self) -> str:
-        self.add_to_grid_selector.click()
-        self.wait_for_timeout(5000)
-        self.submit_btn_selector.click()
-        self.wait_to_load_element(self.submit_confirmation_btn_selector)
-        self.submit_confirmation_btn_selector.click()
-        self.wait_to_load_element(self.requisition_number)
-        value = self.requisition_number.text_content()
-        return value.split(' ')[-1]
