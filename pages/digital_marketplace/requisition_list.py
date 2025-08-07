@@ -7,6 +7,11 @@ class RequisitionList(BasicActionsDM):
 
     def __init__(self, page):
         super().__init__(page)
+        self.requisition_list = page.locator(
+            '//div[text()="Requisition"]//following-sibling::ul//child::span[text()="Requisition List"]')
+        self.requisition_list = page.locator(
+            '//div[text()="Requisition"]//following-sibling::ul//child::span[text()="Requisition List"]')
+
         self.requisition_search_box = page.locator("#requisitionNoForPrint")
         self.requisition_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
         self.requisition_status = page.locator("//table[@id='requisitionGrid']/tbody/tr[2]/child::td[7]")

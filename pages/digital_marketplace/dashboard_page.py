@@ -9,7 +9,8 @@ class DashboardPage(BasicActionsDM):
         self.myDashboardItem_HRM= page.locator('xpath=//*[contains(text(),"HRM")]')
         self.myDashboardItem_ePMS = page.locator('xpath=//*[contains(text(),"ePMS")]')
         self.myDashboardItem_EDMS = page.locator('xpath=//*[contains(text(),"EDMS")]')
-        self.myDashboardItem_procurement = page.locator('xpath=//*[contains(text(),"PROCUREMENT")]')
+        # self.myDashboardItem_procurement = page.locator('xpath=//*[contains(text(),"PROCUREMENT")]')
+        self.myDashboardItem_procurement = page.locator('//a[contains(@class, "moreInfoBoxShow") and text()="PROCUREMENT"]')
         self.myDashboardItem_eTender = page.locator('xpath=//*[contains(text(),"E-Tender")]')
         self.myDashboardItem_Marketplace = page.locator('xpath=//*[contains(text(),"Marketplace")]')
         self.myDashboardItem_FIXEDASSET = page.locator('xpath=//*[contains(text(),"FIXED ASSET")]')
@@ -28,6 +29,8 @@ class DashboardPage(BasicActionsDM):
         self.myDashboardItem_BracInventory = page.locator('xpath=//*[contains(text(),"Brac Inventory")]')
         self.add_bannar = page.locator('#modals')
 
+        self.click_procurement_hyperlink = page.locator('a[href="/procurementDashboard/myDashboard"]:has-text("Procurement")')
+
 
     def closing_add(self) -> None:
         self.wait_to_load_element(self.add_bannar)
@@ -37,3 +40,6 @@ class DashboardPage(BasicActionsDM):
 
     def goto_procurement(self) -> None:
         self.click_on_btn(self.myDashboardItem_procurement)
+
+    def menu_click_procurement_hyperlink(self):
+        self.click_on_btn(self.click_procurement_hyperlink)

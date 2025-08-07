@@ -82,6 +82,16 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
 
         self.date_picker_icon = page.locator('xpath=//*[@alt="Select date"]')
 
+        self.proc_item_requisition = page.locator('//div[text()="Requisition"]')
+        self.requisition_list_page = page.locator('/html/body/div[1]/div/div[5]/div[1]/div/ul/li[11]/ul/li[3]/a')
+        self.requisition_list = page.locator(
+            '//div[text()="Requisition"]//following-sibling::ul//child::span[text()="Requisition List"]')
+
+    def navigate_to_requisition_list(self):
+        self.proc_item_requisition.click()
+        self.requisition_list.click()
+        self.wait_for_timeout(2000)
+
     def validate(self):
         expect(self.validation_point).to_be_visible()
 
@@ -133,7 +143,7 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
 
     def finalize_agreement_item_and_quantity(self):
         self.item_1.click()
-        self.item_qty_selector.fill("100")
+        self.item_qty_selector.fill("5")
 
     def setting_requisition_for_details(self):
         self.gl_code_dropdown.click()
@@ -147,28 +157,28 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         self.ref_code_dropdown.click()
         self.ref_code_input.fill("Ref code input")
         self.req_for_remarks_selector.fill("Item remarks 1")
-        self.wait_for_timeout(5000)
+        self.wait_for_timeout(2000)
         self.add_to_grid_button.click()
-        self.wait_for_timeout(5000)
+        self.wait_for_timeout(2000)
 
     def setting_same_schedule_for_date(self):
         # self.select_same_schedule().click()
         self.click_on_btn(self.select_same_schedule)
         self.click_on_btn(self.date_picker_icon)
         self.click_on_btn(self.today)
-        self.wait_for_timeout(5000)
+        self.wait_for_timeout(2000)
 
     def setting_same_schedule_for_location(self):
         self.delivery_store_select.click()
-        self.wait_for_timeout(5000)
+        # self.wait_for_timeout(2000)
         self.page.select_option("#defaultDeliveryStoreId", value="1")
         # For central store and other delivery schedule
         # self.page.select_option("#defaultDeliveryStoreId", value="2")
         # self.page.select_option("#defaultDeliveryStoreId", value="-1")
-        self.wait_for_timeout(2000)
+        # self.wait_for_timeout(2000)
         self.location_input.click()
         self.input_in_element(self.location_input, "Gulshan 1, Head Office, Dhaka - 1200")
-        self.wait_for_timeout(2000)
+        # self.wait_for_timeout(2000)
 
     def setting_save_requisition(self) -> str:
         self.save_button.click()
