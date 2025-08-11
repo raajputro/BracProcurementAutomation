@@ -17,5 +17,9 @@ class LoginPage(BasicActions):
         self.input_in_element(self.userName, user_name)
         self.input_in_element(self.passWord, pass_word)
         self.click_on_btn(self.signBtn)
-        self.wait_to_load_element(self.advModal)
-        self.page.keyboard.press('Enter')
+
+        try:
+            self.wait_to_load_element(self.advModal)
+            self.page.keyboard.press('Enter')
+        except Exception as e:
+            print("Error occurred while waiting for the modal:", e)

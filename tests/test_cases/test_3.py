@@ -81,7 +81,7 @@ def test_4_create_and_submit_requisition(page):
     c_page.setting_requisition_for("[H04] - Procurement-BRAC")
     c_page.setting_requisition_information("BRAC Fund", "Remarks for funding")
     c_page.setting_requisition_details("glue","[19193]-Glue Stick (Fevi Stick)-(Supplies and Stationeries->Supplies and Stationeries->Stationery)", "Tor for Item","1000","25")
-    c_page.setting_requisition_for_details("[5102010107-05] Remuneration","gl remarks","30-07-2025", "Head Office", "ABC Road")
+    c_page.setting_requisition_for_details("[1202010501-01] Furniture and Fixture","gl remarks","30-07-2025", "Head Office", "ABC Road")
     c_page.get_full_page_screenshot('full_page_screenshot_3')
     global req_num
     req_num = c_page.submit_requisition()

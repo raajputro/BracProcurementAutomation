@@ -1,5 +1,4 @@
 import re
-from resources.resource_file import TestResources
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
@@ -11,7 +10,6 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         super().__init__(page)
         self.purchase_order_type = page.locator("#dpmNo")
         self.vendor_info = page.get_by_role("textbox", name="Search by vendor name(Example")
-        self.search_result = page.get_by_text(TestResources.test_vendor_name)
         self.order_no = page.locator("#woIdDiv_input")
         self.challan_no = page.locator("#challanIdDiv_input")
         self.bill_no = page.locator("#billNo")
@@ -21,7 +19,7 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         self.select_all = page.get_by_role("link", name="Select All", exact=True)
         self.unselect_all = page.get_by_role("link", name="Unselect All")
         self.bill_recommender = page.locator("#poRecommenderIdDiv_input")
-        self.bill_recommender_selection = page.get_by_text(TestResources.test_bill_recommender)
+        
         self.submit = page.get_by_role("button", name="Submit")
         self.submit_confirmation = page.get_by_label("Submit Confirmation").get_by_role("button", name="Submit")
 
@@ -30,9 +28,10 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         self.page.keyboard.press("End")
         self.page.keyboard.type(" ")
         self.page.keyboard.press("Backspace")
-        self.search_result.wait_for(state="visible", timeout=5000)
-        self.search_result.hover()
-        self.search_result.click()
+        search_result = self.page.get_by_text(vendor_name)
+        search_result.wait_for(state="visible", timeout=5000)
+        search_result.hover()
+        search_result.click()
 
     def bill_number(self, bill_no_1: str):
         self.wait_for_timeout(5000)
@@ -68,9 +67,10 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         self.page.keyboard.press("End")
         self.page.keyboard.type(" ")
         self.page.keyboard.press("Backspace")
-        self.bill_recommender_selection.wait_for(state="visible", timeout=5000)
-        self.bill_recommender_selection.hover()
-        self.bill_recommender_selection.click()
+        bill_recommender_selection = self.page.get_by_text(recommender)
+        bill_recommender_selection.wait_for(state="visible", timeout=5000)
+        bill_recommender_selection.hover()
+        bill_recommender_selection.click()
 
     def submit_bill(self):
         self.submit.scroll_into_view_if_needed()
