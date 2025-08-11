@@ -4,15 +4,15 @@ from utils.basic_actionsdm import BasicActionsDM
 class MainNavigationMenu(BasicActionsDM):
     def __init__(self, page):
         super().__init__(page)
-        # write down all the elements here with locator format
-        # self.exit_button = page.locator("a#ico-logout./logout")
+        # Logout from public side
+        self.logout_button = page.locator('a:has-text("Log out")')
 
-        self.logout_button = self.page.locator('a:has-text("Log out")')
-        # self.first_common_login_btn = page.locator("//button[@type='button']")
+        # Logout from admin side
+        self.logout_from_administration_button = page.locator('a:has-text("Logout")')
 
-    def perform_logout(self, logout_button):
-        # self.click_on_btn(self.logout_button)
+    def perform_logout(self):
         self.logout_button.click()
-        # self.exit_button.click()
-        self.wait_for_timeout(1000)
-        # self.logout_button.click()
+        # self.wait_for_timeout(2000)
+
+    def logout_from_administration(self):
+        self.logout_from_administration_button.click()

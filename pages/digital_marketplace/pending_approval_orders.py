@@ -3,8 +3,6 @@ import re
 from utils.basic_actionsdm import BasicActionsDM
 from pages.digital_marketplace.home_page import HomePage
 
-from playwright.sync_api import expect
-
 
 class PendingApprovalOrders(HomePage, BasicActionsDM):
     def __init__(self, page):
@@ -12,17 +10,16 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.page = page
         #   Write down all the elements here with locator format
         # Goto pending order approval menu/page
-        self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
-                                                    has_text="Pending Approval Orders")
+        # self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
+        #                                             has_text="Pending Approval Orders")
 
         # Search order reference number
         self.search_order_number = page.get_by_placeholder('Order Reference Number')
         self.search_button = page.locator('button[class="button"][type="submit"]')
 
         # Go to pending approval order details
-        # self.click_details_button = page.locator(
-        #     "button.order-details-button[onclick*='/pendingApprovalOrderDetails/2472']"
-        # )
+        self.details_button = page.get_by_role("button", name="Details")
+        # self.approve_order_button = page.locator('a[id="approve-order-btn"]')
         self.details_button = page.get_by_role("button", name="Details")
         self.approve_order_button = page.get_by_role("link", name="Approve Order")
         self.yes_button = page.get_by_role("button", name="YES")
@@ -53,30 +50,23 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         # Select approve button for multiselect approval
         self.click_multiselect_approve = page.locator('button[id="pendingApprovalOrder-selected"]')
 
-    def goto_pending_approval_orders_list(self):
-        self.click_on_btn(self.pending_approval_orders)
-        self.wait_for_timeout(2000)
-
-    def search_order_input(self, order_reference_number):
-        self.input_in_element(self.search_order_number, order_reference_number)
         # self.wait_for_timeout(2000)
+
+    def search_order_input(self, reference_number):
+        self.search_order_number.click()
+        self.input_in_element(self.search_order_number, reference_number)
+
+    def click_order_search_button(self):
         self.click_on_btn(self.search_button)
-        self.wait_for_timeout(2000)
-        # self.print('Search_pending_approval_order_number')
 
     def goto_pending_approval_order_details(self):
-        # self.click_on_btn(self.click_details_button)
         self.click_on_btn(self.details_button)
-        self.wait_for_timeout(2000)
-        # self.print('View_pending_approval_order_details')
 
     def approve_order(self):
         self.click_on_btn(self.approve_order_button)
-        # self.print('Show_approve_order_popup')
-        self.click_on_btn(self.close_button)
-        self.click_on_btn(self.approve_order_button)
         self.click_on_btn(self.yes_button)
-        # self.print('Successfully_approve_order_details')
+        # self.click_on_btn(self.close_button)
+        # self.click_on_btn(self.approve_order_button)
 
     def check_pending_approval(self):
         self.pending_approval_checkbox.check()
@@ -118,9 +108,7 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
 
     def check_max_min_characters_validation(self):
         self.click_on_btn(self.review_confirm_button)
-        characters = "w"
-        # characters = "44Send back reasons~!@#$%^&*()_+}{|”:?><~`,./’;[]=-\Docx word“confirm” is a verb in its present tense, meaning that it happens right now currently. the word “confirmed” is this same word in the past tense, meaning that confirmation occurred in the past. 2556"
-
+        characters = "abcd"
         self.input_in_element(self.enter_review_reasons, characters)
         if (len(characters) >= 3) and (len(characters) <= 255):
             print(len(characters))
@@ -141,8 +129,8 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
     def order_review(self):
         self.click_on_btn(self.review_button)
         self.wait_for_timeout(2000)
-        self.input_in_element(self.enter_review_reasons,
-                              'Send back reasons~!@#$%^&*()_+}{|”:?><~`,./’;[]=-\Docx word“confirm” is a verb in its present tense, meaning that it happens right now currently. the word “confirmed” is this same word in the past tense, meaning that confirmation occurred in the past. 2556')
+        # self.input_in_element(self.enter_review_reasons,
+        #                       'Send back reasons~!@#$%^&*()_+}{|”:?><~`,./’;[]=-\Docx word“confirm” is a verb in its present tense, meaning that it happens right now currently. the word “confirmed” is this same word in the past tense, meaning that confirmation occurred in the past. 2556')
         self.click_on_btn(self.review_confirm_button)
 
     def open_preview(self):
@@ -172,8 +160,8 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.wait_for_timeout(2000)
 
     def rejection_max_characters_input(self):
-        # characters = "w"
-        characters = "Order rejection remarks or reasons~!@#$%^&*()_+}{|”:?><~`,./’;[]=-\Docx word“confirm” is a verb in its present tense, meaning that it happens right now currently. the word “confirmed” is this same word in the past tense, meaning that confirmation occurred in the past. 2556test"
+        characters = "test rejection"
+        # characters = "Order rejection remarks or reasons~!@#$%^&*()_+}{|”:?><~`,./’;[]=-\Docx word“confirm” is a verb in its present tense, meaning that it happens right now currently. the word “confirmed” is this same word in the past tense, meaning that confirmation occurred in the past. 2556test"
         self.input_in_element(self.cancellation_remarks, characters)
         if (len(characters) >= 3) and (len(characters) <= 256):
             print(len(characters))

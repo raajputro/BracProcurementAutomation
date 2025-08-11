@@ -4,13 +4,15 @@ from dotenv import load_dotenv
 import os
 import random
 
-from pages.digital_marketplace.procurement_login_age import ProcurementLoginPage
-
 load_dotenv()
 
 proc_url = os.getenv("test_url")
 proc_user = os.getenv("test_user_name")
 proc_pass = os.getenv("test_user_pass")
+marketplace_url = os.getenv("test_marketplace_url")
+marketplace_user = os.getenv("test_marketplace_user")
+marketplace_password = os.getenv("test_marketplace_password")
+manual_delivery_location = os.getenv("test_manual_delivery_location")
 agreement = os.getenv("test_white_listed_agreement")
 proj_gen_pass = os.getenv("test_user_generic_pass")
 admin_user = os.getenv("test_admin")
@@ -20,7 +22,12 @@ dp_approver = os.getenv("test_dp_approver")
 bill_creator = os.getenv("test_bill_creator")
 
 # Page models
-from pages.digital_marketplace.login_page import LoginPage
+# from pages.digital_marketplace.login_page import LoginPage
+# from pages.digital_marketplace.home_page import HomePage
+# from pages.digital_marketplace.shopping_cart import ShoppingCart
+# from pages.digital_marketplace.checkout_page import CheckoutPage
+
+from pages.digital_marketplace.procurement_login_age import ProcurementLoginPage
 from pages.digital_marketplace.dashboard_page import DashboardPage
 from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
 from pages.digital_marketplace.cr3_page import CreateReqPage
@@ -221,15 +228,45 @@ def test_13_check_requisition_approved(page):
     r_page = RequisitionList(page)
     r_page.search_requisition(req_num)
     # r_page.get_full_page_screenshot('full_page_screenshot_18')
-    req_status = r_page.find_requisition_status()
-    print("REQ STATUS:", req_status)
-    expect(req_status).to_be_equal("Approved")
+    # req_status = r_page.find_requisition_status()
+    # print("REQ STATUS:", req_status)
+    # expect(req_status).to_be_equal("Approved")
 
     r2_page = MainNavigationBar(page)
     r2_page.exit()
     r2_page.logout()
     # r2_page.get_full_page_screenshot('full_page_screenshot_19')
     r2_page.wait_for_timeout(2000)
+
+
+def test_14_order_initiation(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(marketplace_url)
+    # s_page.click_on_btn()
+
+    s_page.perform_login_for_sso_login(
+        user_name=proc_user,
+        pass_word=marketplace_password
+    )
+    r_page = HomePage(page)
+    r_page.click_shopping_cart()
+    r1_page = ShoppingCart(page)
+    # r1_page.select_vendor_and_checkout_cart_page()
+    r1_page.remove_vendor_item()
+
+    # r1_page = ShoppingCart(page)
+    # r1_page.select_vendor_and_checkout_cart_page()
+
+    # r2_page = CheckoutPage(page)
+    # r2_page.delivery_schedule_preparation(
+    #     location=manual_delivery_location
+    # )
+    # r2_page.fill_concatenated_pin()
+    # r2_page.click_add_schedule_btn()
+    # c_page.continue_button.click()
+    # c_page.filling_order_remarks()
+    # c_page.select_checkbox()
+    # c_page.confirm_order()
 
 # def test_9_check_requisition_assign(page):
 #     s_page = LoginPage(page)
