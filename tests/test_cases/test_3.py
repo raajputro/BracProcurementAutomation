@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 import os
 import random
 
-from pages.create_direct_purchase import CreateDirectPurchase
-
 load_dotenv()
 
 proj_url = os.getenv("test_url")
