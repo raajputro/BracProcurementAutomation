@@ -11,16 +11,30 @@ class LoginPage(BasicActions):
         self.passWord = page.get_by_label('Password')
         self.signBtn = page.get_by_role('button', name=re.compile("Sign In", re.IGNORECASE))
         self.advModal = page.locator('#modals')
+        self.advCloseBtn = page.locator('xpath=//*[@id="modals"]/div[1]/button')
+        self.overlayModal = page.locator('#overlay.active')
 
     # write down all the necessary actions performed in this page as def
     def perform_login(self, user_name, pass_word):
         self.input_in_element(self.userName, user_name)
         self.input_in_element(self.passWord, pass_word)
         self.click_on_btn(self.signBtn)
+        self.close_adv_modal()
+        # self.page.wait_for_timeout(5000)
+        # try:
+        #     self.wait_to_load_element(self.advModal)
+        #     self.page.keyboard.press('Enter')
+        # except Exception as e:
+        #     print("Error occurred while waiting for the modal:", e)
+
+
+    def close_adv_modal(self):
         self.page.wait_for_timeout(5000)
         try:
-            self.wait_to_load_element(self.advModal)
-            self.page.keyboard.press('Enter')
+            if self.overlayModal.is_visible():
+                self.click_on_btn(self.advCloseBtn)
+                # self.page.wait_for_timeout(2000)
         except Exception as e:
-            print("Error occurred while waiting for the modal:", e)
-            break
+            print("Error occurred while closing the adv modal:", e)
+
+
