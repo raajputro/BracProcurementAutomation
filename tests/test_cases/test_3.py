@@ -107,14 +107,17 @@ def test_5_find_approver_of_the_requisition(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_7')
     r2_page.wait_for_timeout(5000)
 
-
+# approver_id = "15370"
+# # approver_id = "197363"
+# req_num = "REQ20250014442"
 def test_6_login_as_approver_and_approve(page):
     s_page = LoginPage(page)
     s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         given_url=proj_url,
         user_name=approver_id,
-        pass_word=proj_pass
+        pass_word=proj_pass,
+        timeout=60000  # Increased timeout for login
     )
     r_page = RequisitionApproveList(page)
     requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"

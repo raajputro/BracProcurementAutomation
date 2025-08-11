@@ -1,6 +1,7 @@
 # this page contains all the common actions to be performed in this project
 from playwright.sync_api import expect
 import os
+from typing import Optional
 
 
 def is_element_visible(elem):
@@ -37,6 +38,11 @@ class BasicActions:
 
     @staticmethod
     def click_on_btn(btn):
+        btn.click()
+
+    @staticmethod
+    def click_on_btn(btn, timeout: Optional[int] = 5000):
+        btn.wait_for(state='visible', timeout=timeout)
         btn.click()
 
     @staticmethod

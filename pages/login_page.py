@@ -4,6 +4,7 @@ import re
 from utils.basic_actions import BasicActions
 from typing import Optional
 from contextlib import suppress
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 
 class LoginPage(BasicActions):
@@ -12,104 +13,60 @@ class LoginPage(BasicActions):
         # write down all the elements here with locator format
         self.userName = page.get_by_label('Username')
         self.passWord = page.get_by_label('Password')
-        self.signBtn = page.get_by_role('button', name=re.compile(r"^(Sign In|login)$", re.I))
+        #self.signBtn = page.get_by_role('button', name=re.compile(r"^(Sign In|login)$", re.I))
+        self.signBtn = page.locator('xpath=//input[@id="kc-login"]')
 
         self.advModal = page.locator('#modals')
         self.advCloseBtn = page.locator('xpath=//*[@id="modals"]/div[1]/button')
         self.overlayModal = page.locator('#overlay.active')
 
+    # write down all the necessary actions performed on this page as def
+    def perform_login(
+    self,
+    given_url: str,
+    user_name: str,
+    pass_word: str,
+    timeout: Optional[int] = 30_000,
+    post_login_selector: Optional[str] = None,  # fallback dashboard shell
+) -> bool:
+        """Log in robustly; handle post-login overlay; verify success."""
+        user_name = (user_name or "").strip()
+        pass_word = (pass_word or "").strip()
 
-    # write down all the necessary actions performed in this page as def
-    # def perform_login(self, given_url, user_name, pass_word):
-    #     self.navigate_to_url(given_url)
-    #     self.input_in_element(self.userName, user_name)
-    #     self.input_in_element(self.passWord, pass_word)
-    #     self.click_on_btn(self.signBtn)
-    #     # self.page.wait_for_timeout(5000)
-    #     while True:
-    #         try:
-    #             if self.overlayModal.is_visible():
-    #                 print("Advertise modal is visible")
-    #                 self.click_on_btn(self.advCloseBtn)
-    #                 break
-    #             # else:
-    #             #     self.page.keyboard.press("Enter")
-    #         except Exception as e:
-    #             print(e)
+        # 1) Navigate and wait for form
+        self.page.goto(given_url, wait_until="domcontentloaded", timeout=timeout)
+        self.userName.wait_for(state="visible", timeout=timeout)
+        self.userName.clear()
+        self.userName.fill(user_name, timeout=timeout)
+        self.passWord.clear()
+        self.passWord.fill(pass_word, timeout=timeout)
 
-    # def perform_login(self, given_url, user_name, pass_word):
-    #     # Navigate & fill creds
-    #     self.navigate_to_url(given_url)
-    #     self.input_in_element(self.userName, user_name)
-    #     self.input_in_element(self.passWord, pass_word)
+        # 2) Click login
+        self.signBtn.click(timeout=timeout)
 
-    #     # Submit
-    #     # with self.page.expect_navigation():
-    #     #     # Click the sign-in button
-    #     #     # Using regex to match both "Sign In" and "login" (case-insensitive)
-    #     #     self.click_on_btn(self.signBtn)
-    #     # self.signBtn.click(no_wait_after=True)
-    #     self.click_on_btn(self.signBtn)
+        # 3) Wait for either overlay or dashboard
+        overlay_seen = False
+        try:
+            self.overlayModal.wait_for(state="visible", timeout=5000)
+            overlay_seen = True
+        except PlaywrightTimeoutError:
+            pass
 
-    #     # --- Dismiss optional overlays if they show up, else move on ---
-    #     # 1) Try overlayModal first (fast poll)
-    #     try:
-    #         # wait briefly for overlay to become visible
-    #         self.overlayModal.wait_for(state="visible", timeout=1500)
-    #         # if visible, click the close button (same close used for adv modal)
-    #         self.click_on_btn(self.advCloseBtn)
-    #         return
-    #     except Exception:
-    #         pass
-
-    #     # 2) Try advModal
-    #     try:
-    #         self.advModal.wait_for(state="visible", timeout=1500)
-    #         # Close if button is present/visible
-    #         try:
-    #             if self.advCloseBtn.is_visible():
-    #                 self.click_on_btn(self.advCloseBtn)
-    #         except Exception:
-    #             # fallback: try pressing Escape if close button isn’t visible
-    #             try:
-    #                 self.page.keyboard.press("Escape")
-    #             except Exception:
-    #                 pass
-    #     except Exception:
-    #         # Neither modal appeared — just continue with the next steps
-    #         pass
-
-
-    def perform_login(self, given_url: str, user_name: str, pass_word: str, timeout: Optional[int] = 30000) -> None:
-        # """
-        #     Performs login and optionally dismisses modals if they appear.
-            
-        #     Args:
-        #         given_url (str): The login page URL.
-        #         user_name (str): The username.
-        #         pass_word (str): The password.
-        #         timeout (Optional[int]): Timeout in milliseconds for page actions. Defaults to 30000 ms.
-        # """
-        # Navigate & fill creds
-        self.navigate_to_url(given_url)
-        self.input_in_element(self.userName, user_name)
-        self.input_in_element(self.passWord, pass_word)
-
-        # Click the sign-in button
-        self.click_on_btn(self.signBtn, timeout=timeout)
-
-        # --- Dismiss optional overlays if they show up ---
-        # 1) overlayModal
-        with suppress(Exception):
-            self.overlayModal.wait_for(state="visible", timeout=1500)
-            self.click_on_btn(self.advCloseBtn, timeout=timeout)
-            return  # Exit after handling overlay
-
-        # 2) advModal
-        with suppress(Exception):
-            self.advModal.wait_for(state="visible", timeout=1500)
-            if self.advCloseBtn.is_visible():
+        if overlay_seen:
+            # Close overlay
+            try:
                 self.click_on_btn(self.advCloseBtn, timeout=timeout)
-            else:
+            except PlaywrightTimeoutError:
                 with suppress(Exception):
                     self.page.keyboard.press("Escape")
+
+        # 4) Final success check
+        if post_login_selector:
+            try:
+                self.page.wait_for_selector(post_login_selector, timeout=timeout)
+                return True
+            except PlaywrightTimeoutError:
+                return False
+
+        # Fallback: URL change and login button gone
+        return self.page.url != given_url and not self.signBtn.is_visible(timeout=1000)

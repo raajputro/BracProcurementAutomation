@@ -444,7 +444,8 @@ def browser(playwright: Playwright) -> Browser:
                 "--start-maximized",            # open the OS window maximized
                 "--window-position=0,0",        # ensure it starts on the primary display
                 "--high-dpi-support=1",         # better scaling on Windows
-                "--force-device-scale-factor=1" # avoid 125%/150% OS scaling issues
+                "--force-device-scale-factor=1", # avoid 125%/150% OS scaling issues
+                "--ignore-certificate-errors",  # Ignore SSL errors for testing            
             ],
         )
     yield global_browser
@@ -466,6 +467,7 @@ def context(browser: Browser) -> BrowserContext:
             device_scale_factor=1,
             record_video_dir=VIDEOS_DIR,
             record_video_size={"width": screen_width, "height": screen_height},
+            ignore_https_errors=True,  # Ignore SSL errors for testing
         )
         # Start tracing once; we'll stop on teardown after collecting failures
         global_context.tracing.start(screenshots=True, snapshots=True, sources=True)
