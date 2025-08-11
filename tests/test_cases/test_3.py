@@ -5,7 +5,11 @@ import random
 from dotenv import load_dotenv
 load_dotenv()
 
+# Project URLs
 proj_url = os.getenv("test_url")
+requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
+
+
 proj_user = os.getenv("test_user_name")
 proj_pass = os.getenv("test_user_pass")
 proj_gen_pass = os.getenv("test_user_generic_pass")
@@ -52,8 +56,8 @@ bill_num = str(random.randint(10000,99999))
 
 def test_1_login_to_create_requisition(page):
     s_page  = LoginPage(page)
-    s_page.navigate_to_url(proj_url)
     s_page.perform_login(
+        given_url=proj_url,
         user_name=proj_user,
         pass_word=proj_pass
     )
@@ -88,7 +92,7 @@ def test_4_create_and_submit_requisition(page):
 
 def test_5_find_approver_of_the_requisition(page):
     r_page = RequisitionList(page)
-    requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
+
     r_page.navigate_to_url(requisition_list_url)
     r_page.get_full_page_screenshot('full_page_screenshot_5')
     r_page.search_requisition(req_num)
@@ -103,29 +107,30 @@ def test_5_find_approver_of_the_requisition(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_7')
     r2_page.wait_for_timeout(5000)
 
-#
-# def test_6_login_as_approver_and_approve(page):
-#     s_page = LoginPage(page)
-#     s_page.perform_login(
-#         user_name=approver_id,
-#         pass_word=proj_gen_pass
-#     )
-#
-#     r_page = RequisitionApproveList(page)
-#     requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
-#     r_page.navigate_to_url(requisition_approve_url)
-#     r_page.get_full_page_screenshot('full_page_screenshot_8')
-#     r_page.search_requisition(req_num)
-#     r_page.select_requisition(req_num)
-#     r_page.approve_requisition()
-#     r_page.confirmation_message_approve()
-#     r_page.get_full_page_screenshot('full_page_screenshot_9')
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_10')
-#     r2_page.wait_for_timeout(5000)
+
+def test_6_login_as_approver_and_approve(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        given_url=proj_url,
+        user_name=approver_id,
+        pass_word=proj_pass
+    )
+    r_page = RequisitionApproveList(page)
+    requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
+    r_page.navigate_to_url(requisition_approve_url)
+    r_page.get_full_page_screenshot('full_page_screenshot_8')
+    r_page.search_requisition(req_num)
+    r_page.select_requisition(req_num)
+    r_page.approve_requisition()
+    r_page.confirmation_message_approve()
+    r_page.get_full_page_screenshot('full_page_screenshot_9')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_10')
+    r2_page.wait_for_timeout(5000)
 #
 #
 # def test_7_find_approver_of_the_requisition_2(page):

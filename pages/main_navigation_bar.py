@@ -19,3 +19,4 @@ class MainNavigationBar(BasicActions):
         self.wait_for_timeout(1000)
     def logout(self):
         self.logout_button.click()
+        self.clear_browser_cache()

@@ -5,7 +5,7 @@ class RequisitionList(BasicActions):
 
     def __init__(self, page):
         super().__init__(page)
-        self.requisition_search_box = page.get_by_role("input", name=re.compile("requisitionNoForPrint", re.IGNORECASE)) # page.locator("#requisitionNoForPrint")
+        self.requisition_search_box = page.get_by_role('textbox', name='Search Requisition No' )
         self.requisition_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
         self.requisition_status = page.locator("//table[@id='requisitionGrid']/tbody/tr[2]/child::td[7]")
         self.logout_btn = page.locator("//a[@id='btn_login']")

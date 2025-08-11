@@ -19,7 +19,7 @@ class BasicActions:
 
     def navigate_to_url(self, given_url):
         self.page.goto(given_url, wait_until="networkidle")
-        self.page.wait_for_timeout(5000)
+
 
     def verify_by_title(self, title):
         expect(self.page).to_have_title(title)
@@ -76,4 +76,29 @@ class BasicActions:
         self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
         # Click on the first matching option
         self.page.get_by_text(text).click()       
-        
+
+
+    def clear_browser_cache(self):
+        try:
+            origin = self.page.evaluate("location.origin")
+            self.page.evaluate("localStorage.clear(); sessionStorage:clear();")
+            cdp = self.page.context.new_cdp_session(self.page)
+            cdp.send(
+                "Storage.clearDataForOrigin",
+                {
+                    "origin": origin,
+                    "storageTypes": ",".join([
+                        "cookies",
+                        "local_storage",
+                        "session_storage",
+                        "indexeddb",
+                        "cache_storage",
+                        "service_workers"
+                    ])
+                }
+            )
+
+            self.page.context.clear_cookies()
+            self.page.context.clear_permissions()
+        except Exception as e:
+            print(f"⚠️ Failed to clear cache: {e}")
