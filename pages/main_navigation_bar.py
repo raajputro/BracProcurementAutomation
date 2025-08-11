@@ -1,7 +1,7 @@
 # this is an object of samplePage to automate, which contains all elements
 # and actions could be performed, like input, verify etc.
 from utils.basic_actions import BasicActions
-from playwright.sync_api import expect
+# from playwright.sync_api import expect
 
 
 class MainNavigationBar(BasicActions):
@@ -19,4 +19,6 @@ class MainNavigationBar(BasicActions):
         self.wait_for_timeout(1000)
     def logout(self):
         self.logout_button.click()
-        self.clear_browser_cache()
+        #self.clear_browser_cache()
+        self.page.context.clear_cookies()
+        self.page.context.clear_permissions()
