@@ -77,6 +77,7 @@ def test_3_navigate_to_create_req_from_prod_dashboard(page):
 
 
 def test_4_create_and_submit_requisition(page):
+    print("Test 4: Creating requisition...")
     c_page = CreateReqPage(page)
     #c_page.validate()
     c_page.setting_requisition_for("[H04] - Procurement-BRAC")
@@ -91,6 +92,7 @@ def test_4_create_and_submit_requisition(page):
 
 
 def test_5_find_approver_of_the_requisition(page):
+    print("Test 5: Finding approver of the requisition...")
     r_page = RequisitionList(page)
 
     r_page.navigate_to_url(requisition_list_url)
@@ -111,8 +113,9 @@ def test_5_find_approver_of_the_requisition(page):
 # # approver_id = "197363"
 # req_num = "REQ20250014442"
 def test_6_login_as_approver_and_approve(page):
+    print("Test 6: Logging in as approver and approving requisition...")
     s_page = LoginPage(page)
-    s_page.navigate_to_url(proj_url)
+    # s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         given_url=proj_url,
         user_name=approver_id,
@@ -134,205 +137,227 @@ def test_6_login_as_approver_and_approve(page):
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_10')
     r2_page.wait_for_timeout(5000)
+
+
+def test_7_find_approver_of_the_requisition_2(page):
+    print("Test 7: Finding approver of the requisition again...")
+    s_page  = LoginPage(page)
+    s_page.perform_login(
+        given_url=proj_url,
+        user_name=proj_user,
+        pass_word=proj_pass
+    )
+
+    r_page = RequisitionList(page)
+    requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
+    r_page.navigate_to_url(requisition_list_url)
+    r_page.get_full_page_screenshot('full_page_screenshot_11')
+    r_page.search_requisition(req_num)
+    global approver_id_2
+    approver_id_2 = str(int(r_page.find_approver_id()))
+    print("APPROVER ID 2:", approver_id_2)
+    r_page.get_full_page_screenshot('full_page_screenshot_12')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_13')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_8_login_as_approver_and_approve_2(page):
+    print("Test 8: Logging in as second approver and approving requisition...")
+    s_page = LoginPage(page)
+    # s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        given_url=proj_url,
+        user_name=approver_id_2,
+        pass_word=proj_gen_pass,
+        timeout=60000  # Increased timeout for login
+    )
+
+    r_page = RequisitionApproveList(page)
+    requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
+    r_page.navigate_to_url(requisition_approve_url)
+    r_page.get_full_page_screenshot('full_page_screenshot_14')
+    r_page.search_requisition(req_num)
+    r_page.select_requisition(req_num)
+    r_page.approve_requisition()
+    r_page.confirmation_message_approve()
+    r_page.get_full_page_screenshot('full_page_screenshot_15')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_16')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_9_check_requisition_approved(page):
+    print("Test 9: Checking requisition status after approval...")
+    s_page  = LoginPage(page)
+    # s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        given_url=proj_url,
+        user_name=proj_user,
+        pass_word=proj_pass
+    )
+
+    r_page = RequisitionList(page)
+    requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
+    r_page.navigate_to_url(requisition_list_url)
+    r_page.get_full_page_screenshot('full_page_screenshot_17')
+    r_page.search_requisition(req_num)
+    r_page.get_full_page_screenshot('full_page_screenshot_18')
+    req_status = r_page.find_requisition_status()
+    print("REQ STATUS:", req_status)
+    #expect(req_status).to_be_equal("Approved")
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_19')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_10_check_requisition_assign(page):
+    print("Test 10: Assigning requisition to a person...")
+    s_page = LoginPage(page)
+    # s_page.navigate_to_url(proj_url)
+    s_page.perform_login(
+        user_name=admin_user,
+        pass_word=proj_gen_pass,
+        given_url=proj_url,
+        timeout=60000  # Increased timeout for login
+    )
+
+    r_page = AssignRequisition(page)
+    requisition_assign_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignRequisitions"
+    r_page.navigate_to_url(requisition_assign_url)
+    r_page.assigning_person(assigned_person)
+    r_page.search_requisition_for_assigning(req_num)
+    r_page.add_item_to_assign(req_num)
+    r_page.assigning_items()
+    r_page.get_full_page_screenshot('full_page_screenshot_22')
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_23')
+    r2_page.wait_for_timeout(5000)
+
+def test_11_requisition_accept(page):
+    print("Test 11: Accepting requisition...")
+    req_num2 = "REQ20250004556"
+    s_page = LoginPage(page)
+    # s_page.navigate_to_url(proj_url)
+    print("Assigned person:", assigned_person)
+    print("assigned person:", str(int(assigned_person)))
+    print("assigned person type:", type(assigned_person))
+    
+    s_page.perform_login(
+        given_url=proj_url,
+        user_name=str(int(assigned_person)),
+        pass_word=proj_gen_pass,
+        timeout=60000  # Increased timeout for login
+    )
+
+    r_page = RequisitionAcceptList(page)
+    requisition_accept_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignedRequisitionShowList"
+    r_page.navigate_to_url(requisition_accept_url)
+    r_page.search_requisition(req_num)
+    r_page.select_all_requisitions()
+    r_page.accept_requisition()
+    r_page.get_full_page_screenshot('full_page_screenshot_24')
+    r_page.confirm_acceptance()
+
+
+def test_12_create_tender_initiation(page):
+    print("Test 12: Creating tender initiation...")
+    req_num2 = "REQ20250004556"
+    t_page = CreateTenderInitiation(page)
+    tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
+    t_page.navigate_to_url(tender_initiation_url)
+    t_page.search_requisition(req_num)
+    t_page.select_all_items()
+    t_page.select_direct_purchase_method()
+    t_page.fill_remarks("Tender initiation done!")
+    t_page.submit_tender_initiation()
+    t_page.confirm_submission()
+    t_page.get_full_page_screenshot('full_page_screenshot_25')
+
+
+def test_13_create_direct_purchase(page):
+    print("Test 13: Creating direct purchase...")
+    req_num2 = "REQ20250004556"
+    t_page = CreateDirectPurchase(page)
+    try:
+        direct_purchase_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/show"
+        t_page.navigate_to_url(direct_purchase_url)
+        t_page.search_vendor(vendor_name)
+        t_page.same_delivery_schedule()
+        t_page.estimated_delivery_date_with_text("31/08/2025")
+        t_page.delivery_location_dropdown_select()
+        t_page.delivery_location("Dhaka, Bangladesh")
+        t_page.search_item_by_name(req_num)
+        t_page.select_all_items()
+        t_page.save_and_next()
+        t_page.get_full_page_screenshot('full_page_screenshot_26_1')
+        global purchase_num
+        purchase_num = t_page.get_purchase_order_number()
+        print("Purchase number: "+purchase_num)
+        t_page.get_full_page_screenshot('full_page_screenshot_26_2')
+        t_page.template_selection()
+        t_page.direct_purchase_approver_selecting(dp_approver)
+        t_page.get_full_page_screenshot('full_page_screenshot_26')
+        t_page.submit_direct_purchase()
+        t_page.confirm_submission()
+        t_page.get_full_page_screenshot('full_page_screenshot_27')
+    except Exception as e:
+        t_page.get_full_page_screenshot('full_page_screenshot_test_12')
+        print(e)
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_28')
+    r2_page.wait_for_timeout(5000)
+
+
+def test_14_approve_direct_purchase(page):
+    print("Test 14: Approving direct purchase...")
+    s_page = LoginPage(page)    
+    s_page.perform_login(
+        given_url=proj_url,
+        user_name=str(int(dp_approver)),
+        pass_word=proj_gen_pass,
+        timeout=60000  # Increased timeout for login
+    )
+
+    t_page = DirectPurchaseList(page)
+    try:
+        direct_purchase_list_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/list"
+        t_page.navigate_to_url(direct_purchase_list_url)
+        t_page.search_purchase_order(purchase_num)
+        # t_page.navigate_to_direct_purchase_detail_page(purchase_num)
+        # t_page.approve_direct_purchase_from_details_page()
+        t_page.select_direct_purchase_order(purchase_num)
+        t_page.approve_direct_purchase()
+        t_page.confirmation_message_approve()
+        t_page.get_full_page_screenshot('full_page_screenshot_29')
+    except Exception as e:
+        t_page.get_full_page_screenshot('full_page_screenshot_test_13')
+        print(e)
+
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_30')
+    r2_page.wait_for_timeout(5000)
+
 #
-#
-# def test_7_find_approver_of_the_requisition_2(page):
-#     s_page  = LoginPage(page)
-#     s_page.perform_login(
-#         user_name=proj_user,
-#         pass_word=proj_pass
-#     )
-#
-#     r_page = RequisitionList(page)
-#     requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
-#     r_page.navigate_to_url(requisition_list_url)
-#     r_page.get_full_page_screenshot('full_page_screenshot_11')
-#     r_page.search_requisition(req_num)
-#     global approver_id_2
-#     approver_id_2 = str(int(r_page.find_approver_id()))
-#     print("APPROVER ID 2:", approver_id_2)
-#     r_page.get_full_page_screenshot('full_page_screenshot_12')
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_13')
-#     r2_page.wait_for_timeout(5000)
-#
-#
-# def test_8_login_as_approver_and_approve_2(page):
-#     s_page = LoginPage(page)
-#     s_page.navigate_to_url(proj_url)
-#     s_page.perform_login(
-#         user_name=approver_id_2,
-#         pass_word=proj_gen_pass
-#     )
-#
-#     r_page = RequisitionApproveList(page)
-#     requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
-#     r_page.navigate_to_url(requisition_approve_url)
-#     r_page.get_full_page_screenshot('full_page_screenshot_14')
-#     r_page.search_requisition(req_num)
-#     r_page.select_requisition(req_num)
-#     r_page.approve_requisition()
-#     r_page.confirmation_message_approve()
-#     r_page.get_full_page_screenshot('full_page_screenshot_15')
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_16')
-#     r2_page.wait_for_timeout(5000)
-#
-#
-# def test_9_check_requisition_approved(page):
-#     s_page  = LoginPage(page)
-#     s_page.navigate_to_url(proj_url)
-#     s_page.perform_login(
-#         user_name=proj_user,
-#         pass_word=proj_pass
-#     )
-#
-#     r_page = RequisitionList(page)
-#     requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
-#     r_page.navigate_to_url(requisition_list_url)
-#     r_page.get_full_page_screenshot('full_page_screenshot_17')
-#     r_page.search_requisition(req_num)
-#     r_page.get_full_page_screenshot('full_page_screenshot_18')
-#     req_status = r_page.find_requisition_status()
-#     print("REQ STATUS:", req_status)
-#     #expect(req_status).to_be_equal("Approved")
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_19')
-#     r2_page.wait_for_timeout(5000)
-#
-#
-# def test_9_check_requisition_assign(page):
-#     s_page = LoginPage(page)
-#     s_page.navigate_to_url(proj_url)
-#     s_page.perform_login(
-#         user_name=admin_user,
-#         pass_word=proj_gen_pass
-#     )
-#
-#     r_page = AssignRequisition(page)
-#     requisition_assign_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignRequisitions"
-#     r_page.navigate_to_url(requisition_assign_url)
-#     r_page.assigning_person(assigned_person)
-#     r_page.search_requisition_for_assigning(req_num)
-#     r_page.add_item_to_assign(req_num)
-#     r_page.assigning_items()
-#     r_page.get_full_page_screenshot('full_page_screenshot_22')
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_23')
-#     r2_page.wait_for_timeout(5000)
-#
-# def test_10_requisition_accept(page):
-#     req_num2 = "REQ20250004556"
-#     s_page = LoginPage(page)
-#     s_page.navigate_to_url(proj_url)
-#     s_page.perform_login(
-#         user_name=str(int(assigned_person)),
-#         pass_word=proj_gen_pass
-#     )
-#
-#     r_page = RequisitionAcceptList(page)
-#     requisition_accept_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignedRequisitionShowList"
-#     r_page.navigate_to_url(requisition_accept_url)
-#     r_page.search_requisition(req_num)
-#     r_page.select_all_requisitions()
-#     r_page.accept_requisition()
-#     r_page.get_full_page_screenshot('full_page_screenshot_24')
-#     r_page.confirm_acceptance()
-#
-#
-# def test_11_create_tender_initiation(page):
-#     req_num2 = "REQ20250004556"
-#     t_page = CreateTenderInitiation(page)
-#     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/show"
-#     t_page.navigate_to_url(tender_initiation_url)
-#     t_page.search_requisition(req_num)
-#     t_page.select_all_items()
-#     t_page.select_direct_purchase_method()
-#     t_page.fill_remarks("Tender initiation done!")
-#     t_page.submit_tender_initiation()
-#     t_page.confirm_submission()
-#     t_page.get_full_page_screenshot('full_page_screenshot_25')
-#
-#
-# def test_12_create_direct_purchase(page):
-#     req_num2 = "REQ20250004556"
-#     t_page = CreateDirectPurchase(page)
-#     try:
-#         direct_purchase_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/show"
-#         t_page.navigate_to_url(direct_purchase_url)
-#         t_page.search_vendor(vendor_name)
-#         t_page.same_delivery_schedule()
-#         t_page.estimated_delivery_date_with_text("31/08/2025")
-#         t_page.delivery_location_dropdown_select()
-#         t_page.delivery_location("Dhaka, Bangladesh")
-#         t_page.search_item_by_name(req_num)
-#         t_page.select_all_items()
-#         t_page.save_and_next()
-#         t_page.get_full_page_screenshot('full_page_screenshot_26_1')
-#         global purchase_num
-#         purchase_num = t_page.get_purchase_order_number()
-#         print("Purchase number: "+purchase_num)
-#         t_page.get_full_page_screenshot('full_page_screenshot_26_2')
-#         t_page.template_selection()
-#         t_page.direct_purchase_approver_selecting(dp_approver)
-#         t_page.get_full_page_screenshot('full_page_screenshot_26')
-#         t_page.submit_direct_purchase()
-#         t_page.confirm_submission()
-#         t_page.get_full_page_screenshot('full_page_screenshot_27')
-#     except Exception as e:
-#         t_page.get_full_page_screenshot('full_page_screenshot_test_12')
-#         print(e)
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_28')
-#     r2_page.wait_for_timeout(5000)
-#
-#
-# def test_13_approve_direct_purchase(page):
-#     s_page = LoginPage(page)
-#     s_page.navigate_to_url(proj_url)
-#     s_page.perform_login(
-#         user_name=str(int(dp_approver)),
-#         pass_word=proj_gen_pass
-#     )
-#
-#     t_page = DirectPurchaseList(page)
-#     try:
-#         direct_purchase_list_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/list"
-#         t_page.navigate_to_url(direct_purchase_list_url)
-#         t_page.search_purchase_order(purchase_num)
-#         # t_page.navigate_to_direct_purchase_detail_page(purchase_num)
-#         # t_page.approve_direct_purchase_from_details_page()
-#         t_page.select_direct_purchase_order(purchase_num)
-#         t_page.approve_direct_purchase()
-#         t_page.confirmation_message_approve()
-#         t_page.get_full_page_screenshot('full_page_screenshot_29')
-#     except Exception as e:
-#         t_page.get_full_page_screenshot('full_page_screenshot_test_13')
-#         print(e)
-#
-#     r2_page = MainNavigationBar(page)
-#     r2_page.exit()
-#     r2_page.logout()
-#     r2_page.get_full_page_screenshot('full_page_screenshot_30')
-#     r2_page.wait_for_timeout(5000)
-#
-#
-# # def test_14_item_recieve(page):
+# # def test_15_item_recieve(page):
+# #     print("Test 15: Receiving items...")
 # #     s_page = LoginPage(page)
 # #     s_page.navigate_to_url(proj_url)
 # #     s_page.perform_login(
@@ -359,7 +384,8 @@ def test_6_login_as_approver_and_approve(page):
 # #     r2_page.wait_for_timeout(5000)
 # #
 # #
-# # def test_15_bill_creation_and_submit(page):
+# # def test_16_bill_creation_and_submit(page):
+# #     print("Test 16: Creating and submitting vendor bill payable...")
 # #     s_page = LoginPage(page)
 # #     s_page.navigate_to_url(proj_url)
 # #     s_page.perform_login(
