@@ -12,7 +12,10 @@ class ShoppingCart(HomePage, BasicActionsDM):
         super().__init__(page)
         self.page = page
         self.vendor_selection = page.locator('#vendorContainer112')
-        self.selected_vendor_item = page.locator('input[id="radio112"]')
+        # Staging server
+        # self.selected_vendor_item = page.locator('input[id="radio112"]')
+        # Software shop up vendor
+        self.selected_vendor_item = page.locator('input[id="radio140"]')
         self.select_cart_terms_and_condition = page.locator('input[id="termsofservice"]')
         self.select_cart_checkout_button = page.locator('button[id="checkout"][type="submit"]')
 

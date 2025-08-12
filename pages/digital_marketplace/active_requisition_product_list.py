@@ -14,7 +14,10 @@ class ActiveRequisitionProductList(HomePage, BasicActionsDM):
 
         # self.product_history = page.locator('a[href*="requisitionProductId={product_id}"]')
         self.history_link = page.locator('a[href="/Requisition/History?requisitionProductId=2960"]')
-        self.add_to_cart_button = page.locator('button[id="addToCartBtn-7323"]')
+        # Staging use
+        # self.add_to_cart_button = page.locator('button[id="addToCartBtn-7323"]')
+        self.add_to_cart_button = page.locator('button[id^="addToCartBtn-"]')
+
         self.close_button = page.locator('.close')
         self.shopping_cart = page.locator('a[class="ico-cart"]')
 

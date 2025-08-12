@@ -25,7 +25,9 @@ class OrderManagement(HomePage, BasicActionsDM):
 
         self.order_view_button = page.get_by_role("link", name="View")
         # self.acknowledge_button = page.get_by_role("link", name=re.compile(r"Acknowledge", re.I))
-        self.acknowledge_button = page.get_by_role("link", name="Acknowledge")
+        # self.acknowledge_button = page.get_by_role("link", name="Acknowledge")
+        # self.acknowledge_button = page.locator('div.float-right:nth-child(3) > a:nth-child(1)')
+        self.acknowledge_button = page.locator('a[onclick^="openAcknowledgementModal("]')
         self.acknowledge_popup_title = page.locator("modal-title", has_text="Are you sure?")
         self.close_button = page.get_by_role("button", name="×")
 
@@ -49,14 +51,21 @@ class OrderManagement(HomePage, BasicActionsDM):
 
     def vendor_acknowledgment(self):
         self.click_on_btn(self.acknowledge_button)
-        print("Acknowledgement popup title = ", self.acknowledge_popup_title)
 
-    def confirmation_acknowledgment_yes(self):
+    def confirmation_acknowledgment_by_yes(self):
+        self.click_on_btn(self.acknowledge_button)
         self.click_on_btn(self.confirm_acknowledge_yes_button)
-        # self.wait_for_timeout(2000)
-        framework_order_number = self.page.locator("text=Order Details -").text_content()
+        self.wait_for_timeout(5000)
+        # framework_order_number = self.page.locator("text=Order Details -").text_content()
+        # # self.wait_to_load_element(self.order_locator)
+        # get_framework_order_number = framework_order_number.split("-")[-1].strip()
+        # print(get_framework_order_number)
+        # return get_framework_order_number
+
+        framework_order_number = self.page.locator(
+            'div.card-body:nth-child(6) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)').text_content()
         # self.wait_to_load_element(self.order_locator)
-        get_framework_order_number = framework_order_number.split("-")[-1].strip()
+        get_framework_order_number = framework_order_number
         print(get_framework_order_number)
         return get_framework_order_number
 

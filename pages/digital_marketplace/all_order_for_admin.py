@@ -22,6 +22,7 @@ class AllOrderForAdminPage(HomePage, BasicActionsDM):
         self.preview_button = page.locator("a[class='button-2 print-order-button']")
 
         self.click_administration_link = page.locator('a[class="administration"]')
+        self.admin_view_toggle_button = page.locator('button[class="toggle-button collapsed-button btn"]')
 
     def admin_order_search(self, search_number):
         self.search_order_number.click()
@@ -33,7 +34,7 @@ class AllOrderForAdminPage(HomePage, BasicActionsDM):
         self.wait_for_timeout(2000)
 
     def admin_goes_to_order_details(self):
-        self.click_on_btn(self.details_button)
+        self.details_button.first.click()
         self.wait_for_timeout(5000)
         # vendor_username = self.page.locator("//div[@class='order-overview']//table//tr[2]/td[2]")
         # vendor_username = self.page.locator("//td[normalize-space(text())='Vendor Name:']/following-sibling::td/text()")
@@ -43,6 +44,9 @@ class AllOrderForAdminPage(HomePage, BasicActionsDM):
         # )
         # print(vendor_username)
         # return vendor_username
+
+    def view_order_info_for_admin(self):
+        self.admin_view_toggle_button.first.click()
 
     def goto_admin_dashboard(self):
         self.click_on_btn(self.click_administration_link)

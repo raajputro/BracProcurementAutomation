@@ -15,14 +15,17 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
 
         # Search order reference number
         self.search_order_number = page.get_by_placeholder('Order Reference Number')
-        self.search_button = page.locator('button[class="button"][type="submit"]')
+        self.pending_order_search_button = page.locator('button[class="button"][type="submit"]')
 
         # Go to pending approval order details
         self.details_button = page.get_by_role("button", name="Details")
         # self.approve_order_button = page.locator('a[id="approve-order-btn"]')
         self.details_button = page.get_by_role("button", name="Details")
-        self.approve_order_button = page.get_by_role("link", name="Approve Order")
-        self.yes_button = page.get_by_role("button", name="YES")
+        # self.approve_order_button = page.get_by_role("link", name="Approve Order")
+        self.approve_order_button = page.locator('a[id="approve-order-btn"]')
+
+        self.yes_button = page.locator('button[onclick="yes(event)"]')
+        # self.yes_button = page.get_by_role("button", name="YES")
         self.close_button = page.locator("button.modal-close.modal-toggle")
 
         self.goto_order_list = page.locator("a.ico-account")
@@ -49,6 +52,7 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.order_3 = page.locator('input[type="checkbox"][value="2467"]')
         # Select approve button for multiselect approval
         self.click_multiselect_approve = page.locator('button[id="pendingApprovalOrder-selected"]')
+        self.pending_order_toggle_button = page.locator('button[class="toggle-button collapsed-button btn"]')
 
         # self.wait_for_timeout(2000)
 
@@ -57,7 +61,10 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.input_in_element(self.search_order_number, reference_number)
 
     def click_order_search_button(self):
-        self.click_on_btn(self.search_button)
+        self.click_on_btn(self.pending_order_search_button)
+
+    def view_pending_order_info_toggle(self):
+        self.pending_order_toggle_button.first.click()
 
     def goto_pending_approval_order_details(self):
         self.click_on_btn(self.details_button)

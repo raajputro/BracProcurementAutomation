@@ -66,5 +66,6 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
     def confirm_receivable_order(self):
         self.click_on_btn(self.confirm_button)
         self.wait_for_timeout(5000)
-        self.navigate_to_url("https://stgmarketplace.brac.net/Admin/Order/CompleteOrderItemReceivedList")
+        # self.navigate_to_url("https://stgmarketplace.brac.net/Admin/Order/CompleteOrderItemReceivedList")
+        self.navigate_to_url("https://qamarketplace.bracits.com/Admin/Order/CompleteOrderItemReceivedList")
         self.wait_for_timeout(2000)

@@ -27,9 +27,13 @@ class ActiveRequisitionListPage(HomePage, BasicActionsDM):
         self.search_button.click()
 
     # Need change requisition id when requisition number will be changed
-    def goto_active_requisition_product_list(self):
+    def goto_active_requisition_product_list_stg(self):
         self.navigate_to_url(
             "https://stgmarketplace.brac.net/Requisition/ActiveRequisitionProductList?requisitionId=3568")
+
+    def goto_active_requisition_product_list(self):
+        self.navigate_to_url(
+            "https://qamarketplace.bracits.com/Requisition/ActiveRequisitionProductList?requisitionId=3692")
 
     def requisition_item_add_shopping_cart(self):
         self.click_on_btn(self.add_to_cart_button)
