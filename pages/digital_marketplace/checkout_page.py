@@ -25,6 +25,15 @@ class CheckoutPage(HomePage, BasicActionsDM):
         self.view_order_details = page.locator("//a[contains(text(),'Click here for order details.')]")
         # self.view_order_details_another = page.locator("a", has_text="Click here for order details."||"div.details-link", has_text="Click here for order details.")
 
+    def delivery_schedule_preparation_1(self, location, pin):
+        self.click_on_btn(self.schedule_quantity)
+        self.click_on_btn(self.schedule_expected_date)
+        self.input_in_element(self.schedule_expected_location, location)
+        # self.page.wait_for_timeout(5000)
+        self.input_in_element(self.schedule_receiving_person_pin, pin)
+        self.page.keyboard.press('Enter')
+        self.page.wait_for_timeout(10000)
+
     def delivery_schedule_preparation(self, location, pin):
         self.click_on_btn(self.schedule_quantity)
         self.click_on_btn(self.schedule_expected_date)
@@ -49,7 +58,7 @@ class CheckoutPage(HomePage, BasicActionsDM):
 
     def click_add_schedule_btn(self):
         self.click_on_btn(self.click_add_schedule_button)
-        self.wait_for_timeout(5000)
+        # self.wait_for_timeout(5000)
 
     def click_checkout(self):
         self.click_on_btn(self.continue_button)
@@ -62,7 +71,7 @@ class CheckoutPage(HomePage, BasicActionsDM):
 
     def select_terms_of_service(self):
         self.click_on_btn(self.checkbox)
-        self.wait_for_timeout(2000)
+        # self.wait_for_timeout(2000)
 
     def confirm_order(self):
         self.click_on_btn(self.confirm_button)
