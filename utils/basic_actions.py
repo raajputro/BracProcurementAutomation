@@ -21,7 +21,6 @@ class BasicActions:
     def navigate_to_url(self, given_url):
         self.page.goto(given_url, wait_until="networkidle", timeout=60000)
 
-
     def verify_by_title(self, title):
         expect(self.page).to_have_title(title)
 
@@ -34,7 +33,7 @@ class BasicActions:
     @staticmethod
     def wait_to_load_element(elem):
         elem.wait_for(state='visible')
-        #print('waited for the elem')
+        # print('waited for the elem')
 
     @staticmethod
     def click_on_btn(btn):
@@ -47,7 +46,7 @@ class BasicActions:
 
     @staticmethod
     def input_in_element(elem, input_text):
-        #elem.to_be_visible()
+        # elem.to_be_visible()
         elem.click()
         elem.fill(input_text)
 
@@ -73,7 +72,6 @@ class BasicActions:
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
 
-    
     def select_option_from_dropdown(self, elem, text):
         elem.wait_for(state='visible')
         elem.click()
@@ -81,8 +79,7 @@ class BasicActions:
         # Wait for the dropdown options to appear
         self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
         # Click on the first matching option
-        self.page.get_by_text(text).click()       
-
+        self.page.get_by_text(text).click()
 
     def clear_browser_cache(self):
         try:

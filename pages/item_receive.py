@@ -28,6 +28,7 @@ class ItemReceive(ProcurementHomePage, BasicActions):
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.wait_for_timeout(5000)
 
     def set_challan_number(self, challan_number):
         self.challan_no.fill(challan_number)
