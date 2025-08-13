@@ -3,6 +3,9 @@ import os
 import random
 
 from dotenv import load_dotenv
+
+from conftest import new_tab
+
 load_dotenv()
 
 # Project URLs
@@ -392,54 +395,55 @@ bill_num = str(random.randint(10000,99999))
 
 challan_num2 = "39461"
 purchase_num2 = "BPD/2025/DP-2417"
+#
+# def test_16_bill_creation_and_submit(page):
+#     print("Test 16: Creating and submitting vendor bill payable...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(bill_creator)),
+#         pass_word=proj_gen_pass,
+#         timeout=60000
+#     )
+#     t_page = CreateVendorBillPayable(page)
+#     vendor_bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/show"
+#     t_page.navigate_to_url(vendor_bill_payable_url)
+#     t_page.search_vendor(vendor_name)
+#     # t_page.select_order_no(purchase_num)
+#     # t_page.search_challan_number(challan_num)
+#     t_page.select_order_no(purchase_num2)
+#     t_page.search_challan_number(challan_num2)
+#     t_page.bill_number(bill_num)
+#     t_page.bill_date_with_text("31-08-2025")
+#     t_page.bill_receive_date_with_text("31-08-2025")
+#     t_page.select_all_items()
+#     t_page.submit_bill()
+#     t_page.get_full_page_screenshot('full_page_screenshot_33')
+#     t_page.confirm_submission()
+#     t_page.get_full_page_screenshot('full_page_screenshot_34')
+#
+#     l2_page = BillList(page)
+#     bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
+#     l2_page.navigate_to_url(bill_payable_url)
+#     l2_page.search_bill(bill_num)
+#     global approver_id_3
+#     approver_id_3 = l2_page.find_approver_id()
+#
+#     # logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_32')
+#     r2_page.wait_for_timeout(5000)
 
-def test_16_bill_creation_and_submit(page):
-    print("Test 16: Creating and submitting vendor bill payable...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(bill_creator)),
-        pass_word=proj_gen_pass,
-        timeout=60000
-    )
-    t_page = CreateVendorBillPayable(page)
-    vendor_bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/show"
-    t_page.navigate_to_url(vendor_bill_payable_url)
-    t_page.search_vendor(vendor_name)
-    # t_page.select_order_no(purchase_num)
-    # t_page.search_challan_number(challan_num)
-    t_page.select_order_no(purchase_num2)
-    t_page.search_challan_number(challan_num2)
-    t_page.bill_number(bill_num)
-    t_page.bill_date_with_text("31-08-2025")
-    t_page.bill_receive_date_with_text("31-08-2025")
-    t_page.select_all_items()
-    t_page.submit_bill()
-    t_page.get_full_page_screenshot('full_page_screenshot_33')
-    t_page.confirm_submission()
-    t_page.get_full_page_screenshot('full_page_screenshot_34')
-
-    l2_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
-    l2_page.navigate_to_url(bill_payable_url)
-    l2_page.search_bill(bill_num)
-    global approver_id_3
-    approver_id_3 = l2_page.find_approver_id()
-
-    # logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_32')
-    r2_page.wait_for_timeout(5000)
-
-
-def test_17_vendor_bill_approval(page):
+bill_num2 = "80680"
+def test_17_vendor_bill_approval(page, new_tab):
     print("Test 17: Vendor bill approval...")
     s_page = LoginPage(page)
     s_page.perform_login(
         given_url=proj_url,
-        user_name=str(int(approver_id_3)),
+        # user_name=str(int(approver_id_3)),
+        user_name="761",
         pass_word=proj_gen_pass,
         timeout=60000
     )
@@ -447,8 +451,29 @@ def test_17_vendor_bill_approval(page):
     l2_page = BillList(page)
     bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l2_page.navigate_to_url(bill_payable_url)
-    l2_page.search_bill(bill_num)
-    l2_page.click_on_bill_num(bill_num)
+    # l2_page.search_bill(bill_num)
+    # l2_page.click_on_bill_num(bill_num)
+    l2_page.search_bill(bill_num2)
 
-    b_page = BillDetails(page)
-    b_page.
+    new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num2))
+
+    b_page = BillDetails(new_page)
+    document_location = r"C:\Users\raajputro\Downloads\OfficeDownloads\image.png"
+    b_page.upload_document(document_location)
+    b_page.get_full_page_screenshot('full_page_screenshot_35')
+    b_page.select_bill_type("Regular")
+    b_page.get_full_page_screenshot('full_page_screenshot_36')
+    b_page.approve_bill()
+    b_page.get_full_page_screenshot('full_page_screenshot_37')
+
+    new_page.close()
+
+    l2_page = BillList(page)
+    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
+    l2_page.navigate_to_url(bill_payable_url)
+    # l2_page.search_bill(bill_num)
+    l2_page.search_bill(bill_num2)
+    b_page.get_full_page_screenshot('full_page_screenshot_38')
+    global approver_id_4
+    approver_id_4 = l2_page.find_approver_id()
+    print("Test 17: Vendor bill approval...{}".format(approver_id_4))

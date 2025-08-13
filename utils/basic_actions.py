@@ -1,7 +1,9 @@
 # this page contains all the common actions to be performed in this project
 from playwright.sync_api import expect
 import os
+import re
 from typing import Optional
+from pathlib import Path
 
 
 def is_element_visible(elem):
@@ -80,6 +82,31 @@ class BasicActions:
         self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
         # Click on the first matching option
         self.page.get_by_text(text).click()
+
+
+    def upload_file(self, container, file_path: str, index: int = 0, timeout: int = 30000):
+        """
+        Uploads a file using the hidden input inside #selector_fileId_{index}
+        and waits until the corresponding hidden field is populated.
+        """
+        p = Path(file_path).expanduser().resolve()
+        if not p.exists():
+            raise FileNotFoundError(f"File not found: {p}")
+
+        # file_input = self.page.locator(f"#selector_fileId_{index} input[type='file']")
+        file_input = self.page.locator(f"{container} input[type='file']")
+        file_input.wait_for(state="attached", timeout=timeout)
+
+        # This bypasses the OS dialog and triggers the 'change' event.
+        file_input.set_input_files(str(p))
+
+        # App-specific confirmation: hidden field should get a non-empty value.
+        index = int(container.split("_")[-1])
+        hidden_after_upload = self.page.locator(f"#fileHiddenId_{index}")
+        expect(hidden_after_upload).to_have_value(re.compile(r".+"), timeout=timeout)
+
+        # Optional: return what the app stored (filename / token, etc.)
+        return hidden_after_upload.input_value()
 
     def clear_browser_cache(self):
         try:
