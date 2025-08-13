@@ -37,6 +37,7 @@ from pages.direct_purchase_list import DirectPurchaseList
 from pages.item_receive import ItemReceive
 from pages.create_vendor_bill_payable import CreateVendorBillPayable
 from pages.vendor_bill_payable_list import BillList
+from pages.bill_details_information import BillDetails
 
 
 
@@ -448,3 +449,6 @@ def test_17_vendor_bill_approval(page):
     l2_page.navigate_to_url(bill_payable_url)
     l2_page.search_bill(bill_num)
     l2_page.click_on_bill_num(bill_num)
+
+    b_page = BillDetails(page)
+    b_page.
