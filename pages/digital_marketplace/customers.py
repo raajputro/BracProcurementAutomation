@@ -44,16 +44,3 @@ class Customers(BasicActionsDM):
 
         print(username)
         return username
-
-#    //    Click order management menu
-#     public Administration clickOrderManagement() throws InterruptedException {
-#         getWebElement(By.cssSelector("i[class='nav-icon fas fa-shopping-cart']")).click();
-#         Thread.sleep(parseLong("2000"));
-#         return this;
-#     }
-#
-#     //    Click receivable order from order management menu
-#     public Administration clickReceivableOrderList() {
-#         getWebElement(By.cssSelector("a[href='/Admin/Order/ReceivableOrderList']")).click();
-#         return this;
-#     }

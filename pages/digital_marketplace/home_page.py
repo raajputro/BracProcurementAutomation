@@ -47,6 +47,7 @@ class HomePage(BasicActionsDM):
         self.click_on_btn(self.view_details_for_active_requisition)
         self.wait_for_timeout(5000)
 
+    # Using for test purpose
     def get_cart_value(self):
         self.cart_quantity = page.locator('//*[@id="topcartlink"]/a/span[2]')
         value = self.cart_quantity.text_content()

@@ -15,7 +15,8 @@ class ShoppingCart(HomePage, BasicActionsDM):
         # Staging server
         # self.selected_vendor_item = page.locator('input[id="radio112"]')
         # Software shop up vendor
-        self.selected_vendor_item = page.locator('input[id="radio140"]')
+        # self.selected_vendor_item = page.locator('input[id="radio140"]')
+        self.selected_vendor_item = page.locator('input[id^="radio"]')
         self.select_cart_terms_and_condition = page.locator('input[id="termsofservice"]')
         self.select_cart_checkout_button = page.locator('button[id="checkout"][type="submit"]')
 
@@ -29,7 +30,7 @@ class ShoppingCart(HomePage, BasicActionsDM):
         self.item_remarks_textarea_locator = page.locator(
             'xpath=//strong[normalize-space(text())="Specification"]/following-sibling::textarea')
         # or using partial match
-        self.item_remarks_textarea_locator_partial_match = page.locator('textarea[id^="itemRemarks"]')
+        self.item_remarks_locator = page.locator('textarea[id^="itemRemarks"]')
         self.cart_quantity_input = page.locator('input[id^="itemquantity"]')
         self.update_shopping_cart = page.locator('button[id="updatecart"]')
 
@@ -57,14 +58,14 @@ class ShoppingCart(HomePage, BasicActionsDM):
         return get_vendor_name
 
     def update_shopping_cart_remarks(self):
-        self.item_remarks_textarea_locator_partial_match.click()
-        self.item_remarks_textarea_locator_partial_match.clear()
-        self.input_in_element(self.item_remarks_textarea_locator_partial_match, "Marketplace item remarks 123 @#$ test")
+        self.item_remarks_locator.nth(0).click()
+        self.item_remarks_locator.nth(0).clear()
+        self.input_in_element(self.item_remarks_locator.nth(0), "Marketplace item remarks 123 @#$ test")
 
     def update_shopping_cart_value(self):
-        self.cart_quantity_input.click()
-        self.cart_quantity_input.clear()
-        self.input_in_element(self.cart_quantity_input, "5")
+        self.cart_quantity_input.nth(0).click()
+        self.cart_quantity_input.nth(0).clear()
+        self.input_in_element(self.cart_quantity_input.nth(0), "5")
         self.update_shopping_cart.click()
         self.wait_for_timeout(5000)
 
@@ -79,3 +80,36 @@ class ShoppingCart(HomePage, BasicActionsDM):
 
     def goto_order_list(self):
         self.click_on_btn(self.click_username)
+
+    # Use for review requisition item order
+    def item_remarks_update_for_multiple_items(self):
+        self.item_remarks_locator.nth(0).click()
+        self.item_remarks_locator.nth(0).clear()
+        self.input_in_element(self.item_remarks_locator.nth(0), "test remarks 1")
+        self.item_remarks_locator.nth(1).click()
+        self.item_remarks_locator.nth(1).clear()
+        self.input_in_element(self.item_remarks_locator.nth(1), "test remarks 2")
+
+    def update_shopping_cart_info(self):
+        self.click_on_btn(self.update_shopping_cart)
+
+    def update_cart_value_for_multiple_items(self):
+        self.cart_quantity_input.nth(0).click()
+        self.cart_quantity_input.nth(0).clear()
+        self.input_in_element(self.cart_quantity_input.nth(0), "5")
+        self.cart_quantity_input.nth(1).click()
+        self.cart_quantity_input.nth(1).clear()
+        self.input_in_element(self.cart_quantity_input.nth(1), "10")
+
+    def item_remarks_update_for_review_order(self):
+        self.item_remarks_locator.nth(0).click()
+        self.item_remarks_locator.nth(0).clear()
+        self.input_in_element(self.item_remarks_locator.nth(0), "Review Order item test remarks 1")
+
+    def update_cart_value_for_review_order(self):
+        self.cart_quantity_input.nth(0).click()
+        self.cart_quantity_input.nth(0).clear()
+        self.input_in_element(self.cart_quantity_input.nth(0), "9")
+        self.cart_quantity_input.nth(1).click()
+        self.cart_quantity_input.nth(1).clear()
+        self.input_in_element(self.cart_quantity_input.nth(1), "6")

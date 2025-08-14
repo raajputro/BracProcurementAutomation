@@ -6,6 +6,7 @@ import os
 class BasicActionsDM:
     def __init__(self, page):
         self.page = page
+
     # Current working directory = cwd
     def get_screen_shot(self, name):
         self.page.screenshot(path=os.getcwd() + "/screenshots/" + name + ".png")
@@ -15,6 +16,23 @@ class BasicActionsDM:
 
     def navigate_to_url(self, given_url):
         self.page.goto(given_url, wait_until="networkidle")
+
+    def click_requisition_and_interact_with_button(self, url: str, button_locator: str):
+        # Click on the requisition hyperlink
+        self.page.goto(url)
+
+        # Wait for the hyperlink to be clickable and click on it
+        requisition_link = self.page.locator('a[href*="RequisitionList"]')  # Assuming this locator
+        requisition_link.click()
+
+        # Wait for the new tab to open
+        new_tab = self.page.context.wait_for_event('page')  # Wait for the new tab to open
+        new_tab.wait_for_load_state('networkidle')  # Wait until the page is fully loaded
+
+        # Click the button in the new tab using the provided locator
+        button = new_tab.locator(button_locator)
+        button.click()
+        print("Button clicked in new tab")
 
     def verify_by_title(self, title):
         expect(self.page).to_have_title(title)
@@ -69,6 +87,11 @@ class BasicActionsDM:
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
 
+    @staticmethod
+    def click_on_btn_1(locator):
+        locator.wait_for(state="visible", timeout=5000)
+        locator.click()
+
     def wait_for_selector(self, locator, state='visible', timeout=5000):
         """
         Waits for a selector to reach the specified state.
@@ -81,3 +104,9 @@ class BasicActionsDM:
             locator.wait_for(state=state, timeout=timeout)
         except TimeoutError:
             print(f"Timeout: Locator did not become '{state}' within {timeout}ms.")
+
+    def click_hyperlink(hyperlink):
+        hyperlink.click()
+
+    # def navigate_to_url(self, given_url):
+    #     self.page.goto(given_url, wait_until="networkidle")

@@ -10,8 +10,8 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.page = page
         #   Write down all the elements here with locator format
         # Goto pending order approval menu/page
-        # self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
-        #                                             has_text="Pending Approval Orders")
+        self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
+                                                    has_text="Pending Approval Orders")
 
         # Search order reference number
         self.search_order_number = page.get_by_placeholder('Order Reference Number')
@@ -20,7 +20,7 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         # Go to pending approval order details
         self.details_button = page.get_by_role("button", name="Details")
         # self.approve_order_button = page.locator('a[id="approve-order-btn"]')
-        self.details_button = page.get_by_role("button", name="Details")
+        # self.details_button = page.get_by_role("button", name="Details")
         # self.approve_order_button = page.get_by_role("link", name="Approve Order")
         self.approve_order_button = page.locator('a[id="approve-order-btn"]')
 
@@ -31,10 +31,9 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.goto_order_list = page.locator("a.ico-account")
 
         # Order review
-        self.review_button = page.locator("a.review-order-button")
-        self.review_confirm_button = page.get_by_role("button", name="Review")
+        self.review_button = page.locator('a[id="ReviewEditBtn"]')
+        self.review_confirm_button = page.locator('button[class="button-2 review-confirm-button"]')
         self.enter_review_reasons = page.locator('textarea[id="reviewRemarks"]')
-        self.enter_minimum_characters = page.locator('textarea[id="reviewRemarks"]')
 
         # Preview locator
         self.preview_button = page.get_by_role("link", name="Preview")
@@ -105,17 +104,16 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         #     raise AssertionError(f"Mandatory validation check failed: {e}")
 
     def check_minimum_characters_validation(self):
-        self.input_in_element(self.enter_minimum_characters, '!')
-        self.click_on_btn(self.enter_minimum_characters)
-        self.wait_for_timeout(2000)
-        self.input_in_element(self.enter_minimum_characters, 'ab')
-        self.click_on_btn(self.enter_minimum_characters)
+        self.input_in_element(self.enter_review_reasons, '!')
+        self.enter_review_reasons.clear()
+        self.input_in_element(self.enter_review_reasons, 'ab')
+        # self.click_on_btn(self.enter_review_reasons)
         self.wait_for_timeout(2000)
         self.click_on_btn(self.review_confirm_button)
 
     def check_max_min_characters_validation(self):
-        self.click_on_btn(self.review_confirm_button)
-        characters = "abcd"
+        self.enter_review_reasons.clear()
+        characters = "Test Review remarks !@# 1234567890"
         self.input_in_element(self.enter_review_reasons, characters)
         if (len(characters) >= 3) and (len(characters) <= 255):
             print(len(characters))
@@ -128,6 +126,9 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         else:
             print("Sorry!")
         self.wait_for_timeout(5000)
+
+    def confirm_order_review(self):
+        self.click_on_btn(self.review_confirm_button)
 
     def remove_review_popup(self):
         self.click_on_btn(self.close_button)

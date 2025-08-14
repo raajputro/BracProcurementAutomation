@@ -18,7 +18,7 @@ class RequisitionApproveList(ProcurementHomePage, BasicActionsDM):
         # self.confirmation_message_approve = page.locator('button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
         self.final_approve_button = page.locator('//span[text()="Approve"]')
         self.requisition_details_page_approve = page.get_by_role("button", name=re.compile("Approve", re.IGNORECASE))
-        self.requisition_number = "REQ20250004335"
+        # self.requisition_number = "REQ20250004335"
 
     def search_requisition(self, requisition_number):
         self.input_in_element(self.search_box, requisition_number)

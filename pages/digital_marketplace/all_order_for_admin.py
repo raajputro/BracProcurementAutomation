@@ -16,7 +16,7 @@ class AllOrderForAdminPage(HomePage, BasicActionsDM):
         self.search_order_number = page.locator('input[class="searchOrderInput"]')
         self.search_button = page.locator('button[class="search-box-button"][type="submit"]')
 
-        # Go to pending approval order details
+        # Go to order details page from all orders
         self.details_button = page.get_by_role("button", name="Details")
         # self.details_button = page.locator('button[class="search-box-button"]')
         self.preview_button = page.locator("a[class='button-2 print-order-button']")

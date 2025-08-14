@@ -31,6 +31,7 @@ class ActiveRequisitionListPage(HomePage, BasicActionsDM):
         self.navigate_to_url(
             "https://stgmarketplace.brac.net/Requisition/ActiveRequisitionProductList?requisitionId=3568")
 
+    # Use for single item order flow
     def goto_active_requisition_product_list(self):
         self.navigate_to_url(
             "https://qamarketplace.bracits.com/Requisition/ActiveRequisitionProductList?requisitionId=3692")

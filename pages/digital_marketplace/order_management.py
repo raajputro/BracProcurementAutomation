@@ -9,7 +9,7 @@ class OrderManagement(HomePage, BasicActionsDM):
         self.page = page
 
         self.order_management_menu = page.locator('i[class="nav-icon fas fa-shopping-cart"]')
-        self.orders_submenu = page.locator('a[href="/Admin/Order/List"]')
+        self.orders_submenu = page.locator('a[href="/Admin/Order/List"][class="nav-link"]')
         self.vendor_send_backs_submenu = page.locator('a[href="/Admin/Order/VendorSendBackList"]')
         self.shipments_submenu = page.locator('a[href="/Admin/Order/ShipmentList"]')
         self.shipment_receive_submenu = page.locator('a[href="/Admin/Order/CompleteShipmentList"]')
@@ -32,6 +32,8 @@ class OrderManagement(HomePage, BasicActionsDM):
         self.close_button = page.get_by_role("button", name="×")
 
         self.confirm_acknowledge_yes_button = page.locator('button[onclick="acknowledgeSubmit()"]')
+
+        self.edit_review_button = page.locator('a[class="btn btn-success"][onclick^="setLocation"]')
 
         # self.framework_order_no = page.locator('h1[class="float-left"]')
 

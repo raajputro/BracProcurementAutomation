@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 import random
 
+from tests.testsdm.order_flow import marketplace_url_qa
+
 load_dotenv()
 
 proc_url = os.getenv("test_url")
@@ -30,7 +32,7 @@ bill_creator = os.getenv("test_bill_creator")
 from pages.digital_marketplace.procurement_login_age import ProcurementLoginPage
 from pages.digital_marketplace.dashboard_page import DashboardPage
 from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
-from pages.digital_marketplace.cr3_page import CreateReqPage
+from pages.digital_marketplace.requisition_creation import CreateReqPage
 from pages.digital_marketplace.requisition_list import RequisitionList
 from pages.digital_marketplace.main_navigation_bar import MainNavigationBar
 from pages.digital_marketplace.requisition_approve_list import RequisitionApproveList
@@ -241,10 +243,10 @@ def test_13_check_requisition_approved(page):
 
 def test_14_order_initiation(page):
     s_page = LoginPage(page)
-    s_page.navigate_to_url(marketplace_url)
+    s_page.navigate_to_url(marketplace_url_qa)
     # s_page.click_on_btn()
 
-    s_page.perform_login_for_sso_login(
+    s_page.perform_login(
         user_name=proc_user,
         pass_word=marketplace_password
     )
