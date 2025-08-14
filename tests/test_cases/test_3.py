@@ -362,7 +362,7 @@ def test_14_approve_direct_purchase(page):
     r2_page.wait_for_timeout(5000)
 
 #
-def test_15_item_recieve(page):
+def test_15_item_receive(page):
     print("Test 15: Receiving items...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -376,12 +376,14 @@ def test_15_item_recieve(page):
     t_page.navigate_to_url(item_receive_url)
     t_page.search_order_for_item_receive(purchase_num)
     t_page.set_challan_number(challan_num)
-    t_page.challan_date("31-08-2025")
-    t_page.received_date("31-08-2025")
+    # t_page.challan_date("31-08-2025")
+    # t_page.received_date("31-08-2025")
+    t_page.receive_place("Dhaka, Bangladesh")
     t_page.select_all_items()
     t_page.submit_item_receive()
     t_page.confirm_submission()
     t_page.get_full_page_screenshot('full_page_screenshot_31')
+
     # logout from the page
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -458,7 +460,7 @@ def test_17_vendor_bill_approval(page, new_tab):
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
 
     b_page = BillDetails(new_page)
-    document_location = r"C:\Users\raajputro\Downloads\OfficeDownloads\image.png"
+    document_location = r"C:\exported_data\upload_file.pdf"
     b_page.upload_document(document_location)
     b_page.get_full_page_screenshot('full_page_screenshot_35')
     b_page.select_bill_type("Regular")
