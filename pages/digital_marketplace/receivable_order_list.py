@@ -15,6 +15,7 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
         self.order_view_button = page.get_by_role("link", name="View")
 
         self.challan_no = page.locator('input[id="challanNumber"]')
+        self.all_item_select = page.locator('input[id="allItemSelect"]')
         self.item_select = page.locator('input[type="checkbox"]')
         self.quantity_to_receive = page.locator('input[type="number"]')
         self.received_remarks = page.locator('input[id="receivedRemarksText"]')

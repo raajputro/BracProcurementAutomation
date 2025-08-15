@@ -315,3 +315,116 @@ def test_5_vendor_acknowledgement(page):
     s_page = MainNavigationMenu(page)
     s_page.logout_from_administration()
 
+
+# Receiver receives all assigned items
+def test_6_item_receive_by_assigned_receiver(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(marketplace_url_qa)
+    s_page.perform_login_for_common_login(
+        user_name=login_credential_for_receiver,
+        pass_word=marketplace_password
+    )
+    s_page = HomePage(page)
+    s_page.goto_administration()
+    s_page.wait_for_timeout(2000)
+
+    s_page = OrderManagement(page)
+    s_page.click_order_management_menu()
+
+    s_page = ReceivableOrderListPage(page)
+    s_page.goto_receivable_order_list()
+    # s_page.search_receivable_order(receivable_order_number=framework_order_no)
+    s_page.search_receivable_order(receivable_order_number="BPD/2025/FO-2797")
+    s_page.receivable_order_view()
+    s_page.challan_no_input(fill_challan_no="All item received for receiver")
+    s_page.all_item_select.click()
+    s_page.wait_for_timeout(2000)
+    s_page.input_received_remarks(receiving_remarks="Item received by receiver")
+    s_page.open_item_receive_popup()
+    s_page.confirm_button.click()
+    s_page.wait_for_timeout(2000)
+
+    s_page = ItemReceivedList(page)
+    # s_page.search_received_order(received_order_number=framework_order_no)
+    s_page.search_received_order(received_order_number="BPD/2025/FO-2797")
+    s_page.received_order_view()
+
+    s_page.wait_for_timeout(5000)
+    s_page = MainNavigationMenu(page)
+    s_page.logout_from_administration()
+
+
+# Order initiator receives remaining assigned items
+def test_7_item_receive_by_initiator(page):
+    s_page = LoginPage(page)
+    s_page.navigate_to_url(marketplace_url_qa)
+    s_page.perform_login_for_common_login(
+        user_name=order_initiator,
+        pass_word=marketplace_password
+    )
+    s_page = HomePage(page)
+    s_page.goto_administration()
+    s_page.wait_for_timeout(2000)
+
+    s_page = OrderManagement(page)
+    s_page.click_order_management_menu()
+    s_page = ReceivableOrderListPage(page)
+    s_page.goto_receivable_order_list()
+    # s_page.search_receivable_order(receivable_order_number=framework_order_no)
+    s_page.search_receivable_order(receivable_order_number="BPD/2025/FO-2798")
+    s_page.receivable_order_view()
+    challan_number_for_initiator = "BPD/2025/FO-2798"
+    s_page.challan_no_input(fill_challan_no=challan_number_for_initiator)
+    s_page.all_item_select.click()
+    s_page.wait_for_timeout(2000)
+    s_page.input_received_remarks(receiving_remarks="Item received by initiator")
+    s_page.open_item_receive_popup()
+    s_page.confirm_button.click()
+    s_page.wait_for_timeout(2000)
+
+    # Search received item by challan no. and view details
+    s_page = ItemReceivedList(page)
+
+    s_page.searched_received_order(challan_no=challan_number_for_initiator)
+    s_page.search_button_for_received_item.click()
+    s_page.wait_for_timeout(2000)
+    s_page.received_order_view()
+    s_page.wait_for_timeout(2000)
+
+    # s_page.wait_for_timeout(5000)
+    # s_page = MainNavigationMenu(page)
+    # s_page.logout_from_administration()
+
+# # Settled order info. view from public store for admin user
+# def test_9_order_details_view_for_admin(page):
+#     s_page = HomePage(page)
+#     s_page.goto_all_orders_for_admin()
+#
+#     s_page = AllOrderForAdminPage(page)
+#     s_page.admin_order_search(
+#         search_number=order_reference_number
+#     )
+#     s_page.view_order_info_for_admin()
+#     s_page.admin_goes_to_order_details()
+#
+#     s_page = MainNavigationMenu(page)
+#     s_page.perform_logout()
+#
+#
+# # Settled order info. view from public store
+# def test_10_order_details_view_for_order_initiator(page):
+#     s_page = LoginPage(page)
+#     s_page.perform_login_for_common_login(
+#         user_name=order_initiator,
+#         pass_word=marketplace_password
+#     )
+#     s_page = HomePage(page)
+#     s_page.goto_order_list()
+#
+#     s_page = OrdersPublicStore(page)
+#     s_page.search_order_no_or_reference_no(order_no=framework_order_no)
+#     s_page.order_info_view_by_toggle()
+#     s_page.view_order_details()
+#
+#     s_page = MainNavigationMenu(page)
+#     s_page.perform_logout()
