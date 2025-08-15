@@ -11,6 +11,7 @@ class ItemReceivedList(OrderManagement, BasicActionsDM):
         self.order_number_input = page.locator('#OrderNo')
         self.search_button_for_received_item = page.locator('button[id="search-complete-order-item-received-list"]')
         self.order_view_button = page.get_by_role("link", name="View")
+        self.challan_no_input = page.locator('input[id="ChallanNo"]')
 
     def goto_received_order_list(self):
         # self.click_on_btn(self.order_management_menu)
@@ -26,3 +27,6 @@ class ItemReceivedList(OrderManagement, BasicActionsDM):
         # self.click_on_btn(self.order_view_button.first())
         self.order_view_button.first.click()
         # self.order_view_button.nth(0).click()
+
+    def searched_received_order(self, challan_no):
+        self.input_in_element(self.challan_no_input, challan_no)
