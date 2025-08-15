@@ -43,7 +43,7 @@ class LoginPage(BasicActions):
 
         # 2) Click login
         self.signBtn.click(timeout=timeout)
-
+        self.page.reload()
         # 3) Wait for either overlay or dashboard
         overlay_seen = False
         try:

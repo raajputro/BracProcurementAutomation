@@ -6,7 +6,7 @@ class BillList(BasicActions):
     def __init__(self, page):
         super().__init__(page)
         self.bill_payable_search_box = page.get_by_role('textbox', name='Search Vendor Bill Payable' )
-        # self.bill_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
+        self.bill_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
         self.bill_status = page.locator("//table[@id='jqgrid-grid-thirdPartyBillPayableList']/tbody/tr[1]/td[14]")
 
 
@@ -14,14 +14,18 @@ class BillList(BasicActions):
         print("Searching for Bill Number:", bill_number)
         self.bill_payable_search_box.fill(bill_number)
         self.page.keyboard.press("Enter")
-        self.wait_for_timeout(3000)
+        # self.wait_for_timeout(3000)
+        # self.click_on_btn(self.bill_search_btn)
+        self.wait_for_timeout(5000)
 
 
     def find_approver_id(self) -> str:
         status_value = self.bill_status.text_content()
+        print("Status Value: " + status_value)
         approver_id = status_value.split('[')[-1].split(']')[0]
         print("Approver ID: " + approver_id)
         return approver_id
+    
 
     def find_requisition_status(self) -> str:
         status_value = self.bill_status.text_content()
