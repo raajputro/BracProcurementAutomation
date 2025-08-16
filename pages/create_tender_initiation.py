@@ -95,7 +95,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
 
     def same_delivery_schedule(self):
         self.same_schedule.scroll_into_view_if_needed()
-        self.same_schedule.click()
+        self.same_schedule.check()
         self.wait_for_timeout(1000)
 
     def estimated_delivery_date_with_text(self, date: str):
@@ -118,19 +118,18 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
 
 
     def default_evaluation_criteria(self, criteria: str = "Manufacturer authorization letter"):
-        # Click on the default evaluation criteria checkbox
-        checkbox = self.get_by_level(criteria)
-        checkbox.check()
+        container = self.page.locator("div#defaultCriteriaBody", has_text=criteria)
+        checkbox = container.locator("input.defaultCriteriaTenderInitiationList")
         checkbox.scroll_into_view_if_needed()
         checkbox.click()
         self.wait_for_timeout(1000)
 
     def tender_submission_criteria(self, criteria: str = "TIN Certificate"):
         # Click on the tender submission criteria checkbox
-        checkbox = self.get_by_level(criteria)
-        checkbox.check()
+        checkbox = self.page.get_by_label(criteria)
         checkbox.scroll_into_view_if_needed()
-        checkbox.click()
+        checkbox.check()
+        self.wait_for_timeout(1000)
 
     def tender_template_selection(self, template: str = "QM Template"):
         self.tender_template.scroll_into_view_if_needed()

@@ -280,7 +280,7 @@ def test_1_login_to_create_requisition(page):
 
 def test_12_create_tender_initiation(page):
     print("Test 12: Creating tender initiation...")
-    req_num2 = "REQ20250014446"
+    req_num2 = "REQ20250014447"
     t_page = CreateTenderInitiation(page)
     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
     t_page.navigate_to_url(tender_initiation_url)
