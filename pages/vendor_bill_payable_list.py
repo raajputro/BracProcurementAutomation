@@ -28,9 +28,9 @@ class BillList(BasicActions):
         return approver_id
     
 
-    def find_requisition_status(self) -> str:
+    def find_bill_status(self) -> str:
         status_value = self.bill_status.text_content()
-        print("Requisition Status: " + status_value)
+        print("Bill Status: " + status_value)
         return status_value
 
     def click_on_bill_num(self, bill_number):

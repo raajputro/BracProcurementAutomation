@@ -118,6 +118,7 @@ def test_5_find_approver_of_the_requisition(page):
     r2_page.wait_for_timeout(5000)
 
 # approver_id = "15370"
+
 # # approver_id = "197363"
 # req_num = "REQ20250014442"
 def test_6_login_as_approver_and_approve(page):
@@ -392,13 +393,6 @@ def test_15_item_receive(page):
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_32')
     r2_page.wait_for_timeout(5000)
-# #
-# #
-# bill_num2 = "11907"
-# transaction_num2 = "TRNB-20250004213"
-
-# challan_num2 = "39461"
-# purchase_num2 = "BPD/2025/DP-2417"
 
 def test_16_bill_creation_and_submit(page):
     print("Test 16: Creating and submitting vendor bill payable...")
@@ -464,11 +458,11 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
     b_page = BillDetails(new_page)
     document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
     b_page.upload_document(document_location)
-    b_page.get_full_page_screenshot('full_page_screenshot_35')
-    b_page.select_bill_type("Regular")
     b_page.get_full_page_screenshot('full_page_screenshot_36')
-    b_page.approve_bill()
+    b_page.select_bill_type("Regular")
     b_page.get_full_page_screenshot('full_page_screenshot_37')
+    b_page.approve_bill()
+    b_page.get_full_page_screenshot('full_page_screenshot_38')
 
     new_page.close()
 
@@ -528,7 +522,7 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
     r2_page = MainNavigationBar(page)
     r2_page.exit()
     r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_42')
+    r2_page.get_full_page_screenshot('full_page_screenshot_41')
     r2_page.wait_for_timeout(5000)
 
 def test_19_vendor_bill_approver_approval(page, new_tab):
@@ -551,13 +545,15 @@ def test_19_vendor_bill_approver_approval(page, new_tab):
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
     b_page.approve_bill()
-    b_page.get_full_page_screenshot('full_page_screenshot_40')
+    b_page.get_full_page_screenshot('full_page_screenshot_42')
 
     new_page.close()
-        
-
-
-       
-  
-
-
+    l3_page = BillList(page)
+    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
+    l3_page.navigate_to_url(bill_payable_url)
+    
+    l3_page.search_bill(bill_num)
+    l3_page.wait_for_timeout(5000)
+    bill_status=l3_page.find_bill_status()
+    print("Bill STATUS:", bill_status)
+    l3_page.get_full_page_screenshot('full_page_screenshot_43')
