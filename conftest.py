@@ -195,6 +195,7 @@ import pytest
 from pathlib import Path
 import shutil
 import time
+import webbrowser
 from datetime import datetime
 from typing import Optional, Callable
 from playwright.sync_api import (
@@ -230,7 +231,6 @@ try:
 except ValueError:
     HIGHLIGHT_DURATION_MS = 800
 
-# Action-specific colors
 ACTION_COLORS = {
     "click": "red",
     "dblclick": "red",
@@ -252,12 +252,36 @@ test_failures = []
 
 print(f"Running on screen size: {screen_width}x{screen_height}")
 
+# =========================
+# Pytest Hooks
+# =========================
+
 def pytest_configure(config):
     if ARTIFACTS_DIR.exists():
         shutil.rmtree(ARTIFACTS_DIR, ignore_errors=True)
     VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
     TRACES_DIR.mkdir(exist_ok=True)
     SCREENSHOTS_DIR.mkdir(exist_ok=True)
+
+    # HTML report setup
+    if not getattr(config.option, "htmlpath", None):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        report_file = ARTIFACTS_DIR / "reports" / f"report_{timestamp}.html"
+        report_file.parent.mkdir(parents=True, exist_ok=True)
+        config.option.htmlpath = str(report_file)
+
+def pytest_sessionfinish(session, exitstatus):
+    """Auto-open the HTML report after all tests."""
+    report_path = getattr(session.config.option, "htmlpath", None)
+    if report_path and Path(report_path).exists():
+        try:
+            webbrowser.open_new_tab(f"file://{Path(report_path).resolve()}")
+        except Exception:
+            pass
+
+# =========================
+# Utility Functions
+# =========================
 
 def safe_file_operation(file_path, operation, max_retries=5, delay=1):
     for attempt in range(max_retries):
@@ -277,6 +301,10 @@ def wait_until_file_unlocked(path, timeout=10):
         except PermissionError:
             time.sleep(0.5)
     raise TimeoutError(f"File {path} still locked after {timeout} seconds")
+
+# =========================
+# Fixtures
+# =========================
 
 @pytest.fixture(scope="session")
 def playwright() -> Playwright:
@@ -315,21 +343,17 @@ def context(browser: Browser) -> BrowserContext:
             ignore_https_errors=True,
         )
 
-        # Track all new pages/tabs automatically
         def on_page(page: Page):
             global_pages.append(page)
         global_context.on("page", on_page)
 
-        # Start tracing
         global_context.tracing.start(screenshots=True, snapshots=True, sources=True)
 
-        # Install patches
         if HIGHLIGHT_ENABLED:
             _install_auto_highlighter()
 
     yield global_context
 
-    # Stop tracing and handle videos
     trace_suffix = (
         f"{test_failures[-1]['timestamp']}_{test_failures[-1]['name']}"
         if test_failures else datetime.now().strftime("%Y%m%d_%H%M%S_session")
@@ -340,7 +364,6 @@ def context(browser: Browser) -> BrowserContext:
     except Exception:
         pass
 
-    # Handle videos for each page
     for fail in test_failures:
         test_name = fail["name"]
         timestamp = fail["timestamp"]
@@ -362,20 +385,14 @@ def context(browser: Browser) -> BrowserContext:
 
 @pytest.fixture(scope="function")
 def page(context: BrowserContext) -> Page:
-    """Return the main page. Automatically track new tabs."""
     global global_pages
     if not global_pages:
         pg = context.new_page()
         global_pages.append(pg)
-    return global_pages[0]  # main page by default
+    return global_pages[0]
 
 @pytest.fixture
 def new_tab(context: BrowserContext) -> Callable[[Callable[[Page], None]], Page]:
-    """
-    Usage:
-        new_page = new_tab(lambda page: page.click("a[target='_blank']"))
-    Automatically waits for the new tab and returns it.
-    """
     def _open(action: Callable[[Page], None]) -> Page:
         global global_pages
         with context.expect_page() as new_page_info:
@@ -410,11 +427,11 @@ def pytest_runtest_makereport(item, call):
 
         safe_file_operation(screenshot_path, screenshot_op)
 
-# ==========================================
-# Auto-highlighter implementation
-# ==========================================
+# =========================
+# Auto-highlighter Implementation
+# =========================
+
 def highlight_selector(page: Page, selector: str, action: str, duration_ms: int = HIGHLIGHT_DURATION_MS):
-    """Temporarily outline a selector in a color depending on the action."""
     try:
         color = ACTION_COLORS.get(action, "red")
         page.wait_for_selector(selector, state="attached", timeout=1500)
@@ -430,7 +447,6 @@ def highlight_selector(page: Page, selector: str, action: str, duration_ms: int 
         pass
 
 def highlight_locator(locator: Locator, action: str, duration_ms: int = HIGHLIGHT_DURATION_MS):
-    """Temporarily outline the element behind a Locator."""
     try:
         color = ACTION_COLORS.get(action, "red")
         locator.evaluate(
@@ -444,14 +460,12 @@ def highlight_locator(locator: Locator, action: str, duration_ms: int = HIGHLIGH
         pass
 
 def _install_auto_highlighter():
-    """Monkey-patch Page and Locator interaction methods to auto-highlight targets."""
     if getattr(Page, "_auto_highlight_installed", False):
         return
 
     page_methods = list(ACTION_COLORS.keys())
     locator_methods = list(ACTION_COLORS.keys())
 
-    # Patch Page methods
     for method_name in page_methods:
         if not hasattr(Page, method_name):
             continue
@@ -469,7 +483,6 @@ def _install_auto_highlighter():
 
         setattr(Page, method_name, make_wrapper(original, method_name))
 
-    # Patch Locator methods
     for method_name in locator_methods:
         if not hasattr(Locator, method_name):
             continue
