@@ -16,11 +16,12 @@ class RequisitionApproveList(ProcurementHomePage, BasicActionsDM):
         self.approve_button = page.locator('//input[@type="button" and @value="Approve"]')
         self.navigate_to_requisition_detail_page2 = page.locator('a[style="text-decoration: underline;"]')
         # self.confirmation_message_approve = page.locator('button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
-        self.final_approve_button = page.locator('//span[text()="Approve"]')
+        # self.final_approve_button = page.locator('//span[text()="Approve"]')
+        self.final_approve_button = page.locator("//button/span[contains(text(),'Approve')]")
         self.requisition_details_page_approve = page.get_by_role("button", name=re.compile("Approve", re.IGNORECASE))
-        # self.requisition_number = "REQ20250004335"
 
     def search_requisition(self, requisition_number):
+        print("Searching for Requisition Number:", requisition_number)
         self.input_in_element(self.search_box, requisition_number)
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)

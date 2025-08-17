@@ -29,7 +29,7 @@ bill_creator = os.getenv("test_bill_creator")
 # from pages.digital_marketplace.shopping_cart import ShoppingCart
 # from pages.digital_marketplace.checkout_page import CheckoutPage
 
-from pages.digital_marketplace.procurement_login_age import ProcurementLoginPage
+from pages.digital_marketplace.procurement_login_page import ProcurementLoginPage
 from pages.digital_marketplace.dashboard_page import DashboardPage
 from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
 from pages.digital_marketplace.requisition_creation import CreateReqPage
@@ -93,7 +93,7 @@ def test_4_create_and_submit_requisition(page):
     c_page.setting_requisition_for_details()
     c_page.setting_same_schedule_for_date()
     c_page.setting_same_schedule_for_location()
-    # c_page.get_full_page_screenshot('3. Requisition details view beofore saving or submitting')
+    # c_page.get_full_page_screenshot('3. Requisition details view before saving or submitting')
     global req_num
     # req_num = c_page.setting_save_requisition()
     # print("Requisition Number:", req_num)
@@ -101,7 +101,7 @@ def test_4_create_and_submit_requisition(page):
 
     req_num = c_page.submit_requisition()
     print("Requisition Number:", req_num)
-    # c_page.get_full_page_screenshot('full_page_screenshot_4')
+    c_page.get_full_page_screenshot('full_page_screenshot_4')
     c_page.wait_for_timeout(2000)
     c_page.navigate_to_requisition_list()
     # r_page = RequisitionList(page)

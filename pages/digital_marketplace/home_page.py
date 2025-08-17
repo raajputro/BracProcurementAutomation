@@ -25,6 +25,13 @@ class HomePage(BasicActionsDM):
 
         self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
                                                     has_text="Pending Approval Orders")
+        self.welcome_locator = page.locator("div.topic-block-title >> h2")
+
+    def verify_welcome_message(self):
+        # expect(self.welcome_locator).to_have_text("Welcome to BRAC Digital Marketplace")
+        actual_text = self.welcome_locator.text_content().strip()
+        print("Print digital marketplace welcoming message: " + actual_text)
+        return actual_text
 
     def goto_pending_approval_orders_list(self):
         self.click_on_btn(self.pending_approval_orders)

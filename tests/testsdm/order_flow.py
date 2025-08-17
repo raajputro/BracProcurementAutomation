@@ -1,4 +1,4 @@
-from pickletools import string1
+# from pickletools import string1
 
 from dotenv import load_dotenv
 import os
@@ -73,7 +73,7 @@ bill_num = str(random.randint(10000, 99999))
 def test_1_order_initiation(page):
     s_page = LoginPage(page)
     s_page.navigate_to_url(marketplace_url_qa)
-    s_page.perform_login_for_sso_login(
+    s_page.perform_login_for_common_login(
         user_name=order_initiator,
         pass_word=marketplace_password
     )
