@@ -1,5 +1,5 @@
 import re
-from resources.resource_file import TestResources
+
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
@@ -9,7 +9,6 @@ class ItemReceive(ProcurementHomePage, BasicActions):
     def __init__(self, page):
         super().__init__(page)
         self.search_order = page.get_by_role("textbox", name="Search DP/FO/PO/CO Order No.")
-        self.search_result = page.get_by_text() #need help from bhaiyaaa po value kivabe dibooo
         self.challan_no = page.locator("#challanNo")
         self.challan_date = page.locator("#challanDate")
         self.receive_date = page.locator("#receiveDate")
@@ -29,6 +28,7 @@ class ItemReceive(ProcurementHomePage, BasicActions):
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.wait_for_timeout(5000)
 
     def set_challan_number(self, challan_number):
         self.challan_no.fill(challan_number)
