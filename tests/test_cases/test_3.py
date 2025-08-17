@@ -2,11 +2,12 @@
 import os
 import random
 
+current_dir = os.getcwd()
+
 from dotenv import load_dotenv
+load_dotenv()
 
 from conftest import new_tab
-
-load_dotenv()
 
 # Project URLs
 proj_url = os.getenv("test_url")
@@ -456,7 +457,10 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
 
     b_page = BillDetails(new_page)
-    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+    # document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+    print(f"Current directory: {current_dir}")
+    document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
+    print(f"Document directory: {document_location}")
     b_page.upload_document(document_location)
     b_page.get_full_page_screenshot('full_page_screenshot_36')
     b_page.select_bill_type("Regular")

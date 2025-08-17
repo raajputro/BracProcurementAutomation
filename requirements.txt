@@ -5,3 +5,4 @@ pytest-playwright
 rich
 python-dotenv
 pyautogui
+pytest-html
