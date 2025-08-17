@@ -36,6 +36,10 @@ class ShoppingCart(HomePage, BasicActionsDM):
         self.cart_quantity_input = page.locator('input[id^="itemquantity"]')
         self.update_shopping_cart = page.locator('button[id="updatecart"]')
 
+    # def select_cart_vendor(self, vendor):
+    #     if
+
+
     def select_order_vendor(self, vendor):
         # self.click_on_btn(self.selected_vendor_item, vendor)
         self.page.locator(f"div:has(label:has-text('{vendor}')) input[id^='radio']").click()

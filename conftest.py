@@ -382,16 +382,22 @@ def context(browser: Browser) -> BrowserContext:
         test_name = fail["name"]
         timestamp = fail["timestamp"]
         for page in global_pages:
+            # if page.video:
+            #     video_path = Path(page.video.path())
+            #     new_video_path = VIDEOS_DIR / f"{timestamp}_{test_name}.webm"
+            #
+            #     def rename_op(_):
+            #         wait_until_file_unlocked(video_path)
+            #         if video_path.exists():
+            #             video_path.rename(new_video_path)
+            #
+            #     safe_file_operation(video_path, rename_op)
             if page.video:
-                video_path = Path(page.video.path())
                 new_video_path = VIDEOS_DIR / f"{timestamp}_{test_name}.webm"
-
-                def rename_op(_):
-                    wait_until_file_unlocked(video_path)
-                    if video_path.exists():
-                        video_path.rename(new_video_path)
-
-                safe_file_operation(video_path, rename_op)
+                try:
+                    page.video.save_as(new_video_path)  # ✅ safe, no file lock issues
+                except Exception:
+                    pass
 
     global_context.close()
     global_context = None

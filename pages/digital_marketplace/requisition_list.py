@@ -14,6 +14,8 @@ class RequisitionList(BasicActionsDM):
         self.requisition_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
         self.requisition_status = page.locator("//table[@id='requisitionGrid']/tbody/tr[2]/child::td[7]")
         self.logout_btn = page.locator("//a[@id='btn_login']")
+        # self.click_requisition_no = page.locator('a[style="text-decoration: underline;"][onclick^="showDetails("]')
+        self.requisition_no = page.locator("table tr a")
 
     def search_requisition(self, requisition_number):
         self.input_in_element(self.requisition_search_box, requisition_number)
@@ -36,3 +38,6 @@ class RequisitionList(BasicActionsDM):
         status_value = self.requisition_status.text_content()
         print("Requisition Status: " + status_value)
         return status_value
+
+    def goto_requisition_details_information(self):
+        self.requisition_no.nth(0).click()
