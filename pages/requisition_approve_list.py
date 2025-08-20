@@ -10,7 +10,8 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
     def __init__(self, page):
         super().__init__(page)
         # write down all the elements here with locator format
-        self.search_box = page.locator("//input[@name='keyword']")
+        # self.search_box = page.locator("//input[@name='keyword']")
+        self.search_box = page.get_by_role("input", name="keyword")
         self.approve= page.locator("//input[@type='button' and @value='Approve']")
         self.confirmation_message_approve_locator = page.locator("//button/span[contains(text(),'Approve')]")
         # self.confirmation_message_approve = page.locator(
@@ -19,17 +20,25 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
 
     def search_requisition(self, requisition_number):
         print("Searching for Requisition Number:", requisition_number)
-        self.input_in_element(self.search_box, requisition_number)
+        self.page.reload()
+        # self.input_in_element(self.search_box, requisition_number)
+        self.search_box.fill(requisition_number)
+        # self.page.keyboard.press(" ")
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
 
         
     def select_requisition(self, rq_number):
         # Select the checkbox for the requisition
-        requisition_select_checkbox = self.page.locator("//td/a[contains(text(),'"+rq_number+"')]//parent::td//parent::tr//child::td/input[@type='checkbox']")
-        self.wait_to_load_element(requisition_select_checkbox)
-        requisition_select_checkbox.click()
-        self.page.wait_for_timeout(3000)
+        print("select requisition")
+        try:
+            # requisition_select_checkbox = self.page.locator("//td/a[contains(text(),'"+rq_number+"')]//parent::td//parent::tr//child::td/input[@type='checkbox']")
+            requisition_select_checkbox = self.page.locator(f"//a[text()='{rq_number}']/parent::td/parent::tr/td[1]/input")
+            self.wait_to_load_element(requisition_select_checkbox)
+            requisition_select_checkbox.click()
+            self.page.wait_for_timeout(3000)
+        except Exception as e:
+            print(e)
 
 
     def approve_requisition(self):

@@ -64,8 +64,8 @@ from pages.bill_details_information import BillDetails
 #======================================================================================================================
 #======================================================================================================================
 # # Global variables
-req_num = ''
-approver_id = ''
+req_num = 'REQ20250014921'
+approver_id = '15370'
 approver_id_2 = ''
 approver_id_3 = ''
 approver_id_4 = ''
@@ -133,11 +133,11 @@ def test_5_find_approver_of_the_requisition(page):
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_7')
     r2_page.wait_for_timeout(5000)
+#
+# # approver_id = "15370"
+#
+# # # approver_id = "197363"
 
-# approver_id = "15370"
-
-# # approver_id = "197363"
-# req_num = "REQ20250014442"
 def test_6_login_as_approver_and_approve(page):
     print("Test 6: Logging in as approver and approving requisition...")
     s_page = LoginPage(page)
@@ -151,7 +151,8 @@ def test_6_login_as_approver_and_approve(page):
     r_page = RequisitionApproveList(page)
     r_page.navigate_to_url(requisition_approve_url)
     r_page.get_full_page_screenshot('full_page_screenshot_8')
-    r_page.search_requisition(req_num)
+    print(f"Req Number: {req_num}")
+    # r_page.search_requisition(req_num)
     r_page.select_requisition(req_num)
     r_page.approve_requisition()
     r_page.confirmation_message_approve()
@@ -188,7 +189,7 @@ def test_7_find_approver_of_the_requisition_2(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_13')
     r2_page.wait_for_timeout(5000)
 
-
+#
 def test_8_login_as_approver_and_approve_2(page):
     print("Test 8: Logging in as second approver and approving requisition...")
     s_page = LoginPage(page)
@@ -203,7 +204,7 @@ def test_8_login_as_approver_and_approve_2(page):
     r_page = RequisitionApproveList(page)
     r_page.navigate_to_url(requisition_approve_url)
     r_page.get_full_page_screenshot('full_page_screenshot_14')
-    r_page.search_requisition(req_num)
+    # r_page.search_requisition(req_num)
     r_page.select_requisition(req_num)
     r_page.approve_requisition()
     r_page.confirmation_message_approve()
@@ -441,7 +442,8 @@ def test_16_bill_creation_and_submit(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_35')
     r2_page.wait_for_timeout(5000)
 
-# bill_num2 = "80680"
+bill_num2 = "57989"
+rec = "761"
 def test_17_vendor_bill_recommender1_approval(page, new_tab):
     print("Test 17: Vendor bill recommender1 approval...")
     s_page = LoginPage(page)
@@ -449,6 +451,7 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
         given_url=proj_url,
         # user_name=str(int(approver_id_3)),
         user_name=bill_recommender1,
+        # user_name="761",
         pass_word=proj_gen_pass,
         timeout=60000
     )
@@ -458,12 +461,13 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
     # l2_page.search_bill(bill_num)
     # l2_page.click_on_bill_num(bill_num)
     l2_page.search_bill(bill_num)
-    
+
     # # Opening new tab
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
 
     # # Preparing document location
+    current_dir = os.getcwd()
     document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
     b_page.upload_document(document_location)
     print(f"Current directory: {current_dir}")
@@ -488,7 +492,7 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
     global bill_recommender2
     # approver_id_4 = l2_page.find_approver_id()
     bill_recommender2 = str(int(l3_page.find_approver_id()))
-    print(f"Bill Recommender 2: {bill_recommender2}")    
+    print(f"Bill Recommender 2: {bill_recommender2}")
 
     # logout from the page
     r2_page = MainNavigationBar(page)
@@ -529,7 +533,7 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
     bill_approver_id = str(int(l3_page.find_approver_id()))
     print(f"Bill Approver : {bill_approver_id}")
     # print("Test 18: Vendor bill approval...{}".format(bill_approver_id))
-    
+
     # logout from the page
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -553,16 +557,16 @@ def test_19_vendor_bill_approver_approval(page, new_tab):
     # l2_page.search_bill(bill_num)
     # l2_page.click_on_bill_num(bill_num)
     l2_page.search_bill(bill_num)
-    
+
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
     b_page.approve_bill()
     b_page.get_full_page_screenshot('full_page_screenshot_42')
     new_page.close()
-    
+
     l3_page = BillList(page)
-    l3_page.navigate_to_url(bill_payable_url)    
-    l3_page.search_bill(bill_num)
+    l3_page.navigate_to_url(bill_payable_url)
+    l3_page.search_bill(bill_num2)
     l3_page.wait_for_timeout(5000)
     bill_status=l3_page.find_bill_status()
     print("Bill STATUS:", bill_status)

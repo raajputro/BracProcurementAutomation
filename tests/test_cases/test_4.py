@@ -60,10 +60,10 @@ def test_1_navigate(page):
     s_page.navigate_to_page(main_nav_val="Microfinance", sub_nav_val=sec_menu)
     s_page.get_full_page_screenshot("Navigating to Microfinance")
 
-    sec_menu = ["Savings", "Compulsory Savings", "VO Savings Collection"]
+    sec_menu = ["Requisition", "Requisition Assign", "Requisition Accept List"]
     # s_page.navigate_to_page(main_nav_val="Microfinance", sub_nav_val = sec_menu)
-    s_page.navigate_to_page(main_nav_val="Microfinance", sub_nav_val=sec_menu)
-    s_page.get_full_page_screenshot("Navigating to Microfinance 2")
+    s_page.navigate_to_page(main_nav_val="Procurement", sub_nav_val=sec_menu)
+    s_page.get_full_page_screenshot("Navigating to Procurement")
 
     s_page.perform_logout()
     s_page.get_full_page_screenshot("Logout Complete")
