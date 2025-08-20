@@ -1,18 +1,35 @@
 # this page contains all the test cases for the samplePage
 import os
 import random
-
-from dotenv import load_dotenv
-
 from conftest import new_tab
 
+# For validation
+# from playwright.sync_api import expect
+
+# Import for beautiful reporting
+from rich.traceback import install
+install()
+
+from dotenv import load_dotenv
 load_dotenv()
 
+#======================================================================================================================
+#======================================================================================================================
 # Project URLs
 proj_url = os.getenv("test_url")
 requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
+requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
+requisition_assign_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignRequisitions"
+requisition_accept_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignedRequisitionShowList"
+tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
+direct_purchase_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/show"
+direct_purchase_list_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/list"
+item_receive_url = proj_url + "/procurementDashboard/myDashboard#!/itemReceive/show"
+vendor_bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/show"
+bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
 
-
+#======================================================================================================================
+# # Environment Data
 proj_user = os.getenv("test_user_name")
 proj_pass = os.getenv("test_user_pass")
 proj_gen_pass = os.getenv("test_user_generic_pass")
@@ -23,6 +40,8 @@ dp_approver = os.getenv("test_dp_approver")
 bill_creator = os.getenv("test_bill_creator")
 
 
+#======================================================================================================================
+#======================================================================================================================
 # Page models
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
@@ -42,17 +61,11 @@ from pages.create_vendor_bill_payable import CreateVendorBillPayable
 from pages.vendor_bill_payable_list import BillList
 from pages.bill_details_information import BillDetails
 
-
-
-# For validation
-from playwright.sync_api import expect
-
-# Import for beautiful reporting
-from rich.traceback import install
-install()
-
-req_num = ''
-approver_id = ''
+#======================================================================================================================
+#======================================================================================================================
+# # Global variables
+req_num = 'REQ20250014921'
+approver_id = '15370'
 approver_id_2 = ''
 approver_id_3 = ''
 approver_id_4 = ''
@@ -60,8 +73,12 @@ bill_approver_id = ''
 purchase_num = ''
 challan_num = str(random.randint(10000,99999))
 bill_num = str(random.randint(10000,99999))
+bill_recommender1 = ''
+bill_recommender2 = ''
 
-
+#======================================================================================================================
+#======================================================================================================================
+# # ============================================ Test Cases onwards =============================================== # #
 def test_1_login_to_create_requisition(page):
     s_page  = LoginPage(page)
     s_page.perform_login(
@@ -116,11 +133,11 @@ def test_5_find_approver_of_the_requisition(page):
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_7')
     r2_page.wait_for_timeout(5000)
+#
+# # approver_id = "15370"
+#
+# # # approver_id = "197363"
 
-# approver_id = "15370"
-
-# # approver_id = "197363"
-# req_num = "REQ20250014442"
 def test_6_login_as_approver_and_approve(page):
     print("Test 6: Logging in as approver and approving requisition...")
     s_page = LoginPage(page)
@@ -132,10 +149,10 @@ def test_6_login_as_approver_and_approve(page):
         timeout=60000  # Increased timeout for login
     )
     r_page = RequisitionApproveList(page)
-    requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
     r_page.navigate_to_url(requisition_approve_url)
     r_page.get_full_page_screenshot('full_page_screenshot_8')
-    r_page.search_requisition(req_num)
+    print(f"Req Number: {req_num}")
+    # r_page.search_requisition(req_num)
     r_page.select_requisition(req_num)
     r_page.approve_requisition()
     r_page.confirmation_message_approve()
@@ -158,7 +175,6 @@ def test_7_find_approver_of_the_requisition_2(page):
     )
 
     r_page = RequisitionList(page)
-    requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
     r_page.navigate_to_url(requisition_list_url)
     r_page.get_full_page_screenshot('full_page_screenshot_11')
     r_page.search_requisition(req_num)
@@ -173,7 +189,7 @@ def test_7_find_approver_of_the_requisition_2(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_13')
     r2_page.wait_for_timeout(5000)
 
-
+#
 def test_8_login_as_approver_and_approve_2(page):
     print("Test 8: Logging in as second approver and approving requisition...")
     s_page = LoginPage(page)
@@ -186,10 +202,9 @@ def test_8_login_as_approver_and_approve_2(page):
     )
 
     r_page = RequisitionApproveList(page)
-    requisition_approve_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/authorizationList"
     r_page.navigate_to_url(requisition_approve_url)
     r_page.get_full_page_screenshot('full_page_screenshot_14')
-    r_page.search_requisition(req_num)
+    # r_page.search_requisition(req_num)
     r_page.select_requisition(req_num)
     r_page.approve_requisition()
     r_page.confirmation_message_approve()
@@ -213,7 +228,6 @@ def test_9_check_requisition_approved(page):
     )
 
     r_page = RequisitionList(page)
-    requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
     r_page.navigate_to_url(requisition_list_url)
     r_page.get_full_page_screenshot('full_page_screenshot_17')
     r_page.search_requisition(req_num)
@@ -241,7 +255,6 @@ def test_10_check_requisition_assign(page):
     )
 
     r_page = AssignRequisition(page)
-    requisition_assign_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignRequisitions"
     r_page.navigate_to_url(requisition_assign_url)
     r_page.assigning_person(assigned_person)
     r_page.search_requisition_for_assigning(req_num)
@@ -272,7 +285,6 @@ def test_11_requisition_accept(page):
     )
 
     r_page = RequisitionAcceptList(page)
-    requisition_accept_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/assignedRequisitionShowList"
     r_page.navigate_to_url(requisition_accept_url)
     r_page.search_requisition(req_num)
     r_page.select_all_requisitions()
@@ -285,7 +297,6 @@ def test_12_create_tender_initiation(page):
     print("Test 12: Creating tender initiation...")
     req_num2 = "REQ20250004556"
     t_page = CreateTenderInitiation(page)
-    tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
     t_page.navigate_to_url(tender_initiation_url)
     t_page.search_requisition(req_num)
     t_page.select_all_items()
@@ -301,7 +312,6 @@ def test_13_create_direct_purchase(page):
     req_num2 = "REQ20250004556"
     t_page = CreateDirectPurchase(page)
     try:
-        direct_purchase_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/show"
         t_page.navigate_to_url(direct_purchase_url)
         t_page.search_vendor(vendor_name)
         t_page.same_delivery_schedule()
@@ -345,7 +355,6 @@ def test_14_approve_direct_purchase(page):
 
     t_page = DirectPurchaseList(page)
     try:
-        direct_purchase_list_url = proj_url + "/procurementDashboard/myDashboard#!/directPurchase/list"
         t_page.navigate_to_url(direct_purchase_list_url)
         t_page.search_purchase_order(purchase_num)
         # t_page.navigate_to_direct_purchase_detail_page(purchase_num)
@@ -375,7 +384,6 @@ def test_15_item_receive(page):
         timeout=60000
     )
     t_page = ItemReceive(page)
-    item_receive_url = proj_url + "/procurementDashboard/myDashboard#!/itemReceive/show"
     t_page.navigate_to_url(item_receive_url)
     t_page.search_order_for_item_receive(purchase_num)
     t_page.set_challan_number(challan_num)
@@ -404,7 +412,6 @@ def test_16_bill_creation_and_submit(page):
         timeout=60000
     )
     t_page = CreateVendorBillPayable(page)
-    vendor_bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/show"
     t_page.navigate_to_url(vendor_bill_payable_url)
     t_page.search_vendor(vendor_name)
     # t_page.select_order_no(purchase_num)
@@ -421,11 +428,12 @@ def test_16_bill_creation_and_submit(page):
     t_page.get_full_page_screenshot('full_page_screenshot_34')
 
     l2_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
+
     l2_page.navigate_to_url(bill_payable_url)
     l2_page.search_bill(bill_num)
     global bill_recommender1
     bill_recommender1 = str(int(l2_page.find_approver_id()))
+    print(f"Bill Recommender 1: {bill_recommender1}")
 
     # logout from the page
     r2_page = MainNavigationBar(page)
@@ -434,7 +442,8 @@ def test_16_bill_creation_and_submit(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_35')
     r2_page.wait_for_timeout(5000)
 
-# bill_num2 = "80680"
+bill_num2 = "57989"
+rec = "761"
 def test_17_vendor_bill_recommender1_approval(page, new_tab):
     print("Test 17: Vendor bill recommender1 approval...")
     s_page = LoginPage(page)
@@ -442,41 +451,48 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
         given_url=proj_url,
         # user_name=str(int(approver_id_3)),
         user_name=bill_recommender1,
+        # user_name="761",
         pass_word=proj_gen_pass,
         timeout=60000
     )
 
     l2_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l2_page.navigate_to_url(bill_payable_url)
     # l2_page.search_bill(bill_num)
     # l2_page.click_on_bill_num(bill_num)
     l2_page.search_bill(bill_num)
 
+    # # Opening new tab
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
-
     b_page = BillDetails(new_page)
-    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+
+    # # Preparing document location
+    current_dir = os.getcwd()
+    document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
     b_page.upload_document(document_location)
+    print(f"Current directory: {current_dir}")
+    print(f"Document directory: {document_location}")
+
+    # #  Continuing rest of the test
     b_page.get_full_page_screenshot('full_page_screenshot_36')
     b_page.select_bill_type("Regular")
     b_page.get_full_page_screenshot('full_page_screenshot_37')
     b_page.approve_bill()
     b_page.get_full_page_screenshot('full_page_screenshot_38')
 
+    # # Closing new tab
     new_page.close()
 
+    # # Continuing rest of the test in parent tab
     l3_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l3_page.navigate_to_url(bill_payable_url)
     # l2_page.search_bill(bill_num)
     l3_page.search_bill(bill_num)
     # b_page.get_full_page_screenshot('full_page_screenshot_38')
     global bill_recommender2
-
     # approver_id_4 = l2_page.find_approver_id()
     bill_recommender2 = str(int(l3_page.find_approver_id()))
-    print("Test 17: Vendor bill approval...{}".format(bill_recommender2))
+    print(f"Bill Recommender 2: {bill_recommender2}")
 
     # logout from the page
     r2_page = MainNavigationBar(page)
@@ -496,20 +512,18 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
         timeout=60000
     )
     l2_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l2_page.navigate_to_url(bill_payable_url)
     # l2_page.search_bill(bill_num)
     # l2_page.click_on_bill_num(bill_num)
     l2_page.search_bill(bill_num)
+
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
     b_page.approve_bill()
     b_page.get_full_page_screenshot('full_page_screenshot_40')
-
     new_page.close()
 
     l3_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l3_page.navigate_to_url(bill_payable_url)
     # l2_page.search_bill(bill_num)
     l3_page.search_bill(bill_num)
@@ -517,7 +531,9 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
     # b_page.get_full_page_screenshot('full_page_screenshot_41')
     global bill_approver_id
     bill_approver_id = str(int(l3_page.find_approver_id()))
-    print("Test 18: Vendor bill approval...{}".format(bill_approver_id))
+    print(f"Bill Approver : {bill_approver_id}")
+    # print("Test 18: Vendor bill approval...{}".format(bill_approver_id))
+
     # logout from the page
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -537,22 +553,20 @@ def test_19_vendor_bill_approver_approval(page, new_tab):
     )
 
     l2_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l2_page.navigate_to_url(bill_payable_url)
     # l2_page.search_bill(bill_num)
     # l2_page.click_on_bill_num(bill_num)
     l2_page.search_bill(bill_num)
+
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
     b_page.approve_bill()
     b_page.get_full_page_screenshot('full_page_screenshot_42')
-
     new_page.close()
+
     l3_page = BillList(page)
-    bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
     l3_page.navigate_to_url(bill_payable_url)
-    
-    l3_page.search_bill(bill_num)
+    l3_page.search_bill(bill_num2)
     l3_page.wait_for_timeout(5000)
     bill_status=l3_page.find_bill_status()
     print("Bill STATUS:", bill_status)
