@@ -1,5 +1,7 @@
 # Core dependencies
 pytest
+pytest-check
+pytest-html
 playwright
 pytest-playwright
 rich
