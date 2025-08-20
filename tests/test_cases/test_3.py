@@ -4,7 +4,7 @@ import random
 from conftest import new_tab
 
 # For validation
-from playwright.sync_api import expect
+# from playwright.sync_api import expect
 
 # Import for beautiful reporting
 from rich.traceback import install
@@ -13,6 +13,8 @@ install()
 from dotenv import load_dotenv
 load_dotenv()
 
+#======================================================================================================================
+#======================================================================================================================
 # Project URLs
 proj_url = os.getenv("test_url")
 requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
@@ -26,12 +28,8 @@ item_receive_url = proj_url + "/procurementDashboard/myDashboard#!/itemReceive/s
 vendor_bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/show"
 bill_payable_url = proj_url + "/procurementDashboard/myDashboard#!/thirdPartyBillPayable/billList"
 
-
-
-
-
-
-
+#======================================================================================================================
+# # Environment Data
 proj_user = os.getenv("test_user_name")
 proj_pass = os.getenv("test_user_pass")
 proj_gen_pass = os.getenv("test_user_generic_pass")
@@ -42,6 +40,8 @@ dp_approver = os.getenv("test_dp_approver")
 bill_creator = os.getenv("test_bill_creator")
 
 
+#======================================================================================================================
+#======================================================================================================================
 # Page models
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
@@ -61,7 +61,9 @@ from pages.create_vendor_bill_payable import CreateVendorBillPayable
 from pages.vendor_bill_payable_list import BillList
 from pages.bill_details_information import BillDetails
 
-
+#======================================================================================================================
+#======================================================================================================================
+# # Global variables
 req_num = ''
 approver_id = ''
 approver_id_2 = ''
@@ -74,7 +76,9 @@ bill_num = str(random.randint(10000,99999))
 bill_recommender1 = ''
 bill_recommender2 = ''
 
-
+#======================================================================================================================
+#======================================================================================================================
+# # ============================================ Test Cases onwards =============================================== # #
 def test_1_login_to_create_requisition(page):
     s_page  = LoginPage(page)
     s_page.perform_login(

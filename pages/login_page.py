@@ -19,8 +19,52 @@ class LoginPage(BasicActions):
         self.advModal = page.locator('#modals')
         self.advCloseBtn = page.locator('xpath=//*[@id="modals"]/div[1]/button')
         self.overlayModal = page.locator('#overlay.active')
+        self.officeDropdown = page.locator('#officeIdDiv_arrow')
+        self.goBtn = page.locator('//input[@type="button" and @value="Go"]')
+        self.logoutBtn = page.locator('//input[@type="button" and @value="Logout"]')
 
-    # write down all the necessary actions performed on this page as def
+        self.exit_button = page.locator("a#btn_login.btn_user")
+        self.logout_button = self.page.locator('a:has-text("Logout")')
+
+        # Navigation Locators
+        self.main_nav = self.page.locator('//*[@class="top_nav_container"]')
+
+
+    def navigate_to_page(self, main_nav_val, sub_nav_val):
+        # Navigate via Main Nav
+        self.main_nav.get_by_text(main_nav_val).click()
+        self.page.wait_for_timeout(5000)
+        # Navigate to Parent Sub Menu
+        parent_item = self.page.locator(f'xpath=//li[@class="menu-parent"]//child::div[contains(text(),"{sub_nav_val[0]}")]').first
+        # Navigating second menu item
+        sub_item_1 = self.page.locator(f'xpath=//li[@class="sub_arrow"]//child::div/span[text()="{sub_nav_val[1]}"]').first
+        # Navigating third menu item
+        # sub_item_2 = self.page.locator(f'xpath=//span[@class="menuTxtSpan" and contains(text(),"{sub_nav_val[2]}")]')
+        sub_item_2 = self.page.get_by_role("link", name=sub_nav_val[2])
+        # Wait for page to load
+        try:
+            self.wait_to_load_element(parent_item)
+            parent_item.click()
+            self.wait_to_load_element(sub_item_1)
+            sub_item_1.hover()
+            self.wait_to_load_element(sub_item_2)
+            sub_item_2.click()
+            self.page.wait_for_timeout(5000)
+            self.get_full_page_screenshot(f"{main_nav_val} Navigation Success")
+            print(f"{main_nav_val} Navigation Success!!")
+        except Exception as e:
+            print(f"Missing {e}")
+
+
+
+    def perform_logout(self):
+        self.wait_to_load_element(self.exit_button)
+        self.exit_button.click()
+        self.wait_to_load_element(self.logout_button)
+        self.logout_button.click()
+
+
+
     def perform_login(
     self,
     given_url: str,
