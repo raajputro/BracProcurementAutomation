@@ -220,6 +220,10 @@ def test_9_check_requisition_approved(page):
     r_page.get_full_page_screenshot('full_page_screenshot_18')
     req_status = r_page.find_requisition_status()
     print("REQ STATUS:", req_status)
+    expected_req_status = "Approved2"
+    # assert req_status == expected_req_status, f"Assertion failed! Expected 'Approved', but got {req_status}"
+    # expect(req_status).to_be_equal(expected_req_status)
+    
     #expect(req_status).to_be_equal("Approved")
 
     r2_page = MainNavigationBar(page)
@@ -412,8 +416,8 @@ def test_16_bill_creation_and_submit(page):
     # t_page.select_order_no(purchase_num)
     t_page.search_challan_number(challan_num)
     t_page.bill_number(bill_num)
-    t_page.bill_date_with_text("31-08-2025")
-    t_page.bill_receive_date_with_text("31-08-2025")
+    t_page.bill_date_with_text("19-08-2025")
+    t_page.bill_receive_date_with_text("19-08-2025")
     t_page.select_all_items()
     t_page.submit_bill()
     t_page.get_full_page_screenshot('full_page_screenshot_33')
@@ -557,3 +561,8 @@ def test_19_vendor_bill_approver_approval(page, new_tab):
     bill_status=l3_page.find_bill_status()
     print("Bill STATUS:", bill_status)
     l3_page.get_full_page_screenshot('full_page_screenshot_43')
+
+    expected_bill_status = "Approved (On HO-FIN)"
+    assert bill_status == expected_bill_status, f"Assertion failed! Expected 'Approved', but got {bill_status}"
+    print("Test 19: Vendor bill approval completed successfully.")
+# 
