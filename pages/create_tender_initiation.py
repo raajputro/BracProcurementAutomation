@@ -17,7 +17,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.submit_button = page.get_by_role("button", name="Submit")
         self.submit_confirmation = page.locator('span.ui-button-text', has_text="Submit")
         self.save_button = page.get_by_role("button", name="Save")
-        self.save_next = page.get_by_role("button", name="Save & Next ->>")
+        self.save_next = page.get_by_role("button", name="Save & Next")
         self.add_to_grid = page.get_by_role("button", name="Add to Grid")
         self.same_schedule = page.get_by_role("checkbox", name="Same schedule")
         self.est_delivery_date_with_text = page.locator('input#defaultDeliveryDate[placeholder="DD-MM-YYYY"]')
@@ -86,8 +86,19 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.wait_for_timeout(5000)
 
     def go_to_save_next(self):
-        self.save_next.click()
+        # self.wait_for_timeout(10000)
+        try:
+            # self.page.wait_for_selector(self.save_next, timeout=5000)
+            self.save_next.wait_for(state="visible", timeout=3000)
+        # self.save_next.scroll_into_view_if_needed()
+            self.save_next.click()
+        except:
+            print("Save & Next button not found or not clickable.")
+
+        # print("Waiting for Save & Next button to be visible...")
+        # print(self.save_next.inner_text())
         self.wait_for_timeout(5000)
+        
 
     def add_item_to_grid(self):
         self.add_to_grid.click()
@@ -102,6 +113,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         # Fill the estimated delivery date input field
         self.est_delivery_date_with_text.scroll_into_view_if_needed()
         self.est_delivery_date_with_text.fill(date)
+        self.wait_for_timeout(1000)
         # Validate the date format
 
 
@@ -115,6 +127,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         # Fill the delivery location input field
         self.delivery_location_box.scroll_into_view_if_needed()
         self.delivery_location_box.fill(location)
+        self.wait_for_timeout(1000)
 
 
     def default_evaluation_criteria(self, criteria: str = "Manufacturer authorization letter"):
@@ -122,7 +135,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         checkbox = self.page.locator(path)
         checkbox.scroll_into_view_if_needed()
         checkbox.click()
-        self.wait_for_timeout(1000)
+        self.wait_for_timeout(3000)
 
     def tender_submission_criteria(self, criteria: str = "TIN Certificate"):
         # Click on the tender submission criteria checkbox
@@ -130,19 +143,22 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         checkbox = self.page.locator(path)
         checkbox.scroll_into_view_if_needed()
         checkbox.click()
-        self.wait_for_timeout(1000)
+        self.wait_for_timeout(3000)
 
     def tender_template_selection(self, template: str = "QM Template"):
         self.tender_template.scroll_into_view_if_needed()
         self.select_from_list_by_value(self.tender_template, template)
+        self.wait_for_timeout(1000)
 
     def terms_condition_template_selection(self, template: str = "QM Terms And Conditions"):
         self.terms_condition_template.scroll_into_view_if_needed()
         self.select_from_list_by_value(self.terms_condition_template, template)
+        self.wait_for_timeout(1000)
 
     def award_notification_template_selection(self, template: str = "QM Award Notifications"):
         self.award_notification_template.scroll_into_view_if_needed()
         self.select_from_list_by_value(self.award_notification_template, template)
+        self.wait_for_timeout(1000)
 
     def submit_tender_initiation(self):
         self.submit_button.click()
