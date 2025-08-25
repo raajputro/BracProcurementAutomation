@@ -72,7 +72,7 @@ from rich.traceback import install
 
 install()
 order_reference_number = ''
-# vendor_name = ''
+# vendor_1_Name = ''
 order_vendor = ''
 framework_order_no = ''
 vendor_login_id = ''
@@ -92,7 +92,8 @@ def test_1_login_to_create_and_submit_requisition(page):
     s_page.perform_login(
         given_url=proj_url,
         user_name=proj_user,
-        pass_word=proj_pass
+        pass_word=proj_pass,
+        timeout=60000
     )
 
     # def test_2_go_to_procurement_page(page):
@@ -250,7 +251,7 @@ def test_5_login_as_approver_2_and_approve_requisition(page):
     m_page.exit()
     m_page.logout()
     m_page.get_full_page_screenshot('full_page_screenshot_16')
-    # m_page.wait_for_timeout(2000)
+    m_page.wait_for_timeout(2000)
 
 
 def test_6_check_requisition_approved(page, new_tab):
@@ -258,8 +259,8 @@ def test_6_check_requisition_approved(page, new_tab):
     s_page = ProcurementLoginPage(page)
     s_page.perform_login(
         given_url=proj_url,
-        user_name="6008",
-        # user_name=proj_user,
+        # user_name="6008",
+        user_name=proj_user,
         pass_word=proj_pass,
         timeout=60000
     )
@@ -270,8 +271,8 @@ def test_6_check_requisition_approved(page, new_tab):
     p_page.navigate_to_requisition_list()
 
     r1_page = RequisitionList(page)
-    # r1_page.search_requisition(req_num)
-    r1_page.search_requisition(requisition_number="REQ20250014472")
+    r1_page.search_requisition(req_num)
+    # r1_page.search_requisition(requisition_number="REQ20250014472")
     req_status = r1_page.find_requisition_status()
     print("REQ STATUS:", req_status)
     # expect(req_status).to_be_equal("Approved")
@@ -305,11 +306,13 @@ def test_6_check_requisition_approved(page, new_tab):
 
 # Marketplace flow
 # Order initiation
-def test_11_order_initiation(page):
+
+def test_7_order_initiation(page):
     login_page = LoginPage(page)
     login_page.navigate_to_url(marketplace_url_qa)
+    # login_page.perform_login_for_sso_login(
     login_page.perform_login_for_common_login(
-        # user_name="0000"+order_initiator,
+        # user_name=order_initiator,
         user_name="0000" + proj_user,
         pass_word=marketplace_password
     )
@@ -319,10 +322,14 @@ def test_11_order_initiation(page):
     home_page.goto_shopping_cart()
 
     cart_page = ShoppingCart(page)
-    # cart_page.select_vendor_for_requisition("REQ20250014490")
-    # cart_page.select_vendor_for_requisition("REQ20250014417")
-    # cart_page.select_vendor_for_requisition(requisition_number="REQ20250014472")
-    cart_page.select_vendor_for_requisition_2(requisition_number="REQ20250014472")
-    # cart_page.select_order_vendor(vendor="Plan for demand")
-    # cart_page.select_order_vendor(vendor=vendor_name)
-    cart_page.wait_for_timeout(2000)
+    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014909")
+    # cart_page.select_vendor_by_name(vendor_name="Super Formica & Lamination Ltd")
+
+    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014472")
+    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014909")
+    # cart_page.select_vendor_by_name(vendor_name="Super Formica & Lamination Ltd", requisition_number="REQ20250014909")
+    cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014501")
+    cart_page.select_vendor_by_name(vendor_name="Plan for demand", requisition_number="REQ20250014501")
+    # cart_page.select_vendor_by_name(vendor_name="Plan for demand")
+
+    cart_page.wait_for_timeout(5000)
