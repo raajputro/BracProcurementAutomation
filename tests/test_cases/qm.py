@@ -41,6 +41,7 @@ from pages.create_vendor_bill_payable import CreateVendorBillPayable
 from pages.vendor_bill_payable_list import BillList
 from pages.bill_details_information import BillDetails
 
+from datetime import datetime, timedelta
 
 
 # For validation
@@ -58,6 +59,9 @@ approver_id_4 = ''
 purchase_num = ''
 challan_num = str(random.randint(10000,99999))
 bill_num = str(random.randint(10000,99999))
+# Get the current date and time
+
+
 
 
 # def test_1_login_to_create_requisition(page):
@@ -288,7 +292,7 @@ def test_12_create_tender_initiation(page):
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
-    req_num2 = "REQ20250014465"
+    req_num2 = "REQ20250014466"
     t_page = CreateTenderInitiation(page)
     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
     t_page.navigate_to_url(tender_initiation_url)
@@ -310,3 +314,16 @@ def test_12_create_tender_initiation(page):
     t_page.tender_submission_criteria("TIN Certificate")
     t_page.go_to_save_next()
     t_page.tender_template_selection("QM Template")
+    current_time = datetime.now()
+    submission_date_str = (current_time + timedelta(minutes=7)).strftime("%d-%m-%Y %I:%M %p")
+    opening_date_str = (current_time + timedelta(minutes=9)).strftime("%d-%m-%Y %I:%M %p")
+    print("Submission Date:", submission_date_str)
+    print("Opening Date:", opening_date_str)
+    t_page.submission_date(submission_date_str)
+    t_page.opening_date(opening_date_str)
+    t_page.opening_place("BRAC Center, 75 Mohakhali, Dhaka-1212")
+    t_page.opening_offer_validity("30")
+    t_page.terms_condition_template_selection("QM Terms And Conditions")
+    t_page.award_notification_template_selection("QM Award Notifications")
+    t_page.go_to_save_next()
+    t_page.get_full_page_screenshot('full_page_screenshot_25')
