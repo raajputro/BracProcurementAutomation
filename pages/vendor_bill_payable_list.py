@@ -39,5 +39,7 @@ class BillList(BasicActions):
         return status_value
 
     def click_on_bill_num(self, bill_number):
-        self.page.locator("//a[contains(text(),'"+bill_number+"')]").click()
+        # self.page.locator("//a[contains(text(),'"+bill_number+"')]").click()
+        self.page.locator(
+            f"//table[@id='jqgrid-grid-thirdPartyBillPayableList']/tbody/tr/td[2]/a[text()='{bill_number}']").click()
         self.page.wait_for_timeout(2000)

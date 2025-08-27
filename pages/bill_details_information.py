@@ -7,7 +7,8 @@ class BillDetails(BasicActions):
         super().__init__(page)
         self.document_upload_container= "#selector_fileId_0"
         self.bill_type_selector = page.locator('#billTypeId')
-        self.approve_button = page.locator('#approve1')
+        self.approve_button = page.locator("//input[@type='button' and @value='Approve']")
+        self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
 
 
     def upload_document(self, file_path):
@@ -30,5 +31,10 @@ class BillDetails(BasicActions):
         """
         Approve the bill.
         """
+        self.wait_to_load_element(self.approve_button)
         self.approve_button.click()
-        self.page.wait_for_timeout(2000)        
+        # self.page.wait_for_timeout(2000)
+        self.toast_msg.wait_for(state="visible", timeout=10000)
+        toast_msg = self.toast_msg.text_content()
+        print(toast_msg)
+
