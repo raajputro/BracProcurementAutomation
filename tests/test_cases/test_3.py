@@ -414,9 +414,7 @@ def test_16_bill_creation_and_submit(page):
     t_page = CreateVendorBillPayable(page)
     t_page.navigate_to_url(vendor_bill_payable_url)
     t_page.search_vendor(vendor_name)
-    # t_page.select_order_no(purchase_num)
-    # t_page.search_challan_number(challan_num)
-    # t_page.select_order_no(purchase_num)
+
     t_page.search_challan_number(challan_num)
     t_page.bill_number(bill_num)
     t_page.bill_date_with_text("31-08-2025")
@@ -442,8 +440,9 @@ def test_16_bill_creation_and_submit(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_35')
     r2_page.wait_for_timeout(5000)
 
-bill_num2 = "57989"
-rec = "761"
+# bill_num2 = "57989"
+# rec = "761"
+# bill_recommender1 = "7601"
 def test_17_vendor_bill_recommender1_approval(page, new_tab):
     print("Test 17: Vendor bill recommender1 approval...")
     s_page = LoginPage(page)
