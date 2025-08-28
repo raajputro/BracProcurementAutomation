@@ -296,7 +296,7 @@ def test_12_create_tender_initiation(page):
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
-    req_num2 = "REQ20250014465"
+    req_num2 = "REQ20250014466"
     t_page = CreateTenderInitiation(page)
     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
     t_page.navigate_to_url(tender_initiation_url)
@@ -335,12 +335,12 @@ def test_12_create_tender_initiation(page):
     t_page.tender_approver_selecting(tender_approver)
     t_page.go_to_save_next()
 
+    t_page.committee_type_selection("Evaluation committee")
+    t_page.member_type_selection("APPROVER")
+    t_page.select_member(evaluation_approver)
+    t_page.add_committee_member_to_grid()
     # t_page.committee_type_selection("Evaluation committee")
-    # t_page.member_type_selection("Approver")
-    # t_page.select_member(evaluation_approver)
-    # t_page.add_committee_member_to_grid()
-    # t_page.committee_type_selection("Evaluation committee")
-    # t_page.member_type_selection("Recommender") 
+    # t_page.member_type_selection("RECOMMENDER") 
     # t_page.select_member(evaluation_recommender)
     # t_page.add_committee_member_to_grid()
     # t_page.committee_type_selection("Opening committee")

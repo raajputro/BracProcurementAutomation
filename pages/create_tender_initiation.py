@@ -111,6 +111,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.toast_msg.wait_for(state="visible", timeout=10000)
         toast_msg = self.toast_msg.text_content()
         print(toast_msg)
+    
         self.wait_for_timeout(5000)
         
 
@@ -182,12 +183,6 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
     def opening_date(self, date: str):
         self.opening_date_input.scroll_into_view_if_needed()
         self.opening_date_input.wait_for(state="visible", timeout=3000)
-        # self.opening_date_input.click()
-        # self.opening_date_input.press("Control+A")
-        # self.opening_date_input.press("Backspace")
-        # # self.opening_date_input.fill('')
-        # self.wait_for_timeout(3000)
-        # self.opening_date_input.fill(date)
         self.opening_date_input.click()
         self.opening_date_input.press("Control+A")
         self.opening_date_input.press("Backspace")
@@ -219,6 +214,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.wait_for_timeout(3000)
 
     def committee_type_selection(self, type: str ):
+
         self.committee_type.wait_for(state="visible", timeout=3000)
         self.committee_type.scroll_into_view_if_needed()
         self.select_from_list_by_value(self.committee_type, type)
@@ -230,23 +226,52 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.select_from_list_by_value(self.member_type, type)
         self.wait_for_timeout(1000)
 
+    # def select_member(self, member: str):
+    #     self.employee_name.wait_for(state="visible", timeout=3000)
+    #     self.employee_name.scroll_into_view_if_needed()
+    # # Step 1: Type into the input field
+    #     self.employee_name.fill(member)
+    #     self.page.wait_for_timeout(1000)
+    #     self.employee_name.click()  # Focus the input
+    #     self.page.keyboard.press("End")      # Move cursor to end
+    #     self.page.keyboard.insert_text(" ")
+    #     self.page.keyboard.press("Backspace")
+    # # Step 2: Wait for the suggestion to appear
+    #     suggested_method = self.page.get_by_text(member)
+    #     # Wait and click
+    #     suggested_method.wait_for(state="visible", timeout=5000)
+    #     suggested_method.hover()
+    #     suggested_method.click()
+        # self.wait_for_timeout(2000)
     def select_member(self, member: str):
-        self.employee_name.wait_for(state="visible", timeout=3000)
+        self.employee_name.wait_for(state="visible", timeout=5000)
         self.employee_name.scroll_into_view_if_needed()
-    # Step 1: Type into the input field
+
+    # Clear and type the member input
+        self.employee_name.fill("")
         self.employee_name.fill(member)
         self.page.wait_for_timeout(1000)
-        self.employee_name.click()  # Focus the input
-        self.page.keyboard.press("End")      # Move cursor to end
-        self.page.keyboard.insert_text(" ")
-    # Step 2: Wait for the suggestion to appear
-        suggested_method = self.page.get_by_text(member)
-        # Wait and click
-        suggested_method.wait_for(state="visible", timeout=5000)
-        suggested_method.hover()
-        suggested_method.click()
-        self.wait_for_timeout(2000)
 
+    # Ensure suggestions load
+        self.employee_name.click()
+        self.page.keyboard.press("End")
+        self.page.keyboard.insert_text(" ")
+        self.page.keyboard.press("Backspace")
+        self.page.wait_for_timeout(1000)
+
+    # Define the expected suggestion locator
+        suggestion_locator = self.page.locator(f"a.ui-corner-all", has_text=member).first
+
+        try:
+            suggestion_locator.wait_for(state="visible", timeout=5000)
+            suggestion_locator.scroll_into_view_if_needed()
+            suggestion_locator.hover()
+            suggestion_locator.click()
+            self.page.wait_for_timeout(1000)
+        except Exception as e:
+            self.page.screenshot(path=f"select_member_error_{member}.png")
+            raise RuntimeError(f"Could not select member '{member}'. Error: {e}")
+        
     def add_committee_member_to_grid(self):
 
         self.add_to_grid.click()
