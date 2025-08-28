@@ -60,7 +60,7 @@ approver_id = ''
 approver_id_2 = ''
 approver_id_3 = ''
 approver_id_4 = ''
-purchase_num = ''
+tender_num = ''
 challan_num = str(random.randint(10000,99999))
 bill_num = str(random.randint(10000,99999))
 # Get the current date and time
@@ -296,7 +296,7 @@ def test_12_create_tender_initiation(page):
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
-    req_num2 = "REQ20250014466"
+    req_num2 = "REQ20250014465"
     t_page = CreateTenderInitiation(page)
     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
     t_page.navigate_to_url(tender_initiation_url)
@@ -305,6 +305,10 @@ def test_12_create_tender_initiation(page):
     t_page.select_Quotation_method()
     t_page.fill_remarks("Remarks for tender initiation")
     t_page.go_to_save_next()
+
+    global tender_num
+    tender_num = t_page.get_tender_number()
+    print("Purchase number: "+tender_num)
 
     t_page.select_all_items()
     t_page.add_item_to_grid()

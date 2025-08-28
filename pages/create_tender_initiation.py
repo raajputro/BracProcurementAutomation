@@ -37,6 +37,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.employee_name = page.locator("#name")
         self.add_to_grid = page.get_by_role("button", name="Add to Grid")
         self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
+        self.tender_no_field = page.locator("#refNo")
 
     def search_requisition(self, requisition_number: str):
         self.search_box_for_list.fill(requisition_number)
@@ -264,14 +265,18 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
     def submit_tender_initiation(self):
         self.submit_button.click()
         self.wait_for_timeout(5000)
-        self.toast_msg.wait_for(state="visible", timeout=10000)
-        toast_msg = self.toast_msg.text_content()
-        print(toast_msg)
+
 
     def confirm_submission(self):
         self.submit_confirmation.click()
         self.wait_for_timeout(5000)
         self.get_full_page_screenshot("tender_initiation_submitted")
+
+        
+    def get_tender_number(self) -> str:
+        self.tender_value = self.tender_no_field.input_value()
+        print("Generated Purchase Order Number:", self.tender_value)
+        return self.tender_value
         
 
 
