@@ -226,23 +226,7 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.select_from_list_by_value(self.member_type, type)
         self.wait_for_timeout(1000)
 
-    # def select_member(self, member: str):
-    #     self.employee_name.wait_for(state="visible", timeout=3000)
-    #     self.employee_name.scroll_into_view_if_needed()
-    # # Step 1: Type into the input field
-    #     self.employee_name.fill(member)
-    #     self.page.wait_for_timeout(1000)
-    #     self.employee_name.click()  # Focus the input
-    #     self.page.keyboard.press("End")      # Move cursor to end
-    #     self.page.keyboard.insert_text(" ")
-    #     self.page.keyboard.press("Backspace")
-    # # Step 2: Wait for the suggestion to appear
-    #     suggested_method = self.page.get_by_text(member)
-    #     # Wait and click
-    #     suggested_method.wait_for(state="visible", timeout=5000)
-    #     suggested_method.hover()
-    #     suggested_method.click()
-        # self.wait_for_timeout(2000)
+
     def select_member(self, member: str):
         self.employee_name.wait_for(state="visible", timeout=5000)
         self.employee_name.scroll_into_view_if_needed()
@@ -280,6 +264,9 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
     def submit_tender_initiation(self):
         self.submit_button.click()
         self.wait_for_timeout(5000)
+        self.toast_msg.wait_for(state="visible", timeout=10000)
+        toast_msg = self.toast_msg.text_content()
+        print(toast_msg)
 
     def confirm_submission(self):
         self.submit_confirmation.click()
