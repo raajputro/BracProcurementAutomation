@@ -20,6 +20,10 @@ assigned_person = os.getenv("test_requisition_assignee")
 vendor_name = os.getenv("test_vendor_name")
 dp_approver = os.getenv("test_dp_approver")
 bill_creator = os.getenv("test_bill_creator")
+tender_approver = os.getenv("test_tender_approver")
+evaluation_approver = os.getenv("test_evaluation_approver") 
+evaluation_recommender = os.getenv("test_evaluation_recommender")
+opening_approver = os.getenv("test_opening_approver")
 
 
 # Page models
@@ -292,7 +296,7 @@ def test_12_create_tender_initiation(page):
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
-    req_num2 = "REQ20250014466"
+    req_num2 = "REQ20250014465"
     t_page = CreateTenderInitiation(page)
     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
     t_page.navigate_to_url(tender_initiation_url)
@@ -301,9 +305,11 @@ def test_12_create_tender_initiation(page):
     t_page.select_Quotation_method()
     t_page.fill_remarks("Remarks for tender initiation")
     t_page.go_to_save_next()
+
     t_page.select_all_items()
     t_page.add_item_to_grid()
     t_page.go_to_save_next()
+
     t_page.same_delivery_schedule()
     # t_page.estimated_delivery_date_with_text("01-09-2025")
     t_page.estimated_delivery_date_with_text("31/08/2025")
@@ -313,6 +319,7 @@ def test_12_create_tender_initiation(page):
     t_page.default_evaluation_criteria("Manufacturer authorization letter")
     t_page.tender_submission_criteria("TIN Certificate")
     t_page.go_to_save_next()
+
     t_page.tender_template_selection("QM Template")
     current_time = datetime.now()
     submission_date_str = (current_time + timedelta(minutes=7)).strftime("%d-%m-%Y %I:%M %p")
@@ -325,5 +332,21 @@ def test_12_create_tender_initiation(page):
     t_page.opening_offer_validity("30")
     t_page.terms_condition_template_selection("QM Terms And Conditions")
     t_page.award_notification_template_selection("QM Award Notifications")
+    t_page.tender_approver_selecting(tender_approver)
     t_page.go_to_save_next()
-    t_page.get_full_page_screenshot('full_page_screenshot_25')
+
+    # t_page.committee_type_selection("Evaluation committee")
+    # t_page.member_type_selection("Approver")
+    # t_page.select_member(evaluation_approver)
+    # t_page.add_committee_member_to_grid()
+    # t_page.committee_type_selection("Evaluation committee")
+    # t_page.member_type_selection("Recommender") 
+    # t_page.select_member(evaluation_recommender)
+    # t_page.add_committee_member_to_grid()
+    # t_page.committee_type_selection("Opening committee")
+    # t_page.member_type_selection("Approver")
+    # t_page.select_member(opening_approver)
+    # t_page.add_committee_member_to_grid()
+    # t_page.submit_tender_initiation()
+    # t_page.confirm_submission()
+    # t_page.get_full_page_screenshot('full_page_screenshot_25')

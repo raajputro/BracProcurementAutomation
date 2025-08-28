@@ -31,6 +31,12 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.opening_date_input = page.locator('input[name="openingDate"]')
         self.opening_place_input = page.locator("#openingPlace")
         self.opening_offer_validity_input = page.locator('#offerValidityDay')
+        self.tender_approver = page.locator('#signatoryMemberDiv_input')
+        self.committee_type = page.locator("#committeeType")
+        self.member_type = page.locator("#committeeMemberType")
+        self.employee_name = page.locator("#name")
+        self.add_to_grid = page.get_by_role("button", name="Add to Grid")
+        self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
 
     def search_requisition(self, requisition_number: str):
         self.search_box_for_list.fill(requisition_number)
@@ -102,6 +108,9 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
 
         # print("Waiting for Save & Next button to be visible...")
         # print(self.save_next.inner_text())
+        self.toast_msg.wait_for(state="visible", timeout=10000)
+        toast_msg = self.toast_msg.text_content()
+        print(toast_msg)
         self.wait_for_timeout(5000)
         
 
@@ -158,12 +167,12 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
     def terms_condition_template_selection(self, template: str = "QM Terms And Conditions"):
         self.terms_condition_template.scroll_into_view_if_needed()
         self.select_from_list_by_value(self.terms_condition_template, template)
-        self.wait_for_timeout(1000)
+        self.wait_for_timeout(5000)
 
     def award_notification_template_selection(self, template: str = "QM Award Notifications"):
         self.award_notification_template.scroll_into_view_if_needed()
         self.select_from_list_by_value(self.award_notification_template, template)
-        self.wait_for_timeout(1000)
+        self.wait_for_timeout(5000)
 
     def submission_date(self, date: str):
         self.Submission_date_input.scroll_into_view_if_needed()
@@ -172,21 +181,76 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
 
     def opening_date(self, date: str):
         self.opening_date_input.scroll_into_view_if_needed()
-        self.opening_date_input.fill('')
+        self.opening_date_input.wait_for(state="visible", timeout=3000)
+        # self.opening_date_input.click()
+        # self.opening_date_input.press("Control+A")
+        # self.opening_date_input.press("Backspace")
+        # # self.opening_date_input.fill('')
+        # self.wait_for_timeout(3000)
+        # self.opening_date_input.fill(date)
+        self.opening_date_input.click()
+        self.opening_date_input.press("Control+A")
+        self.opening_date_input.press("Backspace")
         self.wait_for_timeout(1000)
-        self.opening_date_input.fill(date)
-        self.wait_for_timeout(1000)
+        self.opening_date_input.type(date, delay=100)
+        self.wait_for_timeout(3000)
 
     def opening_place(self, place: str = "BRAC Center, 75 Mohakhali, Dhaka-1212"):
         self.opening_place_input.scroll_into_view_if_needed()
         self.opening_place_input.fill(place)
-        self.wait_for_timeout(1000)
+        self.wait_for_timeout(3000)
 
     def opening_offer_validity(self, days: str = "30"):
         self.opening_offer_validity_input.scroll_into_view_if_needed()
         self.opening_offer_validity_input.fill(days)
+        self.wait_for_timeout(3000)
+
+    def tender_approver_selecting(self, approver: str):
+        self.tender_approver.wait_for(state="visible", timeout=3000)
+        self.tender_approver.scroll_into_view_if_needed()
+        self.tender_approver.fill(approver)
+        self.page.keyboard.press("End")
+        self.page.keyboard.type(" ")
+        self.page.keyboard.press("Backspace")
+        tender_approver_selection = self.page.get_by_text(approver)
+        tender_approver_selection.wait_for(state="visible", timeout=5000)
+        tender_approver_selection.hover()
+        tender_approver_selection.click()
+        self.wait_for_timeout(3000)
+
+    def committee_type_selection(self, type: str ):
+        self.committee_type.wait_for(state="visible", timeout=3000)
+        self.committee_type.scroll_into_view_if_needed()
+        self.select_from_list_by_value(self.committee_type, type)
         self.wait_for_timeout(1000)
 
+    def member_type_selection(self, type: str):
+        self.member_type.wait_for(state="visible", timeout=3000)
+        self.member_type.scroll_into_view_if_needed()
+        self.select_from_list_by_value(self.member_type, type)
+        self.wait_for_timeout(1000)
+
+    def select_member(self, member: str):
+        self.employee_name.wait_for(state="visible", timeout=3000)
+        self.employee_name.scroll_into_view_if_needed()
+    # Step 1: Type into the input field
+        self.employee_name.fill(member)
+        self.page.wait_for_timeout(1000)
+        self.employee_name.click()  # Focus the input
+        self.page.keyboard.press("End")      # Move cursor to end
+        self.page.keyboard.insert_text(" ")
+    # Step 2: Wait for the suggestion to appear
+        suggested_method = self.page.get_by_text(member)
+        # Wait and click
+        suggested_method.wait_for(state="visible", timeout=5000)
+        suggested_method.hover()
+        suggested_method.click()
+        self.wait_for_timeout(2000)
+
+    def add_committee_member_to_grid(self):
+
+        self.add_to_grid.click()
+        self.wait_for_timeout(5000)
 
     def submit_tender_initiation(self):
         self.submit_button.click()
