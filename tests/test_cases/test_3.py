@@ -79,29 +79,44 @@ bill_recommender2 = ''
 #======================================================================================================================
 #======================================================================================================================
 # # ============================================ Test Cases onwards =============================================== # #
+login_page_obj = None
 def test_1_login_to_create_requisition(page):
-    s_page  = LoginPage(page)
-    s_page.perform_login(
+    global login_page_obj
+    login_page_obj = LoginPage(page)
+    login_page_obj.perform_login(
         given_url=proj_url,
         user_name=proj_user,
         pass_word=proj_pass
     )
+    # s_page  = LoginPage(page)
+    # s_page.perform_login(
+    #     given_url=proj_url,
+    #     user_name=proj_user,
+    #     pass_word=proj_pass
+    # )
 
 
-def test_2_go_to_procurement_page(page):
-    d_page = DashboardPage(page)
-    d_page.goto_procurement()
-    d_page.get_full_page_screenshot('full_page_screenshot_1')
-
-
-def test_3_navigate_to_create_req_from_prod_dashboard(page):
-    p_page = ProcurementHomePage(page)
-    p_page.navigate_to_create_requisition()
-    p_page.get_full_page_screenshot('full_page_screenshot_2')
-    p_page.wait_for_timeout(7500)
+#
+# def test_2_go_to_procurement_page(page):
+#     d_page = DashboardPage(page)
+#     d_page.goto_procurement()
+#     d_page.get_full_page_screenshot('full_page_screenshot_1')
+#
+#
+# def test_3_navigate_to_create_req_from_prod_dashboard(page):
+#     p_page = ProcurementHomePage(page)
+#     p_page.navigate_to_create_requisition()
+#     p_page.get_full_page_screenshot('full_page_screenshot_2')
+#     p_page.wait_for_timeout(7500)
 
 
 def test_4_create_and_submit_requisition(page):
+    main_menu_item = "Procurement"
+    sec__menu_item = ["Requisition", "Create Requisition"]
+    # l_page = LoginPage(page)
+    global login_page_obj
+    login_page_obj.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+
     print("Test 4: Creating requisition...")
     c_page = CreateReqPage(page)
     #c_page.validate()
@@ -115,9 +130,22 @@ def test_4_create_and_submit_requisition(page):
     print("REQ NUM:", req_num)
     c_page.get_full_page_screenshot('full_page_screenshot_4')
 
+# def test_5_add(page):
+#     global login_page_obj
+#     login_page_obj.perform_logout()
+#     print("Logout done")
+#     login_page_obj.perform_login(
+#         given_url=proj_url,
+#         user_name=approver_id,
+#         pass_word=proj_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     login_page_obj.get_full_page_screenshot("full_page_screenshot_5")
+#     login_page_obj.perform_logout()
 
 def test_5_find_approver_of_the_requisition(page):
     print("Test 5: Finding approver of the requisition...")
+
     r_page = RequisitionList(page)
 
     r_page.navigate_to_url(requisition_list_url)
