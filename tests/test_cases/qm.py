@@ -9,6 +9,9 @@ load_dotenv()
 
 # Project URLs
 proj_url = os.getenv("test_url")
+eTender_url = os.getenv("etender_url")
+vendor1 = os.getenv("vendor1")
+vendor2 = os.getenv("vendor2")
 requisition_list_url = proj_url + "/procurementDashboard/myDashboard#!/requisition/list"
 
 
@@ -46,6 +49,7 @@ from pages.item_receive import ItemReceive
 from pages.create_vendor_bill_payable import CreateVendorBillPayable
 from pages.vendor_bill_payable_list import BillList
 from pages.bill_details_information import BillDetails
+from pages.eTender_login import EtenderLoginPage
 
 from datetime import datetime, timedelta
 
@@ -357,32 +361,41 @@ bill_num = str(random.randint(10000,99999))
 #     t_page.confirm_submission()
     # t_page.get_full_page_screenshot('full_page_screenshot_25')
 
-def test_13_approve_tender_initiation(page, new_tab):
+# def test_13_approve_tender_initiation(page, new_tab):
+#     print("Test 14: ...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(tender_approver)),
+#         pass_word=proj_gen_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     tender_num = "BPD/2025/RFQ-1864"
+#     t_page = TenderInitiationList(page)
+#     try:
+#         tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
+#         t_page.navigate_to_url(tender_initiation_list_url)
+#         t_page.search_tender(tender_num)
+#         new_page = new_tab(lambda p:t_page.navigate_to_tender_detail_page(tender_num))
+#         b_page = TenderDetails(new_page)
+#         b_page.approve_tender_from_details_page()
+#         b_page.get_full_page_screenshot('full_page_screenshot_29')
+#         new_page.close()
+#     except Exception as e:
+#         t_page.get_full_page_screenshot('full_page_screenshot_test_13')
+#         print(e)
+
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_30')
+#     r2_page.wait_for_timeout(5000)
+def test_14_vendor1_participation_in_tender(page):
     print("Test 14: ...")
-    s_page = LoginPage(page)
+    s_page = EtenderLoginPage(page)
     s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(tender_approver)),
+        given_url=eTender_url,
+        user_name="Skylark",
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    tender_num = "BPD/2025/RFQ-1864"
-    t_page = TenderInitiationList(page)
-    try:
-        tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
-        t_page.navigate_to_url(tender_initiation_list_url)
-        t_page.search_tender(tender_num)
-        new_page = new_tab(lambda p:t_page.navigate_to_tender_detail_page(tender_num))
-        b_page = TenderDetails(new_page)
-        b_page.approve_tender_from_details_page()
-        b_page.get_full_page_screenshot('full_page_screenshot_29')
-        new_page.close()
-    except Exception as e:
-        t_page.get_full_page_screenshot('full_page_screenshot_test_13')
-        print(e)
-
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_30')
-    r2_page.wait_for_timeout(5000)
