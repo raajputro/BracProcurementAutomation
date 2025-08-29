@@ -404,3 +404,6 @@ def test_14_vendor1_participation_in_tender(page):
     v_page = VendoParticipation(page)
     v_page.apply_in_tender(tender_num)
     v_page.get_full_page_screenshot('full_page_screenshot_31')
+    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+    v_page.fill_criteria_row(page, "Manufacturer authorization letter", "Yes", "All good", document_location)
+    v_page.get_full_page_screenshot('full_page_screenshot_32')
