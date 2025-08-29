@@ -31,19 +31,3 @@ class TenderInitiationList(CreateTenderInitiation):
         tender_details.click()
         self.page.wait_for_timeout(5000)  
         
-    def select_tender(self, tender_number):
-        # Select the checkbox for the direct purchase order
-        check_box = self.page.locator("//a[contains(text(),'"+tender_number+"')]//parent::td//parent::tr//child::td/input[@type='checkbox']")
-        check_box.click()
-        #self.page.wait_for_timeout(1000)
-
-    def approve_tender(self):
-        # Click the approve button
-        self.approve.click()
-        self.page.wait_for_timeout(5000)
-
-    def confirmation_message_approve(self):
-        # Click the confirmation message approve button
-        self.confirmation_message_approve.click()
-        self.page.wait_for_timeout(2000)
-       

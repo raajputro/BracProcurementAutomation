@@ -366,7 +366,7 @@ def test_13_approve_tender_initiation(page, new_tab):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    tender_num = "BPD/2025/RFQ-1866"
+    tender_num = "BPD/2025/RFQ-1864"
     t_page = TenderInitiationList(page)
     try:
         tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
@@ -377,10 +377,6 @@ def test_13_approve_tender_initiation(page, new_tab):
         b_page.approve_tender_from_details_page()
         b_page.get_full_page_screenshot('full_page_screenshot_29')
         new_page.close()
-        # t_page.select_tender(tender_num)
-        # t_page.approve_tender()
-        # t_page.confirmation_message_approve()
-        # t_page.get_full_page_screenshot('full_page_screenshot_29')
     except Exception as e:
         t_page.get_full_page_screenshot('full_page_screenshot_test_13')
         print(e)
