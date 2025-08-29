@@ -38,6 +38,8 @@ from pages.procurement_page_navigation_bar import ProcurementPageNavigationBar
 from pages.assign_req import AssignRequisition
 from pages.requisition_accept_list import RequisitionAcceptList
 from pages.create_tender_initiation import CreateTenderInitiation
+from pages.tender_initiation_list import TenderInitiationList
+from pages.tender_details_page import TenderDetails
 from pages.create_direct_purchase import CreateDirectPurchase
 from pages.direct_purchase_list import DirectPurchaseList
 from pages.item_receive import ItemReceive
@@ -286,71 +288,105 @@ bill_num = str(random.randint(10000,99999))
 #     r_page.confirm_acceptance()
 
 
-def test_12_create_tender_initiation(page):
-    print("Test 12: Creating tender initiation...")
+# def test_12_create_tender_initiation(page):
+#     print("Test 12: Creating tender initiation...")
+#     s_page = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name="761",
+#         pass_word=proj_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     req_num2 = "REQ20250014465"
+#     t_page = CreateTenderInitiation(page)
+#     tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
+#     t_page.navigate_to_url(tender_initiation_url)
+#     t_page.search_requisition(req_num2)
+#     t_page.select_all_items()
+#     t_page.select_Quotation_method()
+#     t_page.fill_remarks("Remarks for tender initiation")
+#     t_page.go_to_save_next()
+
+#     global tender_num
+#     tender_num = t_page.get_tender_number()
+#     print("Purchase number: "+tender_num)
+
+#     t_page.select_all_items()
+#     t_page.add_item_to_grid()
+#     t_page.go_to_save_next()
+
+#     t_page.same_delivery_schedule()
+#     # t_page.estimated_delivery_date_with_text("01-09-2025")
+#     t_page.estimated_delivery_date_with_text("31/08/2025")
+    
+#     t_page.delivery_location_dropdown_select()
+#     t_page.delivery_location("Dhaka, Bangladesh")
+#     t_page.default_evaluation_criteria("Manufacturer authorization letter")
+#     t_page.tender_submission_criteria("TIN Certificate")
+#     t_page.go_to_save_next()
+
+#     t_page.tender_template_selection("QM Template")
+#     current_time = datetime.now()
+#     submission_date_str = (current_time + timedelta(minutes=7)).strftime("%d-%m-%Y %I:%M %p")
+#     opening_date_str = (current_time + timedelta(minutes=9)).strftime("%d-%m-%Y %I:%M %p")
+#     print("Submission Date:", submission_date_str)
+#     print("Opening Date:", opening_date_str)
+#     t_page.submission_date(submission_date_str)
+#     t_page.opening_date(opening_date_str)
+#     t_page.opening_place("BRAC Center, 75 Mohakhali, Dhaka-1212")
+#     t_page.opening_offer_validity("30")
+#     t_page.terms_condition_template_selection("QM Terms And Conditions")
+#     t_page.award_notification_template_selection("QM Award Notifications")
+#     t_page.tender_approver_selecting(tender_approver)
+#     t_page.go_to_save_next()
+
+#     t_page.committee_type_selection("Evaluation committee")
+#     t_page.member_type_selection("APPROVER")
+#     t_page.select_member(evaluation_approver)
+#     t_page.add_committee_member_to_grid()
+#     t_page.committee_type_selection("Evaluation committee")
+#     t_page.member_type_selection("RECOMMENDER") 
+#     t_page.select_member(evaluation_recommender)
+#     t_page.add_committee_member_to_grid()
+#     t_page.committee_type_selection("Opening committee")
+#     t_page.member_type_selection("APPROVER")
+#     t_page.select_member(opening_approver)
+#     t_page.add_committee_member_to_grid()
+#     t_page.submit_tender_initiation()
+#     t_page.confirm_submission()
+    # t_page.get_full_page_screenshot('full_page_screenshot_25')
+
+def test_13_approve_tender_initiation(page, new_tab):
+    print("Test 14: ...")
     s_page = LoginPage(page)
-    # s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         given_url=proj_url,
-        user_name="761",
-        pass_word=proj_pass,
+        user_name=str(int(tender_approver)),
+        pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    req_num2 = "REQ20250014465"
-    t_page = CreateTenderInitiation(page)
-    tender_initiation_url = proj_url + "/procurementDashboard/myDashboard#!/methodSelection/show"
-    t_page.navigate_to_url(tender_initiation_url)
-    t_page.search_requisition(req_num2)
-    t_page.select_all_items()
-    t_page.select_Quotation_method()
-    t_page.fill_remarks("Remarks for tender initiation")
-    t_page.go_to_save_next()
+    tender_num = "BPD/2025/RFQ-1866"
+    t_page = TenderInitiationList(page)
+    try:
+        tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
+        t_page.navigate_to_url(tender_initiation_list_url)
+        t_page.search_tender(tender_num)
+        new_page = new_tab(lambda p:t_page.navigate_to_tender_detail_page(tender_num))
+        b_page = TenderDetails(new_page)
+        b_page.approve_tender_from_details_page()
+        b_page.get_full_page_screenshot('full_page_screenshot_29')
+        new_page.close()
+        # t_page.select_tender(tender_num)
+        # t_page.approve_tender()
+        # t_page.confirmation_message_approve()
+        # t_page.get_full_page_screenshot('full_page_screenshot_29')
+    except Exception as e:
+        t_page.get_full_page_screenshot('full_page_screenshot_test_13')
+        print(e)
 
-    global tender_num
-    tender_num = t_page.get_tender_number()
-    print("Purchase number: "+tender_num)
-
-    t_page.select_all_items()
-    t_page.add_item_to_grid()
-    t_page.go_to_save_next()
-
-    t_page.same_delivery_schedule()
-    # t_page.estimated_delivery_date_with_text("01-09-2025")
-    t_page.estimated_delivery_date_with_text("31/08/2025")
-    
-    t_page.delivery_location_dropdown_select()
-    t_page.delivery_location("Dhaka, Bangladesh")
-    t_page.default_evaluation_criteria("Manufacturer authorization letter")
-    t_page.tender_submission_criteria("TIN Certificate")
-    t_page.go_to_save_next()
-
-    t_page.tender_template_selection("QM Template")
-    current_time = datetime.now()
-    submission_date_str = (current_time + timedelta(minutes=7)).strftime("%d-%m-%Y %I:%M %p")
-    opening_date_str = (current_time + timedelta(minutes=9)).strftime("%d-%m-%Y %I:%M %p")
-    print("Submission Date:", submission_date_str)
-    print("Opening Date:", opening_date_str)
-    t_page.submission_date(submission_date_str)
-    t_page.opening_date(opening_date_str)
-    t_page.opening_place("BRAC Center, 75 Mohakhali, Dhaka-1212")
-    t_page.opening_offer_validity("30")
-    t_page.terms_condition_template_selection("QM Terms And Conditions")
-    t_page.award_notification_template_selection("QM Award Notifications")
-    t_page.tender_approver_selecting(tender_approver)
-    t_page.go_to_save_next()
-
-    t_page.committee_type_selection("Evaluation committee")
-    t_page.member_type_selection("APPROVER")
-    t_page.select_member(evaluation_approver)
-    t_page.add_committee_member_to_grid()
-    t_page.committee_type_selection("Evaluation committee")
-    t_page.member_type_selection("RECOMMENDER") 
-    t_page.select_member(evaluation_recommender)
-    t_page.add_committee_member_to_grid()
-    t_page.committee_type_selection("Opening committee")
-    t_page.member_type_selection("APPROVER")
-    t_page.select_member(opening_approver)
-    t_page.add_committee_member_to_grid()
-    t_page.submit_tender_initiation()
-    t_page.confirm_submission()
-    t_page.get_full_page_screenshot('full_page_screenshot_25')
+    r2_page = MainNavigationBar(page)
+    r2_page.exit()
+    r2_page.logout()
+    r2_page.get_full_page_screenshot('full_page_screenshot_30')
+    r2_page.wait_for_timeout(5000)
