@@ -42,3 +42,14 @@ class VendoParticipation(BasicActions):
         # uploaded_file_name = self.upload_file(complianc_document,file_path)
         # print(f"Uploaded file name: {uploaded_file_name}")
         self.page.wait_for_timeout(2000)
+
+    def fill_required_document_fields(self, page, document_name: str, comment: str, file_path: str):
+        row = page.locator(f'table#tenderItemReqDocComGrid tr:has-text("{document_name}")')
+        self.page.wait_for_timeout(2000)
+        remarks_field = row.locator('textarea')
+        remarks_field.fill(comment)
+        self.page.wait_for_timeout(2000)
+
+        document_upload = row.locator('input[type="file"]')
+        document_upload.set_input_files(file_path)
+        self.page.wait_for_timeout(2000)

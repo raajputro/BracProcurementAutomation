@@ -407,3 +407,5 @@ def test_14_vendor1_participation_in_tender(page):
     document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
     v_page.fill_criteria_row(page, "Manufacturer authorization letter", "Yes", "All good", document_location)
     v_page.get_full_page_screenshot('full_page_screenshot_32')
+    v_page.fill_required_document_fields(page, "TIN Certificate", "Here is the document", document_location)
+    v_page.get_full_page_screenshot('full_page_screenshot_33')
