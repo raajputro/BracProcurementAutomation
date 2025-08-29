@@ -50,6 +50,7 @@ from pages.create_vendor_bill_payable import CreateVendorBillPayable
 from pages.vendor_bill_payable_list import BillList
 from pages.bill_details_information import BillDetails
 from pages.eTender_login import EtenderLoginPage
+from pages.vendor_participation import VendoParticipation
 
 from datetime import datetime, timedelta
 
@@ -399,3 +400,7 @@ def test_14_vendor1_participation_in_tender(page):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
+    tender_num = "BPD/2025/RFQ-1864"
+    v_page = VendoParticipation(page)
+    v_page.apply_in_tender(tender_num)
+    v_page.get_full_page_screenshot('full_page_screenshot_31')
