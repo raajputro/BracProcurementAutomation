@@ -9,6 +9,8 @@ class VendoParticipation(BasicActions):
 
     def __init__(self, page):
         super().__init__(page)
+
+        self.save_and_next_button = page.locator('#savePrimary')
         
         
 
@@ -53,3 +55,79 @@ class VendoParticipation(BasicActions):
         document_upload = row.locator('input[type="file"]')
         document_upload.set_input_files(file_path)
         self.page.wait_for_timeout(2000)
+
+    def click_on_save_and_next(self):
+        self.save_and_next_button.scroll_into_view_if_needed()
+        self.page.wait_for_timeout(2000)
+        self.save_and_next_button.click()
+        self.page.wait_for_timeout(5000)
+
+    def fill_tender_item_fields(self, page, item_name: str, radio_value: str, comment: str, file_path: str, currency: str, unit_cost: str):
+        row = page.locator(f'table#jqGridTenderItem tr:has-text("{item_name}")')
+        self.page.wait_for_timeout(2000)
+
+        # Checkbox
+        checkbox = row.locator('input[type="checkbox"]')
+        checkbox.scroll_into_view_if_needed()
+        checkbox.check()
+        self.page.wait_for_timeout(1000)
+
+        # Technical Proposal Button
+        technical_button = row.locator('button[title="Add Technical Proposal/Offer"]')
+        technical_button.scroll_into_view_if_needed()
+        technical_button.click()
+        self.page.wait_for_timeout(1000)
+
+        ti_row = page.locator(f'tr.itemCriteriaRow:has-text("{item_name}")')
+        self.page.wait_for_timeout(2000)
+           # Select the radio button dynamically
+        radio_button = ti_row.locator(f'input[type="radio"][value="{radio_value}"]')
+        radio_button.scroll_into_view_if_needed()
+        radio_button.check()
+        self.page.wait_for_timeout(1000)
+
+    # Fill the comment field
+        comment_field = ti_row.locator('textarea[id^="comment_"]')
+        comment_field.fill(comment)
+        self.page.wait_for_timeout(1000)
+
+    # Upload the document
+        file_input = ti_row.locator('input[type="file"]')
+        file_input.set_input_files(file_path)
+        self.page.wait_for_timeout(2000)
+
+        technical_info_save_button = page.locator('button#saveTechInfo:has-text("Save")')
+        technical_info_save_button.scroll_into_view_if_needed()
+        technical_info_save_button.click()
+        self.page.wait_for_timeout(3000)
+
+    # Financial Proposal Button
+        financial_button = row.locator('button[title="Add Financial Proposal/Offer"]')
+        financial_button.scroll_into_view_if_needed()
+        financial_button.click()
+        self.page.wait_for_timeout(1000)
+
+        # Select currency from dropdown by label
+        currency_dropdown = page.locator('select#foreignCurrency')
+        currency_dropdown.select_option(label=currency)
+        page.wait_for_timeout(1000)  # opt
+
+        unit_cost_input = page.locator('input#unitCost')
+        unit_cost_input.fill(unit_cost)
+        page.wait_for_timeout(1000)  # allow subtotal to calculate
+
+    #Get the calculated subtotal
+        sub_total = page.locator('input#subTotalCost').input_value()
+        print(f"Subtotal calculated: {sub_total}")
+
+        financial_info_save_button = page.locator("button#saveFinInfo")
+        financial_info_save_button.scroll_into_view_if_needed()
+        financial_info_save_button.click()
+        self.page.wait_for_timeout(3000)
+
+        submit_button = page.locator("button#submit")
+        submit_button.scroll_into_view_if_needed()
+        self.page.wait_for_timeout(2000)
+        submit_button.click()
+        self.page.wait_for_timeout(5000)
+

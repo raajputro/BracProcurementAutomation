@@ -400,7 +400,7 @@ def test_14_vendor1_participation_in_tender(page):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    tender_num = "BPD/2025/RFQ-1864"
+    tender_num = "BPD/2025/RFQ-1866"
     v_page = VendoParticipation(page)
     v_page.apply_in_tender(tender_num)
     v_page.get_full_page_screenshot('full_page_screenshot_31')
@@ -409,3 +409,7 @@ def test_14_vendor1_participation_in_tender(page):
     v_page.get_full_page_screenshot('full_page_screenshot_32')
     v_page.fill_required_document_fields(page, "TIN Certificate", "Here is the document", document_location)
     v_page.get_full_page_screenshot('full_page_screenshot_33')
+    v_page.click_on_save_and_next()
+    v_page.get_full_page_screenshot('full_page_screenshot_34')
+    v_page.fill_tender_item_fields(page, "Glue Stick (Fevi Stick)", "Yes", "All good", document_location, "BDT", "15")
+    v_page.get_full_page_screenshot('full_page_screenshot_35')
