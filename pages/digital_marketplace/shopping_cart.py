@@ -35,74 +35,13 @@ class ShoppingCart(HomePage, BasicActionsDM):
 
         self.item_remarks_textarea_locator = page.locator(
             'xpath=//strong[normalize-space(text())="Specification"]/following-sibling::textarea')
-        # or using partial match
         self.item_remarks_locator = page.locator('textarea[id^="itemRemarks"]')
         self.cart_quantity_input = page.locator('input[id^="itemquantity"]')
+        self.selected_item_quantity = page.locator('input[id^="itemquantity"][inputmode="numeric"]')
+        self.select_choose_file = page.locator('input[type="file"][name="file"][id^="itemAttachment"]')
+        self.confirm_button = page.get_by_role("button", name="Confirm")
+        self.cancel_button = page.get_by_role("button", name="Cancel")
         self.update_shopping_cart = page.locator('button[id="updatecart"]')
-
-    def select_vendor_by_name(self, vendor_name: str, requisition_number):
-        # Build a locator that directly finds the radio button whose label contains the vendor_name
-        radio_button = self.page.locator(
-            f"//div[starts-with(@id,'vendorContainer')]//label[contains(., '{vendor_name}')]/preceding-sibling::input[@type='radio']"
-        )
-
-        if radio_button.count() == 0:
-            print(f"Vendor '{vendor_name}' not found.")
-            return False
-
-        print(f"Found vendor: {vendor_name}")
-        radio_button.check()
-        self.wait_for_timeout(5000)
-        print(f"Selected radio button for vendor: {vendor_name}")
-        # self.page.wait_for_load_state("networkidle", timeout=15000)
-
-        # Now safely get checked requisitions after reload
-        # checked_reqs = self.page.locator(
-        #     "//div[input[@type='checkbox' and @checked='checked']]/label/strong"
-        # )
-        checked_reqs = self.page.locator("//input[@type='checkbox' and @checked]/following-sibling::label/strong")
-
-        count = checked_reqs.count()
-        print(f"Found {count} checked requisition(s).")
-
-        for i in range(count):
-            print(f"value of i: {i}")
-            req_number = checked_reqs.nth(i+1).inner_text().strip()
-            print(f"requisition #{i + 1}: {req_number}")
-            # All okay
-            if req_number != requisition_number:
-                checked_reqs.nth(i+1).click()
-                print(f"Unchecked requisition #{i + 1}: {req_number}")
-
-            else:
-                print(f"Checked requisition #{i + 1}: {req_number}")
-        return True
-
-    def select_vendor_for_requisition(self, requisition_number: str):
-        # Step 1: Find the requisition link by number
-        requisition_locator = self.page.locator(
-            f"//a[@class='item-requisition-link' and contains(., '{requisition_number}')]"
-        )
-
-        if requisition_locator.count() == 0:
-            print(f"Requisition '{requisition_number}' not found.")
-            return False
-
-        print(f"Found requisition: {requisition_number}")
-
-        # Step 2: From requisition, go up to vendor container
-        vendor_block = requisition_locator.locator("xpath=ancestor::div[contains(@id,'vendorContainer')]")
-
-        # Step 3: Get vendor name text
-        vendor_name = vendor_block.locator("label").inner_text()
-        print(f"Vendor found for requisition {requisition_number}: {vendor_name.strip()}")
-
-        # Step 4: Click its radio button
-        radio_button = vendor_block.locator("input[@type='radio']")
-        radio_button.check()
-        print(f"Selected vendor radio button for '{vendor_name.strip()}' linked to requisition {requisition_number}")
-
-        return True
 
     def select_vendor_for_requisition_found(self, requisition_number: str):
         # Locate all matching requisition links
@@ -113,6 +52,154 @@ class ShoppingCart(HomePage, BasicActionsDM):
             return
 
         print(f"Found {requisition_matches.count()} match(es) for requisition: {requisition_number}")
+
+    def select_vendor_by_name(self, vendor_name: str, requisition_number):
+        # Build a locator for the vendor's radio button
+        radio_button = self.page.locator(
+            f"//div[starts-with(@id,'vendorContainer')]//label[contains(., '{vendor_name}')]/preceding-sibling::input[@type='radio']"
+        )
+
+        if radio_button.count() == 0:
+            print(f"Vendor '{vendor_name}' not found.")
+            return False
+
+        print(f"Found vendor: {vendor_name}")
+        radio_button.check()
+        self.wait_for_timeout(2000)
+        print(f"Selected radio button for vendor: {vendor_name}")
+
+        # Find all checked requisitions
+        checked_reqs = self.page.locator(
+            "//input[@type='checkbox' and @checked]/following-sibling::label/strong"
+        )
+
+        req_numbers = checked_reqs.all_inner_texts()
+        print(f"Found {len(req_numbers)} checked requisition(s).")
+
+        for req_number in req_numbers:
+            req_number = req_number.strip()
+
+            if req_number != requisition_number:
+                # Uncheck by finding its input based on label text
+                self.page.locator(
+                    f"//label[strong[normalize-space(text())='{req_number}']]/preceding-sibling::input[@type='checkbox']"
+                ).click()
+                print(f"Unchecked requisition: {req_number}")
+            else:
+                print(f"Kept requisition checked: {req_number}")
+
+        return True
+
+    def update_shopping_cart_value_1(self, qty_update: str):
+        self.selected_item_quantity.click()
+        self.selected_item_quantity.clear()
+        self.input_in_element(self.selected_item_quantity, qty_update)
+        self.update_shopping_cart.click()
+        self.wait_for_timeout(5000)
+
+    def upload_attachment(self, file_path: str) -> bool:
+        """
+        Uploads an attachment to the shopping cart form.
+        :param file_path: absolute path of file to upload
+        :return: True if upload succeeds, False otherwise
+        """
+        try:
+            upload_input = self.page.locator('input[type="file"][name="file"][id^="itemAttachment"]')
+            confirm_button = self.page.get_by_role("button", name="Confirm")
+
+            if upload_input.count() == 0:
+                print("Upload input not found on page.")
+                return False
+
+            # Perform the upload
+            upload_input.set_input_files(file_path)
+            confirm_button.click()
+            print(f"Uploaded file: {file_path}")
+            self.wait_for_timeout(2000)
+            return True
+
+        except Exception as e:
+            print(f"Failed to upload attachment: {e}")
+            return False
+
+    def update_cart_item_remarks(self, requisition_number: str, remarks_text: str):
+        remarks_locator = self.page.locator(
+            f"//a[normalize-space()='{requisition_number}']/ancestor::td//textarea[starts-with(@id,'itemRemarks')]"
+        )
+        if remarks_locator.count() == 0:
+            raise Exception(f"No remarks field found for requisition {requisition_number}")
+
+        remarks_locator.fill(remarks_text)
+        print(f"Updated remarks for requisition {requisition_number} with: {remarks_text}")
+        return True
+
+    def update_shopping_cart_info(self):
+        self.update_shopping_cart.click()
+
+    # def select_vendor_by_name_1(self, vendor_name: str, requisition_number):
+    #     # Build a locator that directly finds the radio button whose label contains the vendor_name
+    #     radio_button = self.page.locator(
+    #         f"//div[starts-with(@id,'vendorContainer')]//label[contains(., '{vendor_name}')]/preceding-sibling::input[@type='radio']"
+    #     )
+    #
+    #     if radio_button.count() == 0:
+    #         print(f"Vendor '{vendor_name}' not found.")
+    #         return False
+    #
+    #     print(f"Found vendor: {vendor_name}")
+    #     radio_button.check()
+    #     self.wait_for_timeout(5000)
+    #     print(f"Selected radio button for vendor: {vendor_name}")
+    #     # self.page.wait_for_load_state("networkidle", timeout=15000)
+    #
+    #     # Now safely get checked requisitions after reload
+    #     # checked_reqs = self.page.locator(
+    #     #     "//div[input[@type='checkbox' and @checked='checked']]/label/strong"
+    #     # )
+    #     checked_reqs = self.page.locator("//input[@type='checkbox' and @checked]/following-sibling::label/strong")
+    #
+    #     count = checked_reqs.count()
+    #     print(f"Found {count} checked requisition(s).")
+    #
+    #     for i in range(count):
+    #         print(f"value of i: {i}")
+    #         req_number = checked_reqs.nth(i + 1).inner_text().strip()
+    #         print(f"requisition #{i + 1}: {req_number}")
+    #         # All okay
+    #         if req_number != requisition_number:
+    #             checked_reqs.nth(i + 1).click()
+    #             print(f"Unchecked requisition #{i + 1}: {req_number}")
+    #
+    #         else:
+    #             print(f"Checked requisition #{i + 1}: {req_number}")
+    #     return True
+    #
+    # def select_vendor_for_requisition(self, requisition_number: str):
+    #     # Step 1: Find the requisition link by number
+    #     requisition_locator = self.page.locator(
+    #         f"//a[@class='item-requisition-link' and contains(., '{requisition_number}')]"
+    #     )
+    #
+    #     if requisition_locator.count() == 0:
+    #         print(f"Requisition '{requisition_number}' not found.")
+    #         return False
+    #
+    #     print(f"Found requisition: {requisition_number}")
+    #
+    #     # Step 2: From requisition, go up to vendor container
+    #     vendor_block = requisition_locator.locator("xpath=ancestor::div[contains(@id,'vendorContainer')]")
+    #
+    #     # Step 3: Get vendor name text
+    #     vendor_name = vendor_block.locator("label").inner_text()
+    #     print(f"Vendor found for requisition {requisition_number}: {vendor_name.strip()}")
+    #
+    #     # Step 4: Click its radio button
+    #     radio_button = vendor_block.locator("input[@type='radio']")
+    #     radio_button.check()
+    #     print(f"Selected vendor radio button for '{vendor_name.strip()}' linked to requisition {requisition_number}")
+    #
+    #     return True
+    #
 
     def remove_vendor_item(self):
         count = self.remove_button.count()
@@ -140,14 +227,20 @@ class ShoppingCart(HomePage, BasicActionsDM):
     def update_shopping_cart_remarks(self):
         self.item_remarks_locator.nth(0).click()
         self.item_remarks_locator.nth(0).clear()
-        self.input_in_element(self.item_remarks_locator.nth(0), "Marketplace item remarks 123 @#$ test")
+        self.input_in_element(self.item_remarks_locator.nth(0), "Marketplace item")
 
-    def update_shopping_cart_value(self):
+    def update_shopping_cart_value(self, qty_update):
         self.cart_quantity_input.nth(0).click()
         self.cart_quantity_input.nth(0).clear()
-        self.input_in_element(self.cart_quantity_input.nth(0), "5")
-        self.update_shopping_cart.click()
+        self.input_in_element(self.cart_quantity_input.nth(0), qty_update)
+        self.update_shopping_cart.nth(0).click()
         self.wait_for_timeout(5000)
+
+    def upload_attachment_1(self, attachment_file):
+        # self.upload_attachment.click()
+        uploaded_file_name = self.upload_file(self.select_choose_file, attachment_file)
+        print(f"Uploaded file name: {uploaded_file_name}")
+        self.confirm_button.click()
 
     def cart_page_checkout(self):
         self.click_on_btn(self.select_cart_terms_and_condition)

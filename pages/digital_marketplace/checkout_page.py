@@ -13,7 +13,7 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
         self.page = page
         # prepare the delivery schedule
         self.schedule_quantity = page.locator('input[type="number"]')
-        self.schedule_expected_date = page.locator('input[id^="date"][class="todayDate"]')
+        self.schedule_expected_date = page.locator('input[type="date"][class="todayDate"]')
         self.schedule_expected_location = page.locator('input[id^="location"]')
         self.schedule_receiving_person_pin = page.locator('input[id^="deliveryInfo"]')
 
@@ -33,20 +33,18 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
         self.schedule_edit_button = page.locator('button[class="editScheduleButton"][type="button"]')
         self.update_schedule_button = page.locator('button[id^="updateScheduleButton"][class="button1"]')
 
-    def delivery_schedule_preparation_1(self, location, pin):
-        self.click_on_btn(self.schedule_quantity)
-        self.click_on_btn(self.schedule_expected_date)
-        self.input_in_element(self.schedule_expected_location, location)
-        # self.page.wait_for_timeout(5000)
-        self.input_in_element(self.schedule_receiving_person_pin, pin)
-        self.page.keyboard.press('Enter')
-        self.page.wait_for_timeout(10000)
+    def update_quantity(self, quantity):
+        self.schedule_quantity.clear()
+        self.input_in_element(self.schedule_quantity, quantity)
+
+    def update_expected_date(self):
+        self.schedule_expected_date.click()
+        expected_date = (datetime.today() + timedelta(days=1)).strftime("%Y-%m-%d")
+        self.schedule_expected_date.fill(expected_date)
+        print(f"Filled expected date with: {expected_date}")
 
     def delivery_schedule_preparation(self, location, pin):
-        self.click_on_btn(self.schedule_quantity)
-        self.click_on_btn(self.schedule_expected_date)
         self.input_in_element(self.schedule_expected_location, location)
-        self.page.wait_for_timeout(5000)
         self.input_in_element(self.schedule_receiving_person_pin, pin)
         self.page.keyboard.press('Enter')
         self.page.wait_for_timeout(5000)
@@ -68,13 +66,13 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
         self.click_on_btn(self.click_add_schedule_button.nth(0))
         # self.wait_for_timeout(5000)
 
-    def click_checkout(self):
+    def click_continue(self):
         self.click_on_btn(self.continue_button)
 
-    def fillup_order_remarks(self):
+    def fillup_order_remarks(self, input_remarks):
         self.click_on_btn(self.order_remarks)
         self.order_remarks.clear()
-        self.input_in_element(self.order_remarks, 'The initiator places an order')
+        self.input_in_element(self.order_remarks, input_remarks)
         self.wait_for_timeout(2000)
 
     def select_terms_of_service(self):
@@ -87,7 +85,7 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
         order_locator = self.page.locator("text=ORDER REFERENCE NO:").text_content()
         # self.wait_to_load_element(self.order_locator)
         order_number = order_locator.split(":")[-1].strip()
-        print(order_number)
+        print("Order reference number: " + order_number)
         return order_number
 
     def goto_public_side_order_details_view(self):

@@ -3,6 +3,7 @@ import os
 import re
 import random
 from conftest import new_tab
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -26,11 +27,11 @@ marketplace_url_qa = os.getenv("test_marketplace_url_qa")
 order_initiator = os.getenv("test_order_initiator")
 marketplace_password = os.getenv("test_marketplace_password")
 # req_num = os.getenv("test_req_num")
-delivery_location = os.getenv("test_delivery_location")
-receiving_pin = os.getenv("test_receiving_pin")
+receiving_pin_1 = os.getenv("test_receiving_pin")
 # order_approver = os.getenv("test_order_approver")
-order_admin = os.getenv("test_order_admin")
-manual_delivery_location = os.getenv("test_manual_delivery_location")
+# order_admin = os.getenv("test_order_admin")
+manual_delivery_location_1 = os.getenv("test_delivery_location_1")
+manual_delivery_location_2 = os.getenv("test_delivery_location_2")
 dm_user_gen_password = os.getenv("test_dm_user_gen_password")
 agreement = os.getenv("test_white_listed_agreement")
 login_credential_for_receiver = os.getenv("test_login_credential_for_receiver")
@@ -76,6 +77,7 @@ order_reference_number = ''
 order_vendor = ''
 framework_order_no = ''
 vendor_login_id = ''
+order_number = ''
 
 req_num = ''
 approver_id = ''
@@ -96,16 +98,13 @@ def test_1_login_to_create_and_submit_requisition(page):
         timeout=60000
     )
 
-    # def test_2_go_to_procurement_page(page):
     d_page = DashboardPage(page)
     d_page.goto_procurement()
     d_page.get_full_page_screenshot('full_page_screenshot_1')
 
-    # def test_3_navigate_to_create_req_from_proc_dashboard(page):
     p_page = ProcurementHomePage(page)
     p_page.navigate_to_create_requisition()
     p_page.get_full_page_screenshot('full_page_screenshot_2')
-    # p_page.wait_for_timeout(7500)
 
     # def test_4_create_and_submit_requisition(page):
     print("Test 1: Creating requisition...")
@@ -120,7 +119,6 @@ def test_1_login_to_create_and_submit_requisition(page):
     c_page.setting_active_framework_list(agreement_info="BPD/2024/FA-93")
     c_page.agreement_item_selector.nth(0).click()
     c_page.finalize_item_quantity(item_quantity="100")
-    # c_page.wait_for_timeout(7500)
     c_page.setting_requisition_for_details("[1202010501-01] Furniture and Fixture", "Item remarks abc123@")
     c_page.setting_same_schedule_for_date()
     c_page.setting_location_for_head_office(address="Gulshan 1, Head Office, Dhaka - 1200")
@@ -153,28 +151,22 @@ def test_2_find_approver_of_the_requisition(page):
 def test_3_login_as_approver_and_approve_requisition(page):
     print("Test 3: Logging in as approver and approving requisition...")
     s_page = ProcurementLoginPage(page)
-    # s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         given_url=proj_url,
         user_name=approver_id,
-        # user_name="9026",
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
 
-    # def test_7_approver_goto_procurement(page):
     d_page = DashboardPage(page)
-    # d_page.close_modal.click()
     d_page.menu_click_procurement_hyperlink()
 
-    # def test_8_approver_goto_procurement_and_approve(page):
     p_page = ProcurementHomePage(page)
     p_page.navigate_to_requisition_approve_list()
 
     r2_page = RequisitionApproveList(page)
     r2_page.get_full_page_screenshot('full_page_screenshot_8')
     r2_page.search_requisition(req_num)
-    # r2_page.search_requisition(requisition_number="REQ20250014472")
     r2_page.select_requisition()
     r2_page.approve_requisition()
     r2_page.get_full_page_screenshot('full_page_screenshot_9')
@@ -206,7 +198,7 @@ def test_4_find_approver_of_the_requisition_2(page):
     r1_page = RequisitionList(page)
     r1_page.get_full_page_screenshot('full_page_screenshot_11')
     r1_page.search_requisition(req_num)
-    # r1_page.search_requisition(requisition_number="REQ20250014472")
+
     global approver_id_2, order_approver
     global order_approver
     order_approver = r1_page.find_approver_id()
@@ -224,11 +216,9 @@ def test_4_find_approver_of_the_requisition_2(page):
 def test_5_login_as_approver_2_and_approve_requisition(page):
     print("Test 5: Logging in as second approver and approving requisition...")
     s_page = ProcurementLoginPage(page)
-    # s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         given_url=proj_url,
         user_name=approver_id_2,
-        # user_name="155790",
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
@@ -241,7 +231,6 @@ def test_5_login_as_approver_2_and_approve_requisition(page):
     r2_page = RequisitionApproveList(page)
     r2_page.get_full_page_screenshot('full_page_screenshot_14')
     r2_page.search_requisition(req_num)
-    # r2_page.search_requisition(requisition_number="REQ20250014472")
     r2_page.select_requisition()
     r2_page.approve_requisition()
     r2_page.get_full_page_screenshot('full_page_screenshot_15')
@@ -259,7 +248,6 @@ def test_6_check_requisition_approved(page, new_tab):
     s_page = ProcurementLoginPage(page)
     s_page.perform_login(
         given_url=proj_url,
-        # user_name="6008",
         user_name=proj_user,
         pass_word=proj_pass,
         timeout=60000
@@ -272,7 +260,6 @@ def test_6_check_requisition_approved(page, new_tab):
 
     r1_page = RequisitionList(page)
     r1_page.search_requisition(req_num)
-    # r1_page.search_requisition(requisition_number="REQ20250014472")
     req_status = r1_page.find_requisition_status()
     print("REQ STATUS:", req_status)
     # expect(req_status).to_be_equal("Approved")
@@ -316,20 +303,47 @@ def test_7_order_initiation(page):
         user_name="0000" + proj_user,
         pass_word=marketplace_password
     )
+
     home_page = HomePage(page)
     home_page.verify_welcome_message()
     home_page.wait_for_timeout(2000)
     home_page.goto_shopping_cart()
 
     cart_page = ShoppingCart(page)
-    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014909")
-    # cart_page.select_vendor_by_name(vendor_name="Super Formica & Lamination Ltd")
+    cart_page.select_vendor_for_requisition_found(requisition_number=req_num)
+    cart_page.select_vendor_by_name(vendor_name=order_vendor, requisition_number=req_num)
+    current_dir = os.getcwd()
+    document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
+    assert cart_page.upload_attachment(document_location), "File upload failed"
+    # Or use below function
+    # cart_page.upload_attachment(document_location)
 
-    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014472")
-    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014909")
-    # cart_page.select_vendor_by_name(vendor_name="Super Formica & Lamination Ltd", requisition_number="REQ20250014909")
-    cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014501")
-    cart_page.select_vendor_by_name(vendor_name="Plan for demand", requisition_number="REQ20250014501")
-    # cart_page.select_vendor_by_name(vendor_name="Plan for demand")
+    cart_page.update_shopping_cart_value_1(qty_update="10")
+    cart_page.update_cart_item_remarks(
+        requisition_number=req_num,
+        remarks_text="Automation test remarks"
+    )
+    cart_page.update_shopping_cart_info()
+    cart_page.cart_page_checkout()
 
-    cart_page.wait_for_timeout(5000)
+    checkout_page = CheckoutPage(page)
+    checkout_page.update_quantity(quantity="4")
+    # checkout_page.schedule_expected_date.click()
+    # expected_date = (datetime.strptime( "2025-09-04", "%Y-%m-%d") + timedelta(days=1)).strftime(
+    #     "%Y-%m-%d")
+    # checkout_page.schedule_expected_date.fill(expected_date)
+
+    checkout_page.update_expected_date()
+    checkout_page.delivery_schedule_preparation(location=manual_delivery_location_1, pin=receiving_pin_1)
+    checkout_page.click_add_schedule_button.click()
+    checkout_page.delivery_schedule_preparation(location=manual_delivery_location_2, pin=order_initiator)
+    checkout_page.click_add_schedule_button.click()
+    checkout_page.click_continue()
+    checkout_page.fillup_order_remarks(input_remarks="The initiator places an order")
+    checkout_page.select_terms_of_service()
+    checkout_page.confirm_order()
+    checkout_page.goto_public_side_order_details_view()
+    checkout_page.wait_for_timeout(5000)
+
+    order_details = MainNavigationMenu(page)
+    order_details.perform_logout()
