@@ -51,6 +51,7 @@ from pages.vendor_bill_payable_list import BillList
 from pages.bill_details_information import BillDetails
 from pages.eTender_login import EtenderLoginPage
 from pages.vendor_participation import VendoParticipation
+from pages.Participate_in_Tender import PerticipateTenderList
 
 from datetime import datetime, timedelta
 
@@ -396,20 +397,42 @@ def test_14_vendor1_participation_in_tender(page):
     s_page = EtenderLoginPage(page)
     s_page.perform_login(
         given_url=eTender_url,
-        user_name="Skylark",
+        user_name="bakergonjf",
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    tender_num = "BPD/2025/RFQ-1866"
-    v_page = VendoParticipation(page)
-    v_page.apply_in_tender(tender_num)
-    v_page.get_full_page_screenshot('full_page_screenshot_31')
+    tender_num = "BPD/2025/RFQ-1864"
+    x_page = PerticipateTenderList(page)
+    x_page.go_to_participate_in_tender()
+    x_page.get_full_page_screenshot('full_page_screenshot_30_1')
+    x_page.search_tender_EoI(tender_num)
+    x_page.get_full_page_screenshot('full_page_screenshot_30_2')
+    x_page.click_apply_button_for_tender(tender_num)
+    x_page.get_full_page_screenshot('full_page_screenshot_30_3')
     document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
-    v_page.fill_criteria_row(page, "Manufacturer authorization letter", "Yes", "All good", document_location)
-    v_page.get_full_page_screenshot('full_page_screenshot_32')
-    v_page.fill_required_document_fields(page, "TIN Certificate", "Here is the document", document_location)
-    v_page.get_full_page_screenshot('full_page_screenshot_33')
-    v_page.click_on_save_and_next()
-    v_page.get_full_page_screenshot('full_page_screenshot_34')
-    v_page.fill_tender_item_fields(page, "Glue Stick (Fevi Stick)", "Yes", "All good", document_location, "BDT", "15")
-    v_page.get_full_page_screenshot('full_page_screenshot_35')
+    x_page.fill_criteria_row("Manufacturer authorization letter", "Yes", "All good", document_location)
+    x_page.get_full_page_screenshot('full_page_screenshot_30_4')
+    x_page.fill_required_document_fields("TIN Certificate", "Here is the document", document_location)
+    x_page.get_full_page_screenshot('full_page_screenshot_30_5')
+    x_page.click_on_save_and_next()
+    x_page.get_full_page_screenshot('full_page_screenshot_30_6')
+    x_page.selecting_item("Glue Stick (Fevi Stick)")
+    x_page.selecting_technical_button("Glue Stick (Fevi Stick)", "Yes", "All good", document_location)
+    x_page.get_full_page_screenshot('full_page_screenshot_30_7')
+    x_page.selecting_financial_button("Glue Stick (Fevi Stick)", "BDT", "15")
+    x_page.get_full_page_screenshot('full_page_screenshot_30_8')
+    x_page.click_on_submit()
+    x_page.get_full_page_screenshot('full_page_screenshot_30_9')
+
+    # v_page = VendoParticipation(page)
+    # v_page.apply_in_tender(tender_num)
+    # v_page.get_full_page_screenshot('full_page_screenshot_31')
+    # document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+    # v_page.fill_criteria_row(page, "Manufacturer authorization letter", "Yes", "All good", document_location)
+    # v_page.get_full_page_screenshot('full_page_screenshot_32')
+    # v_page.fill_required_document_fields(page, "TIN Certificate", "Here is the document", document_location)
+    # v_page.get_full_page_screenshot('full_page_screenshot_33')
+    # v_page.click_on_save_and_next()
+    # v_page.get_full_page_screenshot('full_page_screenshot_34')
+    # v_page.fill_tender_item_fields(page, "Glue Stick (Fevi Stick)", "Yes", "All good", document_location, "BDT", "15")
+    # v_page.get_full_page_screenshot('full_page_screenshot_35')
