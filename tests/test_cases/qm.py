@@ -56,6 +56,8 @@ from pages.tender_list import TenderList
 from pages.e_tender_details_page import ETenderDetails
 from pages.tender_shot_list import TenderShortList
 from pages.prepare_short_list import PrepareShortList
+from pages.tender_evaluation_list import TenderEvaluationList
+from pages.financial_evaluation import FinancialEvaluation
 
 from datetime import datetime, timedelta
 
@@ -458,36 +460,61 @@ bill_num = str(random.randint(10000,99999))
     # s_page.logout()
     # s_page.get_full_page_screenshot('full_page_screenshot_32_2')  
 
-def test_17_tender_shortlist(page,new_tab):
-    print("Test 17: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name=assigned_person,
-        pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
-    )
-    tender_num = "BPD/2025/RFQ-1867"
-    req_num = "REQ20250014446"
-    supplier_name="Mentors"
-    x_page = TenderShortList(page)
-    x_page.go_to_tender_short_list()
-    x_page.search_tender(tender_num)
-    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
-    b_page = PrepareShortList(new_page)
-    b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
-    b_page.get_full_page_screenshot('full_page_screenshot_33_1')
+# def test_17_tender_shortlist(page,new_tab):
+#     print("Test 17: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=assigned_person,
+#         pass_word=proj_gen_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     tender_num = "BPD/2025/RFQ-1867"
+#     req_num = "REQ20250014446"
+#     supplier_name="Mentors"
+#     x_page = TenderShortList(page)
+#     x_page.go_to_tender_short_list()
+#     x_page.search_tender(tender_num)
+#     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+#     b_page = PrepareShortList(new_page)
+#     b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
+#     b_page.get_full_page_screenshot('full_page_screenshot_33_1')
     # document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
     # b_page.fill_supplier_details(supplier_name, True,"All good", document_location, 5, 0)
     # b_page.fill_supplier_details("Inventory Test", False,"Not responsive",document_location)
     # b_page.fill_supplier_details("sadia enterprise 2", False,"Not responsive",document_location)
     # b_page.get_full_page_screenshot('full_page_screenshot_33_2')
     # b_page.click_shortlist_button()
-    b_page.get_full_page_screenshot('full_page_screenshot_33_3')
-    b_page.fill_recommendation_field("Ready to approve")
-    b_page.get_full_page_screenshot('full_page_screenshot_33_4')    
-    b_page.click_forward_to_committee()
-    b_page.get_full_page_screenshot('full_page_screenshot_33_5')
+    # b_page.get_full_page_screenshot('full_page_screenshot_33_3')
+    # b_page.fill_recommendation_field("Ready to approve")
+    # b_page.get_full_page_screenshot('full_page_screenshot_33_4')    
+    # b_page.click_forward_to_committee()
+    # b_page.get_full_page_screenshot('full_page_screenshot_33_5')
+    # new_page.close()
+    # s_page.logout()
+    # s_page.get_full_page_screenshot('full_page_screenshot_33_6')
+
+def test_18_tender_shortlist(page,new_tab):
+    print("Test 18: ...")
+    s_page = EtenderLoginPage(page)
+    s_page.perform_login(
+        given_url=eTender_url,
+        user_name=evaluation_recommender,
+        pass_word=proj_gen_pass,
+        timeout=60000  # Increased timeout for login
+    )
+    tender_num = "BPD/2025/RFQ-217"
+    req_num = "REQ20250014446"
+    supplier_name="Mentors"
+    x_page = TenderEvaluationList(page)
+    x_page.go_to_tender_evaluation_list()
+    x_page.search_tender(tender_num)
+    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+    b_page = FinancialEvaluation(new_page)
+    b_page.click_select_all_recommendations()
+    b_page.get_full_page_screenshot('full_page_screenshot_34_1')
+    b_page.click_bulk_accept()
+    b_page.selecting_confirm_yes()
+    b_page.get_full_page_screenshot('full_page_screenshot_34_2')
     new_page.close()
     s_page.logout()
-    s_page.get_full_page_screenshot('full_page_screenshot_33_6')
