@@ -477,16 +477,17 @@ def test_17_tender_shortlist(page,new_tab):
     b_page = PrepareShortList(new_page)
     b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
     b_page.get_full_page_screenshot('full_page_screenshot_33_1')
-    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
-    b_page.fill_supplier_details(supplier_name, True,"All good", document_location, 5, 0)
-    b_page.fill_supplier_details("Inventory Test", False,"Not responsive",document_location)
-    b_page.fill_supplier_details("sadia enterprise 2", False,"Not responsive",document_location)
-#     fill_supplier_details(
-#     supplier_name="Mentors",
-#     is_responsive=True,
-#     proposed_qty=5,
-#     advance_amount=2000,
-#     comment_text="Here is the vendor's proposal.",
-#     upload_file_path="C:/path/to/document.pdf"
-# )
-    b_page.get_full_page_screenshot('full_page_screenshot_33_2')
+    # document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+    # b_page.fill_supplier_details(supplier_name, True,"All good", document_location, 5, 0)
+    # b_page.fill_supplier_details("Inventory Test", False,"Not responsive",document_location)
+    # b_page.fill_supplier_details("sadia enterprise 2", False,"Not responsive",document_location)
+    # b_page.get_full_page_screenshot('full_page_screenshot_33_2')
+    # b_page.click_shortlist_button()
+    b_page.get_full_page_screenshot('full_page_screenshot_33_3')
+    b_page.fill_recommendation_field("Ready to approve")
+    b_page.get_full_page_screenshot('full_page_screenshot_33_4')    
+    b_page.click_forward_to_committee()
+    b_page.get_full_page_screenshot('full_page_screenshot_33_5')
+    new_page.close()
+    s_page.logout()
+    s_page.get_full_page_screenshot('full_page_screenshot_33_6')
