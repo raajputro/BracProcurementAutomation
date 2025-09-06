@@ -469,6 +469,7 @@ def test_17_tender_shortlist(page,new_tab):
     )
     tender_num = "BPD/2025/RFQ-1867"
     req_num = "REQ20250014446"
+    supplier_name="Mentors"
     x_page = TenderShortList(page)
     x_page.go_to_tender_short_list()
     x_page.search_tender(tender_num)
@@ -476,3 +477,16 @@ def test_17_tender_shortlist(page,new_tab):
     b_page = PrepareShortList(new_page)
     b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
     b_page.get_full_page_screenshot('full_page_screenshot_33_1')
+    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+    b_page.fill_supplier_details(supplier_name, True,"All good", document_location, 5, 0)
+    b_page.fill_supplier_details("Inventory Test", False,"Not responsive",document_location)
+    b_page.fill_supplier_details("sadia enterprise 2", False,"Not responsive",document_location)
+#     fill_supplier_details(
+#     supplier_name="Mentors",
+#     is_responsive=True,
+#     proposed_qty=5,
+#     advance_amount=2000,
+#     comment_text="Here is the vendor's proposal.",
+#     upload_file_path="C:/path/to/document.pdf"
+# )
+    b_page.get_full_page_screenshot('full_page_screenshot_33_2')
