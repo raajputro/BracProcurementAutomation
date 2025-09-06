@@ -110,39 +110,43 @@ class PrepareShortList(BasicActions):
         """
 
         # Find supplier ID by matching hidden input value
-        supplier_inputs = self.page.locator('input[id^="supName_"]')
-        count = supplier_inputs.count()
+        supplier_name_locator = self.page.locator('input[id^="supName_"]')
+        count = supplier_name_locator.count()
         supplier_id = None
         for i in range(count):
-            val = supplier_inputs.nth(i).input_value()
+            val = supplier_name_locator.nth(i).input_value()
             if val.strip() == supplier_name:
-                supplier_id = supplier_inputs.nth(i).get_attribute('id').split('_')[1]
+                supplier_id = supplier_name_locator.nth(i).get_attribute('id').split('_')[1]
                 break
         if not supplier_id:
             raise Exception(f"Supplier name '{supplier_name}' not found!")
 
         # 1. Select Responsive / Non-Responsive radio button
-        radio_selector = f'#res_{supplier_id}' if is_responsive else f'#non_res_{supplier_id}'
-        self.page.locator(radio_selector).check()
+        select_responsiveness = self.page.locator(f'#res_{supplier_id}' if is_responsive else f'#non_res_{supplier_id}')
+        select_responsiveness.check()
         self.page.wait_for_timeout(5000)
 
         if is_responsive:
             # 2. Propose Vendor Selection checkbox and Proposed Quantity
-            self.page.locator(f'#checkSuggest_{supplier_id}').check(force=True)
+            propose_vendor_selection_checkbox = self.page.locator(f'#checkSuggest_{supplier_id}')
+            propose_vendor_selection_checkbox.check(force=True)
             self.page.wait_for_timeout(3000)
             if proposed_qty is not None:
-                self.page.locator(f'#awardQty_{supplier_id}').fill(str(proposed_qty))
+                proposed_quantity = self.page.locator(f'#awardQty_{supplier_id}')
+                proposed_quantity.fill(str(proposed_qty))
 
             # 3. Advance Amount (BDT)
-            self.page.locator(f'#chkAdv_{supplier_id}').check(force=True)
+            advance_amount_checkbox = self.page.locator(f'#chkAdv_{supplier_id}')
+            advance_amount_checkbox.check(force=True)
             self.page.wait_for_timeout(3000)
             if advance_amount is not None:
-                self.page.locator(f'#advAmount_{supplier_id}').fill(str(advance_amount))
+                give_advance_amount = self.page.locator(f'#advAmount_{supplier_id}')
+                give_advance_amount.fill(str(advance_amount))
 
         # 4. Upload document if path provided
         if upload_file_path:
-            upload_handle = self.page.locator(f'#document_{supplier_id} input[type="file"]')
-            upload_handle.set_input_files(upload_file_path)
+            upload_document_file = self.page.locator(f'#document_{supplier_id} input[type="file"]')
+            upload_document_file.set_input_files(upload_file_path)
             self.page.wait_for_timeout(1000)  # Allow time for upload
 
         # 5. Write comment
