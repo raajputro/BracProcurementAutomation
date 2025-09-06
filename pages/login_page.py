@@ -19,6 +19,10 @@ class LoginPage(BasicActions):
         self.advModal = page.locator('#modals')
         self.advCloseBtn = page.locator('xpath=//*[@id="modals"]/div[1]/button')
         self.overlayModal = page.locator('#overlay.active')
+ 
+
+    
+
 
     # write down all the necessary actions performed on this page as def
     def perform_login(

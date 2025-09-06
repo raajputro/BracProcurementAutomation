@@ -14,6 +14,18 @@ class EtenderLoginPage(BasicActions):
         self.userName = page.locator("#userName")
         self.passWord = page.locator("#password")
         self.signBtn = page.locator("#loginForm > div.modal-footer > button.btn.btn-primary")  # Inside modal
+        self.logout_link = page.locator('a[href="/login/logout"]')
+        self.dropdown_trigger = page.locator('div.nav-user .dropdown span.logIn')
+
+    def logout(self):
+    # Click on the dropdown to reveal logout
+        self.page.wait_for_timeout(2000)  # Wait for any pending actions
+        self.dropdown_trigger.click()
+        self.page.wait_for_timeout(1000)
+        # Click the Logout link
+        self.logout_link.click()
+        print("Successfully logged out.")
+        self.page.wait_for_timeout(2000)  # Wait for logout to complete
 
     def perform_login(
         self,
