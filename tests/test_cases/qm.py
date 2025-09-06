@@ -54,6 +54,8 @@ from pages.vendor_participation import VendoParticipation
 from pages.Participate_in_Tender import PerticipateTenderList
 from pages.tender_list import TenderList
 from pages.e_tender_details_page import ETenderDetails
+from pages.tender_shot_list import TenderShortList
+from pages.prepare_short_list import PrepareShortList
 
 from datetime import datetime, timedelta
 
@@ -431,24 +433,46 @@ bill_num = str(random.randint(10000,99999))
     # s_page.logout()
     # s_page.get_full_page_screenshot('full_page_screenshot_30_10')
 
-def test_16_tender_opening(page,new_tab):
-    print("Test 16: ...")
+# def test_16_tender_opening(page,new_tab):
+    # print("Test 16: ...")
+    # s_page = EtenderLoginPage(page)
+    # s_page.perform_login(
+    #     given_url=eTender_url,
+    #     user_name=opening_approver,
+    #     pass_word=proj_gen_pass,
+    #     timeout=60000  # Increased timeout for login
+    # )
+    # tender_num = "BPD/2025/IFT-1829"
+    # x_page = TenderList(page)
+    # x_page.go_to_tender_list()
+    # x_page.search_tender(tender_num)
+
+    # new_page = new_tab(lambda p:x_page.navigate_to_tender_details_page(tender_num))
+    # b_page = ETenderDetails(new_page)
+    # b_page.wait_until(opening_date_str)
+    # b_page.click_open_button()
+    # b_page.confirm_open_tender() 
+    # b_page.get_full_page_screenshot('full_page_screenshot_32_1')
+    # new_page.close()
+
+    # s_page.logout()
+    # s_page.get_full_page_screenshot('full_page_screenshot_32_2')  
+
+def test_17_tender_shortlist(page,new_tab):
+    print("Test 17: ...")
     s_page = EtenderLoginPage(page)
     s_page.perform_login(
         given_url=eTender_url,
-        user_name=opening_approver,
+        user_name=assigned_person,
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    tender_num = "BPD/2025/IFT-1829"
-    x_page = TenderList(page)
-    x_page.go_to_tender_list()
+    tender_num = "BPD/2025/RFQ-1867"
+    req_num = "REQ20250014446"
+    x_page = TenderShortList(page)
+    x_page.go_to_tender_short_list()
     x_page.search_tender(tender_num)
-    current_time = datetime.now()
-    opening_date_str = (current_time + timedelta(minutes=1)).strftime("%d-%m-%Y %I:%M %p")
-    new_page = new_tab(lambda p:x_page.navigate_to_tender_details_page(tender_num))
-    b_page = ETenderDetails(new_page)
-    b_page.wait_until(opening_date_str)
-    b_page.click_open_button()
-    b_page.confirm_open_tender() 
-    b_page.get_full_page_screenshot('full_page_screenshot_32_1')  
+    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+    b_page = PrepareShortList(new_page)
+    b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
+    b_page.get_full_page_screenshot('full_page_screenshot_33_1')
