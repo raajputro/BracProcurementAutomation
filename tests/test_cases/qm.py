@@ -494,12 +494,37 @@ bill_num = str(random.randint(10000,99999))
     # s_page.logout()
     # s_page.get_full_page_screenshot('full_page_screenshot_33_6')
 
-def test_18_tender_shortlist(page,new_tab):
+# def test_18_Evaluation_recommender_approve(page,new_tab):
+#     print("Test 18: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=evaluation_recommender,
+#         pass_word=proj_gen_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     tender_num = "BPD/2025/RFQ-217"
+#     req_num = "REQ20250014446"
+#     supplier_name="Mentors"
+#     x_page = TenderEvaluationList(page)
+#     x_page.go_to_tender_evaluation_list()
+#     x_page.search_tender(tender_num)
+#     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+#     b_page = FinancialEvaluation(new_page)
+#     b_page.click_select_all_recommendations()
+#     b_page.get_full_page_screenshot('full_page_screenshot_34_1')
+#     b_page.click_bulk_accept()
+#     b_page.selecting_confirm_yes()
+#     b_page.get_full_page_screenshot('full_page_screenshot_34_2')
+#     new_page.close()
+#     s_page.logout()
+
+def test_19_Evaluation_approver_approve(page,new_tab):
     print("Test 18: ...")
     s_page = EtenderLoginPage(page)
     s_page.perform_login(
         given_url=eTender_url,
-        user_name=evaluation_recommender,
+        user_name=evaluation_approver,
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
@@ -511,10 +536,8 @@ def test_18_tender_shortlist(page,new_tab):
     x_page.search_tender(tender_num)
     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
     b_page = FinancialEvaluation(new_page)
-    b_page.click_select_all_recommendations()
-    b_page.get_full_page_screenshot('full_page_screenshot_34_1')
-    b_page.click_bulk_accept()
+    b_page.click_nominate_for_award()
     b_page.selecting_confirm_yes()
-    b_page.get_full_page_screenshot('full_page_screenshot_34_2')
+    b_page.get_full_page_screenshot('full_page_screenshot_35_1')
     new_page.close()
     s_page.logout()

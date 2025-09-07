@@ -13,6 +13,7 @@ class FinancialEvaluation(BasicActions):
         self.select_all_button = page.locator('#select-button')
         self.bulk_accept_button = page.locator('#accept')
         self.confirm_yes = page.locator('div.jconfirm-buttons button.btn-green', has_text='Yes')
+        self.nominate_button = page.locator('#award')
 
     def click_select_all_recommendations(self):
         """
@@ -57,3 +58,18 @@ class FinancialEvaluation(BasicActions):
 
         self.page.wait_for_timeout(5000)
         print("Clicked 'Yes' on confirmation dialog.")
+
+    def click_nominate_for_award(self):
+        """
+        Clicks the 'Nominate for Award' button.
+        """
+        print("Clicking 'Nominate for Award' button...")
+        # Wait for button to be visible and enabled
+        self.nominate_button.wait_for(state='visible', timeout=5000)
+
+        # Scroll into view and click
+        self.nominate_button.scroll_into_view_if_needed()
+        self.nominate_button.click()
+
+        self.page.wait_for_timeout(3000)
+        print("'Nominate for Award' button clicked.")
