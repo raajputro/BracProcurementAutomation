@@ -58,6 +58,7 @@ from pages.tender_shot_list import TenderShortList
 from pages.prepare_short_list import PrepareShortList
 from pages.tender_evaluation_list import TenderEvaluationList
 from pages.financial_evaluation import FinancialEvaluation
+from pages.create_noal import CreateNoal
 
 from datetime import datetime, timedelta
 
@@ -519,25 +520,49 @@ bill_num = str(random.randint(10000,99999))
 #     new_page.close()
 #     s_page.logout()
 
-def test_19_Evaluation_approver_approve(page,new_tab):
-    print("Test 18: ...")
+# def test_19_Evaluation_approver_approve(page,new_tab):
+#     print("Test 19: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=evaluation_approver,
+#         pass_word=proj_gen_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     tender_num = "BPD/2025/RFQ-217"
+#     req_num = "REQ20250014446"
+#     supplier_name="Mentors"
+#     x_page = TenderEvaluationList(page)
+#     x_page.go_to_tender_evaluation_list()
+#     x_page.search_tender(tender_num)
+#     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+#     b_page = FinancialEvaluation(new_page)
+#     b_page.click_nominate_for_award()
+#     b_page.selecting_confirm_yes()
+#     b_page.get_full_page_screenshot('full_page_screenshot_35_1')
+#     new_page.close()
+#     s_page.logout()
+
+def test_20_Creating_Noal(page,new_tab):
+    print("Test 20: ...")
     s_page = EtenderLoginPage(page)
     s_page.perform_login(
         given_url=eTender_url,
-        user_name=evaluation_approver,
+        user_name=assigned_person,
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    tender_num = "BPD/2025/RFQ-217"
+    tender_num = "BPD/FA/2025/RFQ-251"
     req_num = "REQ20250014446"
-    supplier_name="Mentors"
-    x_page = TenderEvaluationList(page)
-    x_page.go_to_tender_evaluation_list()
+    supplier_name="Powerbreeze Engineering Limited"
+    x_page = CreateNoal(page)
+    x_page.click_create_noal()
     x_page.search_tender(tender_num)
-    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
-    b_page = FinancialEvaluation(new_page)
-    b_page.click_nominate_for_award()
-    b_page.selecting_confirm_yes()
-    b_page.get_full_page_screenshot('full_page_screenshot_35_1')
-    new_page.close()
+    x_page.select_items_by_tender_supplier_payment_type(tender_num,supplier_name,"Bank")
+    x_page.get_full_page_screenshot('full_page_screenshot_36_1')
+    x_page.click_submit_button()
+    x_page.get_full_page_screenshot('full_page_screenshot_36_2')
+    x_page.confirm_submission()
+    x_page.get_full_page_screenshot('full_page_screenshot_36_3')
     s_page.logout()
+
