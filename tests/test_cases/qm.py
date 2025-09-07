@@ -61,6 +61,8 @@ from pages.tender_evaluation_list import TenderEvaluationList
 from pages.financial_evaluation import FinancialEvaluation
 from pages.create_noal import CreateNoal
 from pages.create_work_order import CreateWorkOrder
+from pages.purchase_order_list import PurchaseOrderList
+from pages.purchase_order_details_information import PurchaseOrderDetailsInformation
 
 from datetime import datetime, timedelta
 
@@ -569,41 +571,61 @@ bill_num = str(random.randint(10000,99999))
 #     x_page.get_full_page_screenshot('full_page_screenshot_36_3')
 #     s_page.logout()
 
-def test_21_Create_Work_Order(page):
-    print("Test 21: Create Work Order...")
+# def test_21_Create_Work_Order(page):
+#     print("Test 21: Create Work Order...")
+#     s_page = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=assigned_person,
+#         pass_word=proj_gen_pass,
+#         timeout=60000  # Increased timeout for login
+#     )
+#     work_order_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/show"
+#     tender_num = "BPD/FA/2025/RFQ-251"
+#     noal_number = "NOAL2025149"
+#     r_page = CreateWorkOrder(page)
+#     r_page.navigate_to_url(work_order_url)
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_1')
+#     tender_num = "BPD/2025/RFQ-1812"  
+#     supplier_name="Skylark Printers"
+#     r_page.select_vendor(supplier_name)
+#     r_page.select_payment_mode("Bank")
+#     r_page.select_first_checkbox_by_noal_and_tender(noal_number,tender_num)
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_2')
+#     r_page.add_item_to_grid()
+#     r_page.same_delivery_schedule()
+#     delivary_date = r_page.add_days_to_current_date(5)
+#     r_page.estimated_delivery_date_with_text(delivary_date)
+#     r_page.delivery_location_dropdown_select()
+#     r_page.delivery_location("Dhaka, Bangladesh")
+#     r_page.go_to_save_next()
+#     global work_order_num
+#     work_order_num = r_page.get_work_order_number()
+#     r_page.select_purchase_order_template("Purchase Order Template")
+#     r_page.select_payment_template("Purchase Order Payment")
+#     r_page.select_terms_template("Purchase Order Terms and Condions")
+#     r_page.work_order_approver_selecting(work_order_approver)
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_3')
+#     r_page.submit_work_order()
+
+def test_21_Approving_Work_Order(page,new_tab):
+    print("Test 21: Approving Work Order...")
     s_page = LoginPage(page)
     # s_page.navigate_to_url(proj_url)
     s_page.perform_login(
         given_url=proj_url,
-        user_name=assigned_person,
+        user_name=str(int(work_order_approver)),
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    work_order_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/show"
-    tender_num = "BPD/FA/2025/RFQ-251"
-    noal_number = "NOAL2025149"
-    r_page = CreateWorkOrder(page)
-    r_page.navigate_to_url(work_order_url)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_1')
-    tender_num = "BPD/2025/RFQ-1812"  
-    supplier_name="Skylark Printers"
-    r_page.select_vendor(supplier_name)
-    r_page.select_payment_mode("Bank")
-    r_page.select_first_checkbox_by_noal_and_tender(noal_number,tender_num)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_2')
-    r_page.add_item_to_grid()
-    r_page.same_delivery_schedule()
-    delivary_date = r_page.add_days_to_current_date(5)
-    r_page.estimated_delivery_date_with_text(delivary_date)
-    r_page.delivery_location_dropdown_select()
-    r_page.delivery_location("Dhaka, Bangladesh")
-    r_page.go_to_save_next()
-    global work_order_num
-    work_order_num = r_page.get_work_order_number()
-    r_page.select_purchase_order_template("Purchase Order Template")
-    r_page.select_payment_template("Purchase Order Payment")
-    r_page.select_terms_template("Purchase Order Terms and Condions")
-    r_page.work_order_approver_selecting(work_order_approver)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_3')
-    r_page.submit_work_order()
+    work_order_list_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/list"
+    work_order_num = "BPD/2025/PO-1554"
+    r_page = PurchaseOrderList(page)
+    r_page.navigate_to_url(work_order_list_url)
+    r_page.get_full_page_screenshot('full_page_screenshot_38_1')
+    r_page.search_work_order(work_order_num)
+    new_page = new_tab(lambda p:r_page.click_on_work_order_num(work_order_num))
+    b_page = PurchaseOrderDetailsInformation(new_page)
+    b_page.approve_work_order()
 
