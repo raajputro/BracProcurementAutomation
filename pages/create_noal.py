@@ -15,6 +15,7 @@ class CreateNoal(BasicActions):
         self.tender_search = page.locator('#tenderTitle')
         self.submit_button = page.locator('#approve')
         self.yes_button = page.locator('.ui-dialog-buttonset >> text=Yes')
+        self.toast_msg = page.locator("//div[contains(@class, 'jGrowl-notification')]//div[contains(@class, 'jGrowl-message')]")
 
     def click_create_noal(self):
         # Step 1: Click on "Tender Finalize"
@@ -113,6 +114,10 @@ class CreateNoal(BasicActions):
         self.yes_button.wait_for(state='visible', timeout=10000)
         self.yes_button.scroll_into_view_if_needed()
         self.yes_button.click()
+        print("Clicked 'Yes' on confirmation dialog.")
+        self.toast_msg.wait_for(state="visible", timeout=10000)
+        toast_msg = self.toast_msg.text_content()
+        self.print_important_toast(toast_msg)
 
         self.page.wait_for_timeout(2000)  # Optional wait to allow the action to complete
-        print("Clicked 'Yes' on confirmation dialog.")
+        

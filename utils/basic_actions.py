@@ -4,6 +4,7 @@ import os
 import re
 from typing import Optional
 from pathlib import Path
+from datetime import datetime, timedelta
 
 
 def is_element_visible(elem):
@@ -82,6 +83,22 @@ class BasicActions:
         self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
         # Click on the first matching option
         self.page.get_by_text(text).click()
+
+    def print_important_toast(self,toast_msg: str):
+        """
+        Print a toast message in bold, with a yellow highlight and black text.
+        This makes it highly visible in terminal or console outputs.
+        """
+        highlight = "\033[1m\033[30m\033[103m"  # Bold + black text + bright yellow background
+        reset = "\033[0m"
+
+        print(f"{highlight} 🔔 {toast_msg} 🔔 {reset}")
+
+    def add_days_to_current_date(self,extra_days: int = 0) -> str:
+        # Get current date and add extra days
+        new_date = datetime.now().date() + timedelta(days=extra_days)
+        # Format to 'DD-MM-YYYY' as required by the input field
+        return new_date.strftime('%d-%m-%Y')
 
 
     def upload_file(self, container, file_path: str, index: int = 0, timeout: int = 30000):
