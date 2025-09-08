@@ -1,6 +1,8 @@
 # this is an object of samplePage to automate, which contains all elementsAdd commentMore actions
 # and actions could be performed, like input, verify, etc.
 import re
+from asyncio import wait_for
+
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
@@ -11,7 +13,8 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
         super().__init__(page)
         # write down all the elements here with locator format
         # self.search_box = page.locator("//input[@name='keyword']")
-        self.search_box = page.get_by_role("input", name="keyword")
+        # self.search_box = page.get_by_role("input", name="keyword")
+        self.search_box = page.get_by_placeholder("Search Requisition No")
         self.approve= page.locator("//input[@type='button' and @value='Approve']")
         self.confirmation_message_approve_locator = page.locator("//button/span[contains(text(),'Approve')]")
         # self.confirmation_message_approve = page.locator(
@@ -20,10 +23,8 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
 
     def search_requisition(self, requisition_number):
         print("Searching for Requisition Number:", requisition_number)
-        self.page.reload()
-        # self.input_in_element(self.search_box, requisition_number)
-        self.search_box.fill(requisition_number)
-        # self.page.keyboard.press(" ")
+        self.page.wait_for_timeout(10000)
+        self.input_in_element(self.search_box, requisition_number)
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
 

@@ -13,6 +13,40 @@ def is_element_visible(elem):
 class BasicActions:
     def __init__(self, page):
         self.page = page
+        self.main_nav = self.page.locator('//*[@class="top_nav_container"]')
+
+    def navigate_to_page(self, main_nav_val, sub_nav_val):
+        # Navigate via Main Nav
+        self.main_nav.get_by_text(main_nav_val).click()
+        self.page.wait_for_timeout(5000)
+
+        '''Sub menu level is 2, then we go from parent to first child'''
+        try:
+            # Navigate to Parent Sub Menu
+            parent_item = self.page.locator(
+                f'xpath=//li[@class="menu-parent"]/div[contains(text(),"{sub_nav_val[0]}")]')
+            self.wait_to_load_element(parent_item)
+            parent_item.click()
+            if len(sub_nav_val) == 3:
+                sub_item_1 = self.page.locator(
+                    f'xpath=//li[@class="sub_arrow"]//child::div/span[text()="{sub_nav_val[1]}"]').first
+                sub_item_2 = self.page.get_by_role("link", name=sub_nav_val[2])
+                self.wait_to_load_element(sub_item_1)
+                sub_item_1.hover()
+                self.wait_to_load_element(sub_item_2)
+                sub_item_2.click()
+            elif len(sub_nav_val) == 2:
+                sub_item_1 = self.page.get_by_role("link", name=sub_nav_val[1])
+                self.wait_to_load_element(sub_item_1)
+                sub_item_1.click()
+            else:
+                print(f"Please check your sec_menu list and update it properly!")
+
+            self.page.wait_for_timeout(5000)
+            self.get_full_page_screenshot(f"{main_nav_val} Navigation Success")
+            print(f"{main_nav_val} Navigation Success!!")
+        except Exception as e:
+            print(f"Missing {e}")
 
     def get_screen_shot(self, name):
         self.page.screenshot(path=os.getcwd() + "/screenshots/" + name + ".png")
