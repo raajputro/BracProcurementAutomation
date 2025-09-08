@@ -1,7 +1,7 @@
 # this page contains all the test cases for the samplePage
 from resources.resource_file import TestResources
-from pages.cr2_page import CreateRequisitionPage
-from pages.login_page import LoginPage
+from pages.erp_procurement.cr2_page import CreateRequisitionPage
+from pages.erp_procurement.login_page import LoginPage
 
 from rich.traceback import install
 install()

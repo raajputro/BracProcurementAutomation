@@ -1,7 +1,5 @@
 # this page contains all the test cases for the samplePage
 import os
-import random
-from conftest import new_tab
 
 # For validation
 # from playwright.sync_api import expect
@@ -43,7 +41,7 @@ bill_creator = os.getenv("test_bill_creator")
 #======================================================================================================================
 #======================================================================================================================
 # Page models
-from pages.login_page import LoginPage
+from pages.erp_procurement.login_page import LoginPage
 
 
 

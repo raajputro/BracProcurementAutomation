@@ -3,21 +3,13 @@ import pytest
 
 from rich.traceback import install
 
-from pages.create_requisition_page import CreateRequisitionPage
-from pages.dashboard_page import DashboardPage
-from pages.login_page import LoginPage
-from pages.procurement_home_page import ProcurementHomePage
+from pages.erp_procurement.dashboard_page import DashboardPage
+from pages.erp_procurement.login_page import LoginPage
 from resources.resource_file import TestResources
-from pages.requisition_approve_list import RequisitionApproveList
-from pages.assign_requisition import AssignRequisition
-from pages.requisition_accept_list import RequisitionAcceptList
-from pages.main_navigation_bar import MainNavigationBar
-from utils.basic_actions import BasicActions       
 from playwright.sync_api import sync_playwright
-from pages.procurement_page_navigation_bar import ProcurementPageNavigationBar
-from pages.create_tender_initiation import CreateTenderInitiation 
-from pages.create_direct_purchase import CreateDirectPurchase 
-from pages.direct_purchase_list import DirectPurchaseList 
+from pages.erp_procurement.procurement_page_navigation_bar import ProcurementPageNavigationBar
+from pages.erp_procurement.create_direct_purchase import CreateDirectPurchase
+from pages.erp_procurement.direct_purchase_list import DirectPurchaseList
 
 # Variables used to run this test
 purchase_order_number = ''

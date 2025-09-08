@@ -3,8 +3,6 @@ import random
 
 from dotenv import load_dotenv
 
-from conftest import new_tab
-
 load_dotenv()
 
 # Project URLs
@@ -23,25 +21,8 @@ bill_creator = os.getenv("test_bill_creator")
 
 
 # Page models
-from pages.login_page import LoginPage
-from pages.dashboard_page import DashboardPage
-from pages.procurement_home_page import ProcurementHomePage
-from pages.cr3_page import CreateReqPage
-from pages.requisition_list import RequisitionList
-from pages.main_navigation_bar import MainNavigationBar
-from pages.requisition_approve_list import RequisitionApproveList
-from pages.procurement_page_navigation_bar import ProcurementPageNavigationBar
-from pages.assign_req import AssignRequisition
-from pages.requisition_accept_list import RequisitionAcceptList
-from pages.create_tender_initiation import CreateTenderInitiation
-from pages.create_direct_purchase import CreateDirectPurchase
-from pages.direct_purchase_list import DirectPurchaseList
-from pages.item_receive import ItemReceive
-from pages.create_vendor_bill_payable import CreateVendorBillPayable
-from pages.vendor_bill_payable_list import BillList
-from pages.bill_details_information import BillDetails
-
-
+from pages.erp_procurement.login_page import LoginPage
+from pages.erp_procurement.create_tender_initiation import CreateTenderInitiation
 
 # For validation
 from playwright.sync_api import expect

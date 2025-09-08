@@ -1,10 +1,8 @@
 # this is an object of samplePage to automate, which contains all elementsAdd commentMore actions
 # and actions could be performed, like input, verify, etc.
-import re
-from asyncio import wait_for
 
 from utils.basic_actions import BasicActions
-from pages.procurement_home_page import ProcurementHomePage
+from pages.erp_procurement.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
 
 

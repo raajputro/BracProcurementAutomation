@@ -1,7 +1,6 @@
-import re
 from playwright.sync_api import expect
 from utils.basic_actions import BasicActions
-from pages.procurement_home_page import ProcurementHomePage
+from pages.erp_procurement.procurement_home_page import ProcurementHomePage
 
 class CreateReqPage(ProcurementHomePage, BasicActions):
     def __init__(self, page):

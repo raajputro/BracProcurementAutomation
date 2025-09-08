@@ -1,7 +1,6 @@
 # this page contains all the test cases for the samplePage
 import os
 import random
-from typing import Optional
 
 from conftest import new_tab
 
@@ -45,23 +44,22 @@ bill_creator = os.getenv("test_bill_creator")
 #======================================================================================================================
 #======================================================================================================================
 # Page models
-from pages.login_page import LoginPage
-from pages.dashboard_page import DashboardPage
-from pages.procurement_home_page import ProcurementHomePage
-from pages.cr3_page import CreateReqPage
-from pages.requisition_list import RequisitionList
-from pages.main_navigation_bar import MainNavigationBar
-from pages.requisition_approve_list import RequisitionApproveList
-from pages.procurement_page_navigation_bar import ProcurementPageNavigationBar
-from pages.assign_req import AssignRequisition
-from pages.requisition_accept_list import RequisitionAcceptList
-from pages.create_tender_initiation import CreateTenderInitiation
-from pages.create_direct_purchase import CreateDirectPurchase
-from pages.direct_purchase_list import DirectPurchaseList
-from pages.item_receive import ItemReceive
-from pages.create_vendor_bill_payable import CreateVendorBillPayable
-from pages.vendor_bill_payable_list import BillList
-from pages.bill_details_information import BillDetails
+from pages.erp_procurement.login_page import LoginPage
+from pages.erp_procurement.dashboard_page import DashboardPage
+from pages.erp_procurement.procurement_home_page import ProcurementHomePage
+from pages.erp_procurement.cr3_page import CreateReqPage
+from pages.erp_procurement.requisition_list import RequisitionList
+from pages.erp_procurement.main_navigation_bar import MainNavigationBar
+from pages.erp_procurement.requisition_approve_list import RequisitionApproveList
+from pages.erp_procurement.assign_req import AssignRequisition
+from pages.erp_procurement.requisition_accept_list import RequisitionAcceptList
+from pages.erp_procurement.create_tender_initiation import CreateTenderInitiation
+from pages.erp_procurement.create_direct_purchase import CreateDirectPurchase
+from pages.erp_procurement.direct_purchase_list import DirectPurchaseList
+from pages.erp_procurement.item_receive import ItemReceive
+from pages.erp_procurement.create_vendor_bill_payable import CreateVendorBillPayable
+from pages.erp_procurement.vendor_bill_payable_list import BillList
+from pages.erp_procurement.bill_details_information import BillDetails
 
 #======================================================================================================================
 #======================================================================================================================

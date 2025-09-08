@@ -1,10 +1,7 @@
 # this page contains all the test cases for the samplePage
 from resources.resource_file import TestResources
-from pages.create_requisition_page import CreateRequisitionPage
-from pages.dashboard_page import DashboardPage
-from pages.login_page import LoginPage
-from pages.procurement_home_page import ProcurementHomePage
-from pages.requisition_approve_list import RequisitionApproveList
+from pages.erp_procurement.create_requisition_page import CreateRequisitionPage
+from pages.erp_procurement.login_page import LoginPage
 from resources.resource_file import TestResources
 
 from rich.traceback import install
