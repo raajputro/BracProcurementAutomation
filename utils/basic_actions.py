@@ -1,5 +1,5 @@
 # this page contains all the common actions to be performed in this project
-from playwright.sync_api import expect
+from datetime import datetime, timedelta
 import os
 import re
 from typing import Optional
@@ -14,6 +14,25 @@ class BasicActions:
     def __init__(self, page):
         self.page = page
         self.main_nav = self.page.locator('//*[@class="top_nav_container"]')
+
+
+    def print_important_toast(self, toast_msg: str):
+        """
+        Print a toast message in bold, with a yellow highlight and black text.
+        This makes it highly visible in terminal or console outputs.
+        """
+        highlight = "\033[1m\033[30m\033[103m"  # Bold + black text + bright yellow background
+        reset = "\033[0m"
+
+        print(f"{highlight} 🔔 {toast_msg} 🔔 {reset}")
+
+
+    def add_days_to_current_date(self,extra_days: int = 0) -> str:
+        # Get current date and add extra days
+        new_date = datetime.now().date() + timedelta(days=extra_days)
+        # Format to 'DD-MM-YYYY' as required by the input field
+        return new_date.strftime('%d-%m-%Y')
+
 
     def navigate_to_page(self, main_nav_val, sub_nav_val):
         # Navigate via Main Nav
