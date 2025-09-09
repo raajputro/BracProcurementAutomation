@@ -27,7 +27,7 @@ class BasicActions:
         print(f"{highlight} 🔔 {toast_msg} 🔔 {reset}")
 
 
-    def add_days_to_current_date(self,extra_days: int = 0) -> str:
+    def select_date(self,extra_days: int = 0) -> str:
         # Get current date and add extra days
         new_date = datetime.now().date() + timedelta(days=extra_days)
         # Format to 'DD-MM-YYYY' as required by the input field
