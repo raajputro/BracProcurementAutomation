@@ -139,8 +139,10 @@ class PerticipateTenderList(BasicActions):
     #Get the calculated subtotal
         sub_total = self.page.locator('input#subTotalCost').input_value()
         print(f"Subtotal calculated: {sub_total}")
+        self.page.wait_for_timeout(2000)
 
-        financial_info_save_button = self.page.locator("button#saveFinInfo")
+         # Click on Save button
+        financial_info_save_button = self.page.locator("#saveFinInfo")
         financial_info_save_button.scroll_into_view_if_needed()
         financial_info_save_button.click()
         self.page.wait_for_timeout(3000)
@@ -148,7 +150,8 @@ class PerticipateTenderList(BasicActions):
 
     def click_on_submit(self):
         
-        submit_button = self.page.locator("button#submit")
+        submit_button = self.page.locator("button[onclick*='createTenderParticipantItem'][onclick*='participant']")
+    
         submit_button.scroll_into_view_if_needed()
         self.page.wait_for_timeout(2000)
         submit_button.click()

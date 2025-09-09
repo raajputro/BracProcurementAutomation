@@ -1,10 +1,10 @@
 # this page contains all the common actions to be performed in this project
-from playwright.sync_api import expect
+from datetime import datetime, timedelta
 import os
 import re
 from typing import Optional
 from pathlib import Path
-from datetime import datetime, timedelta
+from playwright.sync_api import expect
 
 
 def is_element_visible(elem):
@@ -14,6 +14,59 @@ def is_element_visible(elem):
 class BasicActions:
     def __init__(self, page):
         self.page = page
+        self.main_nav = self.page.locator('//*[@class="top_nav_container"]')
+
+
+    def print_important_toast(self, toast_msg: str):
+        """
+        Print a toast message in bold, with a yellow highlight and black text.
+        This makes it highly visible in terminal or console outputs.
+        """
+        highlight = "\033[1m\033[30m\033[103m"  # Bold + black text + bright yellow background
+        reset = "\033[0m"
+
+        print(f"{highlight} 🔔 {toast_msg} 🔔 {reset}")
+
+
+    def add_days_to_current_date(self,extra_days: int = 0) -> str:
+        # Get current date and add extra days
+        new_date = datetime.now().date() + timedelta(days=extra_days)
+        # Format to 'DD-MM-YYYY' as required by the input field
+        return new_date.strftime('%d-%m-%Y')
+
+
+    def navigate_to_page(self, main_nav_val, sub_nav_val):
+        # Navigate via Main Nav
+        self.main_nav.get_by_text(main_nav_val).click()
+        self.page.wait_for_timeout(5000)
+
+        '''Sub menu level is 2, then we go from parent to first child'''
+        try:
+            # Navigate to Parent Sub Menu
+            parent_item = self.page.locator(
+                f'xpath=//li[@class="menu-parent"]/div[contains(text(),"{sub_nav_val[0]}")]')
+            self.wait_to_load_element(parent_item)
+            parent_item.click()
+            if len(sub_nav_val) == 3:
+                sub_item_1 = self.page.locator(
+                    f'xpath=//li[@class="sub_arrow"]//child::div/span[text()="{sub_nav_val[1]}"]').first
+                sub_item_2 = self.page.get_by_role("link", name=sub_nav_val[2])
+                self.wait_to_load_element(sub_item_1)
+                sub_item_1.hover()
+                self.wait_to_load_element(sub_item_2)
+                sub_item_2.click()
+            elif len(sub_nav_val) == 2:
+                sub_item_1 = self.page.get_by_role("link", name=sub_nav_val[1])
+                self.wait_to_load_element(sub_item_1)
+                sub_item_1.click()
+            else:
+                print(f"Please check your sec_menu list and update it properly!")
+
+            self.page.wait_for_timeout(5000)
+            self.get_full_page_screenshot(f"{main_nav_val} Navigation Success")
+            print(f"{main_nav_val} Navigation Success!!")
+        except Exception as e:
+            print(f"Missing {e}")
 
     def get_screen_shot(self, name):
         self.page.screenshot(path=os.getcwd() + "/screenshots/" + name + ".png")
@@ -22,7 +75,8 @@ class BasicActions:
         self.page.screenshot(path=os.getcwd() + "/screenshots_taken/" + name + ".png", full_page=True)
 
     def navigate_to_url(self, given_url):
-        self.page.goto(given_url, wait_until="networkidle", timeout=60000)
+        # self.page.goto(given_url, wait_until="networkidle", timeout=120000)
+        self.page.goto(given_url, wait_until='domcontentloaded')
 
     def verify_by_title(self, title):
         expect(self.page).to_have_title(title)
@@ -83,22 +137,6 @@ class BasicActions:
         self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
         # Click on the first matching option
         self.page.get_by_text(text).click()
-
-    def print_important_toast(self,toast_msg: str):
-        """
-        Print a toast message in bold, with a yellow highlight and black text.
-        This makes it highly visible in terminal or console outputs.
-        """
-        highlight = "\033[1m\033[30m\033[103m"  # Bold + black text + bright yellow background
-        reset = "\033[0m"
-
-        print(f"{highlight} 🔔 {toast_msg} 🔔 {reset}")
-
-    def add_days_to_current_date(self,extra_days: int = 0) -> str:
-        # Get current date and add extra days
-        new_date = datetime.now().date() + timedelta(days=extra_days)
-        # Format to 'DD-MM-YYYY' as required by the input field
-        return new_date.strftime('%d-%m-%Y')
 
 
     def upload_file(self, container, file_path: str, index: int = 0, timeout: int = 30000):

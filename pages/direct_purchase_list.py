@@ -1,7 +1,4 @@
 import re
-from typing import Self
-from utils.basic_actions import BasicActions
-from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
 from pages.create_direct_purchase import CreateDirectPurchase
 

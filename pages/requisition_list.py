@@ -1,7 +1,8 @@
 import re
 from utils.basic_actions import BasicActions
+from pages.procurement_home_page import ProcurementHomePage
 
-class RequisitionList(BasicActions):
+class RequisitionList(ProcurementHomePage, BasicActions):
 
     def __init__(self, page):
         super().__init__(page)
@@ -13,7 +14,7 @@ class RequisitionList(BasicActions):
 
     def search_requisition(self, requisition_number):
         print("Searching for Requisition Number:", requisition_number)
-        #self.input_in_element(self.requisition_search_box, requisition_number)
+        self.page.wait_for_timeout(5000)
         self.requisition_search_box.fill(requisition_number)
         self.click_on_btn(self.requisition_search_btn)
         self.wait_for_timeout(5000)

@@ -1,4 +1,3 @@
-import re
 from playwright.sync_api import expect
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
@@ -98,4 +97,5 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.submit_confirmation_btn_selector.click()
         self.wait_to_load_element(self.requisition_number)
         value = self.requisition_number.text_content()
+        self.print_important_toast(value)
         return value.split(' ')[-1]

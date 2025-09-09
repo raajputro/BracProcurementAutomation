@@ -628,4 +628,8 @@ def test_21_Approving_Work_Order(page,new_tab):
     new_page = new_tab(lambda p:r_page.click_on_work_order_num(work_order_num))
     b_page = PurchaseOrderDetailsInformation(new_page)
     b_page.approve_work_order()
-
+    b_page.get_full_page_screenshot('full_page_screenshot_38_2')
+    new_page.close()
+    r_page.refresh()
+    r_page.find_work_order_status()
+    b_page.get_full_page_screenshot('full_page_screenshot_38_3')

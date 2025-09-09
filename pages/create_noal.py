@@ -116,8 +116,8 @@ class CreateNoal(BasicActions):
         self.yes_button.click()
         print("Clicked 'Yes' on confirmation dialog.")
         self.toast_msg.wait_for(state="visible", timeout=10000)
-        toast_msg = self.toast_msg.text_content()
-        self.print_important_toast(toast_msg)
+        toast_msg_value = self.toast_msg.text_content()
+        self.print_important_toast(toast_msg_value)
 
         self.page.wait_for_timeout(2000)  # Optional wait to allow the action to complete
         

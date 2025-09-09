@@ -1,5 +1,4 @@
 
-import re
 from utils.basic_actions import BasicActions
 from pages.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
@@ -21,15 +20,11 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
                                                                                                               name="Select date")
         self.est_delivery_date_with_text = page.locator('input#defaultDeliveryDate[placeholder="DD-MM-YYYY"]')
         self.delivery_location_dropdown = page.locator("#defaultDeliveryStoreId")
-        self.delivery_location_box = page.get_by_placeholder(
-            "Note: 1. Address 2. Contact Person Name 3. Cell Number 4. Delivery Time")
-        # self.location_central_store = self.page.get_by_role("option", name="Central Store")
-        # self.location_head_office = self.page.get_by_role("option", name="Head Office")
-        # self.location_other = self.page.get_by_role("option", name="Other")
-        # self.location_select_delivery_location = self.page.get_by_role("option", name="-Select Delivery Location -")
+        self.delivery_location_box = page.get_by_placeholder("Note: 1. Address 2. Contact Person Name 3. Cell Number 4. Delivery Time")
+
         self.template_selection_dropdown = page.locator("#purchaseLetterBodyTemplateId")
         self.direct_purchase_approver = page.locator("#signatoryMemberDiv_input")
-        # self.direct_purchase_approver_selection = page.get_by_text(TestResources.test_purchase_approver)
+
         self.purchase_submit = page.get_by_role("button", name="Submit")
         self.purchase_submit_confirmation = page.get_by_label("Submit Confirmation").get_by_role("button",
                                                                                                  name="Submit")
@@ -63,26 +58,8 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
         self.estimated_delivery_date_using_calendar_box.click()
 
     def delivery_location_dropdown_select(self, delivery_location: str = "Central Store"):
-        # Select the delivery location from the dropdown
-        # self.delivery_location_dropdown.scroll_into_view_if_needed()
-        # self.delivery_location_dropdown.click()
+
         self.select_from_list_by_value(self.delivery_location_dropdown, delivery_location)
-
-    # def delivery_location_central_store(self):
-    #     self.location_central_store.hover()
-    #     self.location_central_store.click()
-
-    # def delivery_location_Head_Office(self):
-    #     self.location_head_office.hover()
-    #     self.location_head_office.click()
-
-    # def delivery_location_Other(self):
-    #     self.location_other.hover()
-    #     self.location_other.click()
-
-    # def delivery_location_Select_Delivery_Location(self):
-    #     self.location_select_delivery_location.hover()
-    #     self.location_select_delivery_location.click()
 
     def delivery_location(self, location: str):
         # Fill the delivery location input field
