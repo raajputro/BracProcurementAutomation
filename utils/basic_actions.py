@@ -49,15 +49,20 @@ class BasicActions:
             if len(sub_nav_val) == 3:
                 sub_item_1 = self.page.locator(
                     f'xpath=//li[@class="sub_arrow"]//child::div/span[text()="{sub_nav_val[1]}"]').first
-                sub_item_2 = self.page.get_by_role("link", name=sub_nav_val[2])
-                self.wait_to_load_element(sub_item_1)
-                sub_item_1.hover()
-                self.wait_to_load_element(sub_item_2)
-                sub_item_2.click()
+                sub_item_2 = self.page.get_by_role("link", name=sub_nav_val[2], exact=True)
+                if sub_item_1.is_visible():
+                # self.wait_to_load_element(sub_item_1)
+                    sub_item_1.hover()
+                if sub_item_2.is_visible():
+                # self.wait_to_load_element(sub_item_2)
+                    sub_item_2.click()
+                else:
+                    print(f"Please check your sec_menu list and update it properly!")
             elif len(sub_nav_val) == 2:
-                sub_item_1 = self.page.get_by_role("link", name=sub_nav_val[1])
-                self.wait_to_load_element(sub_item_1)
-                sub_item_1.click()
+                sub_item_1 = self.page.get_by_role("link", name=sub_nav_val[1], exact=True)
+                if sub_item_1.is_visible:
+                    # .wait_to_load_element(sub_item_1)
+                    sub_item_1.click()
             else:
                 print(f"Please check your sec_menu list and update it properly!")
 
