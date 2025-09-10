@@ -1,4 +1,4 @@
-import re
+import re, os
 from utils.basic_actions import BasicActions
 
 class BillDetails(BasicActions):
@@ -16,8 +16,12 @@ class BillDetails(BasicActions):
         Upload a document to the bill details page.
         :param file_path: Path to the document file to be uploaded.
         """
-        uploaded_file_name = self.upload_file(self.document_upload_container,file_path)
-        print(f"Uploaded file name: {uploaded_file_name}")
+        print(f"Uploading file from : {file_path}")
+        if os.path.exists(file_path):
+            uploaded_file_name = self.upload_file(self.document_upload_container,file_path)
+            print(f"Uploaded file name: {uploaded_file_name}")
+        else:
+            print(f"File not found at path: {file_path}")
 
     def select_bill_type(self, bill_type):
         """

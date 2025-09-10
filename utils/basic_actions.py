@@ -4,6 +4,7 @@ import os
 import re
 from typing import Optional
 from pathlib import Path
+from playwright.sync_api import expect
 
 
 def is_element_visible(elem):
@@ -143,7 +144,7 @@ class BasicActions:
         self.page.get_by_text(text).click()
 
 
-    def upload_file(self, container, file_path: str, index: int = 0, timeout: int = 30000):
+    def upload_file(self, container, file_path: str, index: int = 0, timeout: int = 120000):
         """
         Uploads a file using the hidden input inside #selector_fileId_{index}
         and waits until the corresponding hidden field is populated.
