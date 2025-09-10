@@ -1,8 +1,11 @@
+# ===== User toggles =====
 headless_flag = False
 slow_mo_speed = 2000
 
 from sys import maxsize
 import os
+import webbrowser
+import platform
 import pyautogui
 import pytest
 from pathlib import Path
@@ -27,7 +30,12 @@ print(f"Artifacts path: {ARTIFACTS_DIR}")
 VIDEOS_DIR = ARTIFACTS_DIR / "videos"
 TRACES_DIR = ARTIFACTS_DIR / "traces"
 SCREENSHOTS_DIR = ARTIFACTS_DIR / "screenshots"
+REPORTS_DIR = ARTIFACTS_DIR / "reports"
 screen_width, screen_height = pyautogui.size()
+
+# Default report file (timestamped)
+RUN_TS = datetime.now().strftime("%Y%m%d_%H%M%S")
+DEFAULT_REPORT = REPORTS_DIR / f"report_{RUN_TS}.html"
 
 # =========================
 # Auto-highlighter settings
@@ -62,15 +70,51 @@ global_browser: Optional[Browser] = None
 global_context: Optional[BrowserContext] = None
 global_pages: list[Page] = []
 test_failures = []
+_report_path: Optional[Path] = None   # set in pytest_configure
 
 print(f"Running on screen size: {screen_width}x{screen_height}")
 
-def pytest_configure(config):
+def pytest_configure(config: pytest.Config):
+    """
+    - Prepare artifact folders
+    - If pytest-html is installed and --html not provided, set a default report path
+    - Force self-contained HTML so screenshots embed nicely
+    """
     if ARTIFACTS_DIR.exists():
         shutil.rmtree(ARTIFACTS_DIR, ignore_errors=True)
     VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
     TRACES_DIR.mkdir(exist_ok=True)
     SCREENSHOTS_DIR.mkdir(exist_ok=True)
+    REPORTS_DIR.mkdir(exist_ok=True)
+
+    # If pytest-html is available, ensure an html path
+    has_html = config.pluginmanager.hasplugin("html")
+    if has_html:
+        # Older/newer versions expose option under different names; set both defensively
+        # If user didn't pass --html, use our default
+        html_opt_name = "htmlpath" if hasattr(config.option, "htmlpath") else "html"
+        current_path = getattr(config.option, html_opt_name, None)
+        final_path = current_path or str(DEFAULT_REPORT)
+        setattr(config.option, html_opt_name, final_path)
+
+        # Always embed assets
+        if hasattr(config.option, "self_contained_html"):
+            config.option.self_contained_html = True
+
+        global _report_path
+        _report_path = Path(final_path)
+
+        # Add a bit of metadata
+        setattr(config, "_metadata", getattr(config, "_metadata", {}))
+        config._metadata.update({
+            "Run Timestamp": RUN_TS,
+            "Headless": str(headless_flag),
+            "Resolution": f"{screen_width}x{screen_height}",
+            "OS": platform.platform(),
+            "Python": platform.python_version(),
+        })
+    else:
+        print("⚠️ pytest-html not installed. Install it with: pip install pytest-html")
 
 def safe_file_operation(file_path, operation, max_retries=5, delay=1):
     for attempt in range(max_retries):
@@ -153,7 +197,7 @@ def context(browser: Browser) -> BrowserContext:
     except Exception:
         pass
 
-    # Handle videos for each page
+    # Handle videos for each page of failed tests
     for fail in test_failures:
         test_name = fail["name"]
         timestamp = fail["timestamp"]
@@ -199,13 +243,30 @@ def new_tab(context: BrowserContext) -> Callable[[Callable[[Page], None]], Page]
         return page
     return _open
 
+# === Soft Assertion Integration ===
+# Logs pytest-check soft failures to console and reports
+try:
+    import pytest_check
+except ImportError:
+    pytest_check = None
+
+# ----------------------------------------------------
+# Unified makereport: capture screenshots on failures,
+# and attach to pytest-html (if available)
+# ----------------------------------------------------
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
     setattr(item, "rep_" + rep.when, rep)
 
-    if rep.when == "call" and rep.failed:
+    if rep.when != "call":
+        return
+
+    screenshot_path = None
+
+    # Hard failures
+    if rep.failed:
         test_name = item.name
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         test_failures.append({"name": test_name, "timestamp": timestamp})
@@ -222,6 +283,22 @@ def pytest_runtest_makereport(item, call):
                     pass
 
         safe_file_operation(screenshot_path, screenshot_op)
+
+    # Soft assertion errors from pytest-check (optional)
+    if pytest_check:
+        errors = getattr(pytest_check, "_errors", [])
+        for e in errors:
+            print(f"🔸 Soft check failure in {item.name}: {e}")
+
+    # Attach to pytest-html if present
+    if item.config.pluginmanager.hasplugin("html"):
+        from pytest_html import extras
+        extra = getattr(rep, "extra", [])
+        if screenshot_path and screenshot_path.exists():
+            with open(screenshot_path, "rb") as f:
+                img_bytes = f.read()
+            extra.append(extras.image(img_bytes, mime_type="image/png"))
+        rep.extra = extra
 
 # ==========================================
 # Auto-highlighter implementation
@@ -302,41 +379,38 @@ def _install_auto_highlighter():
 
     setattr(Page, "_auto_highlight_installed", True)
 
-# === Soft Assertion Integration ===
-# Logs pytest-check soft failures to console and reports
-try:
-    import pytest_check
-except ImportError:
-    pytest_check = None
+# ------------------------------------------
+# Open the HTML report when the run finishes
+# ------------------------------------------
+def _open_report(path: Path):
+    try:
+        # Prefer OS-native opener on Windows for reliability
+        if os.name == "nt" and path.exists():
+            os.startfile(path)  # type: ignore[attr-defined]
+        else:
+            webbrowser.open_new_tab(path.resolve().as_uri())
+    except Exception as e:
+        print(f"⚠️ Could not auto-open report: {e}")
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    outcome = yield
-    rep = outcome.get_result()
-    setattr(item, "rep_" + rep.when, rep)
-
-    if rep.when == "call":
-        # Regular failures (already present)
-        if rep.failed:
-            test_name = item.name
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            test_failures.append({"name": test_name, "timestamp": timestamp})
-
-            screenshot_path = SCREENSHOTS_DIR / f"{timestamp}_{test_name}.png"
-
-            def screenshot_op(_):
-                if global_pages:
-                    page = global_pages[-1]
-                    try:
-                        if hasattr(page, "is_closed") and not page.is_closed():
-                            page.screenshot(path=screenshot_path, full_page=True)
-                    except Exception:
-                        pass
-
-            safe_file_operation(screenshot_path, screenshot_op)
-
-        # Soft assertion errors from pytest-check (optional)
-        if pytest_check:
-            errors = getattr(pytest_check, "_errors", [])
-            for e in errors:
-                print(f"🔸 Soft check failure in {item.name}: {e}")
+@pytest.hookimpl(trylast=True)
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int):
+    # If pytest-html was active, use its final path; else use our default (if created)
+    global _report_path
+    if session.config.pluginmanager.hasplugin("html"):
+        # In some versions, the plugin stores the writer on config._html
+        path = None
+        try:
+            writer = getattr(session.config, "_html", None)
+            if writer and getattr(writer, "logfile", None):
+                path = Path(writer.logfile)
+        except Exception:
+            path = None
+        if not path:
+            path = _report_path or DEFAULT_REPORT
+        if path and Path(path).exists():
+            print(f"\n📄 HTML report: {path}")
+            _open_report(Path(path))
+        else:
+            print("⚠️ HTML report path not found; ensure pytest-html is installed.")
+    else:
+        print("ℹ️ pytest-html plugin not active; skipping auto-open.")
