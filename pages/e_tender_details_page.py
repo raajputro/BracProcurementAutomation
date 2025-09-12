@@ -14,6 +14,7 @@ class ETenderDetails(BasicActions):
         self.yes_button = page.locator('button.btn-green:has-text("Yes")')
 
     def click_open_button(self):
+        self.page.reload()
         self.open_tender_button.wait_for(state="visible", timeout=20000)
         self.open_tender_button.scroll_into_view_if_needed()
         self.open_tender_button.click()
@@ -33,6 +34,7 @@ class ETenderDetails(BasicActions):
             print(f" Opening time {target_time_str} already passed or is now.")
 
     def confirm_open_tender(self):
+        
         self.yes_button.wait_for(state="visible", timeout=40000)
         self.yes_button.scroll_into_view_if_needed()
         self.yes_button.click()

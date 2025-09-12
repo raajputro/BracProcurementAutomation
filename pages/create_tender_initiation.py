@@ -263,11 +263,13 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
         self.wait_for_timeout(5000)
 
     def submit_tender_initiation(self):
+        print("clicking on submit button")
         self.submit_button.click()
         self.wait_for_timeout(5000)
 
 
     def confirm_submission(self):
+        print("clicked on confirm submission button")
         self.submit_confirmation.click()
         self.wait_for_timeout(5000)
         self.get_full_page_screenshot("tender_initiation_submitted")

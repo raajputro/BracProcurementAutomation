@@ -133,8 +133,16 @@ class PerticipateTenderList(BasicActions):
         self.page.wait_for_timeout(1000)  # opt
 
         unit_cost_input = self.page.locator('input#unitCost')
-        unit_cost_input.fill(unit_cost)
-        self.page.wait_for_timeout(1000)  # allow subtotal to calculate
+        unit_cost_input.wait_for(state="visible", timeout=60000)
+        # clear existing text if any
+        unit_cost_input.click()
+        # optional: unit_cost_input.fill("") or select all then backspace
+        unit_cost_input.press("Control+A")  
+        unit_cost_input.press("Backspace")
+        # unit_cost_input.type(unit_cost)
+        unit_cost_input.type(unit_cost, delay=100)
+
+        self.page.wait_for_timeout(5000)  # allow subtotal to calculate
 
     #Get the calculated subtotal
         sub_total = self.page.locator('input#subTotalCost').input_value()
@@ -142,15 +150,15 @@ class PerticipateTenderList(BasicActions):
         self.page.wait_for_timeout(2000)
 
          # Click on Save button
-        financial_info_save_button = self.page.locator("#saveFinInfo")
+        financial_info_save_button = self.page.locator('button#saveFinInfo')
         financial_info_save_button.scroll_into_view_if_needed()
-        financial_info_save_button.click()
+        financial_info_save_button.click(timeout=60000)
         self.page.wait_for_timeout(3000)
 
 
     def click_on_submit(self):
         
-        submit_button = self.page.locator("button[onclick*='createTenderParticipantItem'][onclick*='participant']")
+        submit_button = self.page.locator("button#submit:has-text('Submit')")
     
         submit_button.scroll_into_view_if_needed()
         self.page.wait_for_timeout(2000)

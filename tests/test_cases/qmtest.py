@@ -435,7 +435,7 @@ def test_14_vendor1_participation_in_tender(page):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    # tender_num="BPD/2025/RFQ-1875"
+    # tender_num="BPD/2025/RFQ-1864"
     x_page = PerticipateTenderList(page)
     x_page.go_to_participate_in_tender()
     x_page.get_full_page_screenshot('full_page_screenshot_30_1')
@@ -642,7 +642,7 @@ def test_21_Approving_Work_Order(page,new_tab):
         timeout=60000  # Increased timeout for login
     )
     work_order_list_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/list"
-    work_order_num = "BPD/2025/PO-1554"
+    # work_order_num = "BPD/2025/PO-1554"
     r_page = PurchaseOrderList(page)
     r_page.navigate_to_url(work_order_list_url)
     r_page.get_full_page_screenshot('full_page_screenshot_38_1')
