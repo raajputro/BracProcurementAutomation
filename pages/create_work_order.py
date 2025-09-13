@@ -31,12 +31,13 @@ class CreateWorkOrder(BasicActions):
     def select_vendor(self, vendor_name: str):
         print("Typing vendor name...")
 
-        self.vendor_input.fill(vendor_name)
+        self.wait_for_timeout(2000)
+        self.vendor_input.type(vendor_name)
         self.page.wait_for_timeout(2000)
-        self.vendor_input.click()  # Focus the input
-        self.page.keyboard.press("End")      # Move cursor to end
-        self.page.keyboard.insert_text(" ")
-        self.page.keyboard.press("Backspace")  # Trigger input event
+        # self.vendor_input.click()  # Focus the input
+        # self.page.keyboard.press("End")      # Move cursor to end
+        # self.page.keyboard.insert_text(" ")
+        # self.page.keyboard.press("Backspace")  # Trigger input event
         self.page.wait_for_timeout(2000)
 
         # Wait for the suggestion dropdown to appear

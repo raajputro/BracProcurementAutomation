@@ -501,6 +501,7 @@ def test_17_tender_shortlist(page,new_tab):
     x_page.search_tender(tender_num)
     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
     b_page = PrepareShortList(new_page)
+    b_page.click_save_compliance()
     b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
     b_page.get_full_page_screenshot('full_page_screenshot_33_1')
     document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
@@ -527,8 +528,7 @@ def test_18_Evaluation_recommender_approve(page,new_tab):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-
-    supplier_name="Skylark Printers"
+    # tender_num ="BPD/2025/RFQ-1892"
     x_page = TenderEvaluationList(page)
     x_page.go_to_tender_evaluation_list()
     x_page.search_tender(tender_num)
@@ -551,7 +551,7 @@ def test_19_Evaluation_approver_approve(page,new_tab):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-    supplier_name="Skylark Printers"
+    # tender_num ="BPD/2025/RFQ-1892"
     x_page = TenderEvaluationList(page)
     x_page.go_to_tender_evaluation_list()
     x_page.search_tender(tender_num)
@@ -596,16 +596,14 @@ def test_21_Create_Work_Order(page):
         timeout=60000  # Increased timeout for login
     )
     work_order_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/show"
-    tender_num = "BPD/FA/2025/RFQ-251"
-    noal_number = "NOAL2025149"
+    
     r_page = CreateWorkOrder(page)
     r_page.navigate_to_url(work_order_url)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_1')
-    tender_num = "BPD/2025/RFQ-1812"  
+    r_page.get_full_page_screenshot('full_page_screenshot_37_1')  
     supplier_name="Skylark Printers"
     r_page.select_vendor(supplier_name)
     r_page.select_payment_mode("Bank")
-    r_page.select_first_checkbox_by_noal_and_tender(noal_number,tender_num)
+    r_page.select_first_checkbox_by_tender(tender_num)
     r_page.get_full_page_screenshot('full_page_screenshot_37_2')
     r_page.add_item_to_grid()
     r_page.same_delivery_schedule()
@@ -642,17 +640,16 @@ def test_21_Approving_Work_Order(page,new_tab):
         timeout=60000  # Increased timeout for login
     )
     work_order_list_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/list"
-    # work_order_num = "BPD/2025/PO-1554"
     r_page = PurchaseOrderList(page)
     r_page.navigate_to_url(work_order_list_url)
     r_page.get_full_page_screenshot('full_page_screenshot_38_1')
     r_page.search_work_order(work_order_num)
     new_page = new_tab(lambda p:r_page.click_on_work_order_num(work_order_num))
     b_page = PurchaseOrderDetailsInformation(new_page)
-    b_page.approve_work_order()
+    # b_page.approve_work_order()
     b_page.get_full_page_screenshot('full_page_screenshot_38_2')
     new_page.close()
-    r_page.refresh()
+    r_page.search_work_order(work_order_num)
     r_page.find_work_order_status()
     b_page.get_full_page_screenshot('full_page_screenshot_38_3')
     # logout from the page
@@ -660,7 +657,6 @@ def test_21_Approving_Work_Order(page,new_tab):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_39')
-    r2_page.wait_for_timeout(5000)
 
 def test_15_item_receive(page):
     print("Test 15: Receiving items...")

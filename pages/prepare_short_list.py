@@ -10,9 +10,16 @@ class PrepareShortList(BasicActions):
 
     def __init__(self, page):
         super().__init__(page)
+        self.save_compliance = page.locator("button.save-compliance", has_text=re.compile(r"(Save|Update)", re.IGNORECASE))
         self.shortlist_button = page.locator("button:has-text('Short List')")
         self.recommendation_box = page.locator('#recommendation')
         self.forward_button = page.locator('button#saveComments')
+
+    def click_save_compliance(self):
+        
+        self.save_compliance.wait_for(state="visible", timeout=3000)
+        self.save_compliance.scroll_into_view_if_needed(timeout=3000)
+        self.save_compliance.click(timeout=3000)
 
     def click_details_of_item(self, requisition_no: str, item_title: str):
     # Construct a combined row locator using both texts
