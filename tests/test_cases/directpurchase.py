@@ -119,6 +119,7 @@ def test_3_create_and_submit_requisition(page):
     c_page.setting_requisition_details("glue","[19193]-Glue Stick (Fevi Stick)-(Supplies and Stationeries->Supplies and Stationeries->Stationery)", "Tor for Item","100","19")
     c_page.setting_requisition_for_details("[1202010501-01] Furniture and Fixture","gl remarks",c_page.select_date(20), "Head Office", "ABC Road")
     c_page.get_full_page_screenshot('full_page_screenshot_3')
+    
     global req_num
     req_num = c_page.submit_requisition()
     print("REQ NUM:", req_num)

@@ -5,6 +5,8 @@ import re
 from typing import Optional
 from pathlib import Path
 from playwright.sync_api import expect
+from datetime import datetime
+import time
 
 
 def is_element_visible(elem):
@@ -33,6 +35,18 @@ class BasicActions:
         new_date = datetime.now().date() + timedelta(days=extra_days)
         # Format to 'DD-MM-YYYY' as required by the input field
         return new_date.strftime('%d-%m-%Y')
+    
+    def wait_until(self, target_time_str: str):
+        """Wait until the given time before proceeding."""
+        target_time = datetime.strptime(target_time_str, "%d-%m-%Y %I:%M %p")
+        now = datetime.now()
+        seconds_to_wait = (target_time - now).total_seconds()
+
+        if seconds_to_wait > 0:
+            print(f" Waiting {int(seconds_to_wait)} seconds until: {target_time_str}")
+            time.sleep(seconds_to_wait)
+        else:
+            print(f" Opening time {target_time_str} already passed or is now.")
 
 
     def navigate_to_page(self, main_nav_val, sub_nav_val):
