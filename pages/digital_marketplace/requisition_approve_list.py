@@ -47,9 +47,9 @@ class RequisitionApproveList(ProcurementHomePage, BasicActionsDM):
     def approve_requisition(self):
         # Click the approve button
         self.approve_button.click()
-        self.page.wait_for_timeout(2000)
+        self.page.wait_for_timeout(3000)
         self.final_approve_button.click()
-        self.page.wait_for_timeout(2000)
+        self.page.wait_for_timeout(3000)
         # Verify the requisition number is displayed in the message
         # expect(self.page.locator('//div[@class="message"]')).to_contain_text(self.requisition_number)
         # self.page.wait_for_timeout(2000)

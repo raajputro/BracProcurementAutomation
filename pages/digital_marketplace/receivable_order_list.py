@@ -36,7 +36,6 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
         self.click_on_btn(self.search_button)
 
     def receivable_order_view(self):
-        # self.click_on_btn(self.order_view_button.first())
         self.order_view_button.first.click()
 
     def challan_no_input(self, fill_challan_no):
@@ -68,5 +67,16 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
         self.click_on_btn(self.confirm_button)
         self.wait_for_timeout(5000)
         # self.navigate_to_url("https://stgmarketplace.brac.net/Admin/Order/CompleteOrderItemReceivedList")
-        self.navigate_to_url("https://qamarketplace.bracits.com/Admin/Order/CompleteOrderItemReceivedList")
-        self.wait_for_timeout(2000)
+        # self.navigate_to_url("https://qamarketplace.bracits.com/Admin/Order/CompleteOrderItemReceivedList")
+        # self.wait_for_timeout(2000)
+
+    def upload_file(self, file_path: str, container: str = "#receivedRemarksDiv", index: int = 0, timeout: int = 30000):
+        p = Path(file_path).expanduser().resolve()
+        if not p.exists():
+            raise FileNotFoundError(f"File not found: {p}")
+
+        file_input = self.page.locator(f"{container} input[type='file']")
+        file_input.wait_for(state="attached", timeout=timeout)
+        file_input.set_input_files(str(p))
+
+        return True

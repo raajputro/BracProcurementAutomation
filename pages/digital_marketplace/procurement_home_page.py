@@ -14,6 +14,11 @@ class ProcurementHomePage(BasicActionsDM):
         self.requisition_approve_list = page.locator(
             '//div[text()="Requisition"]//following-sibling::ul//child::span[text()="Requisition Approve List"]')
 
+        self.purchase_order = page.locator('//div[text()="Purchase Order"]')
+        self.framework_order = page.locator(
+            '//div[text()="Purchase Order"]//following-sibling::ul//child::span[text()="Framework Order"]')
+        self.framework_order_list = page.get_by_role("link", name="Framework Order List")
+
     # write down all the necessary actions performed on this page as def
     def navigate_to_create_requisition(self):
         self.proc_item_requisition.click()
@@ -32,4 +37,10 @@ class ProcurementHomePage(BasicActionsDM):
     def navigate_to_requisition_approve_list(self):
         self.proc_item_requisition.click()
         self.requisition_approve_list.click()
+        self.wait_for_timeout(5000)
+
+    def navigate_to_framework_order_list(self):
+        self.purchase_order.click()
+        self.framework_order.click()
+        self.framework_order_list.click()
         self.wait_for_timeout(5000)

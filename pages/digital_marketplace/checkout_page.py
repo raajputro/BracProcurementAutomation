@@ -36,15 +36,18 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
     def update_quantity(self, quantity):
         self.schedule_quantity.clear()
         self.input_in_element(self.schedule_quantity, quantity)
+        self.wait_for_timeout(3000)
 
     def update_expected_date(self):
         self.schedule_expected_date.click()
         expected_date = (datetime.today() + timedelta(days=1)).strftime("%Y-%m-%d")
         self.schedule_expected_date.fill(expected_date)
+        self.wait_for_timeout(5000)
         print(f"Filled expected date with: {expected_date}")
 
     def delivery_schedule_preparation(self, location, pin):
         self.input_in_element(self.schedule_expected_location, location)
+        self.page.wait_for_timeout(3000)
         self.input_in_element(self.schedule_receiving_person_pin, pin)
         self.page.keyboard.press('Enter')
         self.page.wait_for_timeout(5000)
@@ -84,13 +87,17 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
         self.wait_for_timeout(5000)
         order_locator = self.page.locator("text=ORDER REFERENCE NO:").text_content()
         # self.wait_to_load_element(self.order_locator)
-        order_number = order_locator.split(":")[-1].strip()
-        print("Order reference number: " + order_number)
-        return order_number
+        order_reference_number = order_locator.split(":")[-1].strip()
+        print("Order reference number: " + order_reference_number)
+        return order_reference_number
 
     def goto_public_side_order_details_view(self):
         self.click_on_btn(self.view_order_details)
         self.wait_for_timeout(2000)
+        order_status_pending = self.page.locator("text=Order Status:").text_content()
+        order_status = order_status_pending.split(":")[-1].strip()
+        print("Order status: " + order_status)
+        return order_status
 
     def delivery_schedule_preparation_item_1(self, location, pin):
         self.click_on_btn(self.schedule_quantity.nth(0))

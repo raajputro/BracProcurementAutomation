@@ -98,11 +98,6 @@ class ShoppingCart(HomePage, BasicActionsDM):
         self.wait_for_timeout(5000)
 
     def upload_attachment(self, file_path: str) -> bool:
-        """
-        Uploads an attachment to the shopping cart form.
-        :param file_path: absolute path of file to upload
-        :return: True if upload succeeds, False otherwise
-        """
         try:
             upload_input = self.page.locator('input[type="file"][name="file"][id^="itemAttachment"]')
             confirm_button = self.page.get_by_role("button", name="Confirm")
@@ -135,71 +130,6 @@ class ShoppingCart(HomePage, BasicActionsDM):
 
     def update_shopping_cart_info(self):
         self.update_shopping_cart.click()
-
-    # def select_vendor_by_name_1(self, vendor_name: str, requisition_number):
-    #     # Build a locator that directly finds the radio button whose label contains the vendor_name
-    #     radio_button = self.page.locator(
-    #         f"//div[starts-with(@id,'vendorContainer')]//label[contains(., '{vendor_name}')]/preceding-sibling::input[@type='radio']"
-    #     )
-    #
-    #     if radio_button.count() == 0:
-    #         print(f"Vendor '{vendor_name}' not found.")
-    #         return False
-    #
-    #     print(f"Found vendor: {vendor_name}")
-    #     radio_button.check()
-    #     self.wait_for_timeout(5000)
-    #     print(f"Selected radio button for vendor: {vendor_name}")
-    #     # self.page.wait_for_load_state("networkidle", timeout=15000)
-    #
-    #     # Now safely get checked requisitions after reload
-    #     # checked_reqs = self.page.locator(
-    #     #     "//div[input[@type='checkbox' and @checked='checked']]/label/strong"
-    #     # )
-    #     checked_reqs = self.page.locator("//input[@type='checkbox' and @checked]/following-sibling::label/strong")
-    #
-    #     count = checked_reqs.count()
-    #     print(f"Found {count} checked requisition(s).")
-    #
-    #     for i in range(count):
-    #         print(f"value of i: {i}")
-    #         req_number = checked_reqs.nth(i + 1).inner_text().strip()
-    #         print(f"requisition #{i + 1}: {req_number}")
-    #         # All okay
-    #         if req_number != requisition_number:
-    #             checked_reqs.nth(i + 1).click()
-    #             print(f"Unchecked requisition #{i + 1}: {req_number}")
-    #
-    #         else:
-    #             print(f"Checked requisition #{i + 1}: {req_number}")
-    #     return True
-    #
-    # def select_vendor_for_requisition(self, requisition_number: str):
-    #     # Step 1: Find the requisition link by number
-    #     requisition_locator = self.page.locator(
-    #         f"//a[@class='item-requisition-link' and contains(., '{requisition_number}')]"
-    #     )
-    #
-    #     if requisition_locator.count() == 0:
-    #         print(f"Requisition '{requisition_number}' not found.")
-    #         return False
-    #
-    #     print(f"Found requisition: {requisition_number}")
-    #
-    #     # Step 2: From requisition, go up to vendor container
-    #     vendor_block = requisition_locator.locator("xpath=ancestor::div[contains(@id,'vendorContainer')]")
-    #
-    #     # Step 3: Get vendor name text
-    #     vendor_name = vendor_block.locator("label").inner_text()
-    #     print(f"Vendor found for requisition {requisition_number}: {vendor_name.strip()}")
-    #
-    #     # Step 4: Click its radio button
-    #     radio_button = vendor_block.locator("input[@type='radio']")
-    #     radio_button.check()
-    #     print(f"Selected vendor radio button for '{vendor_name.strip()}' linked to requisition {requisition_number}")
-    #
-    #     return True
-    #
 
     def remove_vendor_item(self):
         count = self.remove_button.count()
@@ -245,7 +175,7 @@ class ShoppingCart(HomePage, BasicActionsDM):
     def cart_page_checkout(self):
         self.click_on_btn(self.select_cart_terms_and_condition)
         self.click_on_btn(self.select_cart_checkout_button)
-        self.wait_for_timeout(2000)
+        self.wait_for_timeout(5000)
 
     def goto_home_page(self):
         self.click_on_btn(self.logo)
@@ -263,7 +193,7 @@ class ShoppingCart(HomePage, BasicActionsDM):
         self.item_remarks_locator.nth(1).clear()
         self.input_in_element(self.item_remarks_locator.nth(1), "test remarks 2")
 
-    def update_shopping_cart_info(self):
+    def update_shopping_cart_info_1(self):
         self.click_on_btn(self.update_shopping_cart)
 
     def update_cart_value_for_multiple_items(self):

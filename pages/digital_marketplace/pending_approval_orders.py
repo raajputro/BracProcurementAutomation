@@ -46,9 +46,6 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         # Pending Approval Order Checkbox for single order
         self.pending_approval_checkbox = page.locator("input#pendingApprovalOrder")
 
-        self.order_1 = page.locator('input[type="checkbox"][value="2469"]')
-        self.order_2 = page.locator('input[type="checkbox"][value="2470"]')
-        self.order_3 = page.locator('input[type="checkbox"][value="2467"]')
         # Select approve button for multiselect approval
         self.click_multiselect_approve = page.locator('button[id="pendingApprovalOrder-selected"]')
         self.pending_order_toggle_button = page.locator('button[class="toggle-button collapsed-button btn"]')
@@ -63,7 +60,7 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.click_on_btn(self.pending_order_search_button)
 
     def view_pending_order_info_toggle(self):
-        self.pending_order_toggle_button.first.click()
+        self.pending_order_toggle_button.click()
 
     def goto_pending_approval_order_details(self):
         self.click_on_btn(self.details_button)
@@ -71,8 +68,11 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
     def approve_order(self):
         self.click_on_btn(self.approve_order_button)
         self.click_on_btn(self.yes_button)
-        # self.click_on_btn(self.close_button)
-        # self.click_on_btn(self.approve_order_button)
+        self.wait_for_timeout(2000)
+        order_status_approved = self.page.locator("text=Order Status:").text_content()
+        order_status = order_status_approved.split(":")[-1].strip()
+        print("Order status: " + order_status)
+        return order_status
 
     def check_pending_approval(self):
         self.pending_approval_checkbox.check()

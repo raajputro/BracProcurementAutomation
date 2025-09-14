@@ -4,7 +4,7 @@ import pytest
 from rich.traceback import install
 
 from pages.digital_marketplace.login_page import LoginPage
-from pages.digital_marketplace.administration import Administration
+from pages.digital_marketplace.vendor_dashboard import Administration
 from resources.DMResourceFile import TestResourcesDM
 from utils.basic_actionsdm import BasicActionsDM
 from playwright.sync_api import sync_playwright

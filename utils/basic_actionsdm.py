@@ -1,5 +1,6 @@
 # this page contains all the common actions to be performed in this project
 from playwright.sync_api import expect
+from datetime import datetime
 import os
 import re
 from typing import Optional
@@ -31,18 +32,12 @@ class BasicActionsDM:
         self.page.wait_for_timeout(timeout)
 
     def click_requisition_and_interact_with_button(self, url: str, button_locator: str):
-        # Click on the requisition hyperlink
         self.page.goto(url)
-
-        # Wait for the hyperlink to be clickable and click on it
         requisition_link = self.page.locator('a[href*="RequisitionList"]')  # Assuming this locator
         requisition_link.click()
 
-        # Wait for the new tab to open
-        new_tab = self.page.context.wait_for_event('page')  # Wait for the new tab to open
-        new_tab.wait_for_load_state('networkidle')  # Wait until the page is fully loaded
-
-        # Click the button in the new tab using the provided locator
+        new_tab = self.page.context.wait_for_event('page')
+        new_tab.wait_for_load_state('networkidle')
         button = new_tab.locator(button_locator)
         button.click()
         print("Button clicked in new tab")
@@ -122,6 +117,7 @@ class BasicActionsDM:
         """
         Uploads a file using the hidden input inside #selector_fileId_{index}
         and waits until the corresponding hidden field is populated.
+        :rtype: Any
         """
         p = Path(file_path).expanduser().resolve()
         if not p.exists():
@@ -179,3 +175,44 @@ class BasicActionsDM:
             locator.wait_for(state=state, timeout=timeout)
         except TimeoutError:
             print(f"Timeout: Locator did not become '{state}' within {timeout}ms.")
+
+    # New Method to Fill Date Range
+    def fill_date_range(self, start_date: str, end_date: str):
+        """
+        Fills the StartDate and EndDate fields with the provided dates.
+        """
+        start_date_field = self.page.locator('#StartDate')
+        end_date_field = self.page.locator('#EndDate')
+
+        # Fill the input fields with the provided dates
+        start_date_field.fill(start_date)
+        end_date_field.fill(end_date)
+
+        print(f"Start Date: {start_date}, End Date: {end_date}")
+
+    # New Method to Validate Date Range
+    def validate_date_range(self):
+        """
+        Validates that the StartDate is not later than the EndDate.
+        """
+        start_date_value = self.page.locator('#StartDate').input_value()
+        end_date_value = self.page.locator('#EndDate').input_value()
+
+        try:
+            start_date = datetime.strptime(start_date_value, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date_value, '%Y-%m-%d')
+        except ValueError:
+            print("Invalid date format. Please ensure dates are in YYYY-MM-DD format.")
+            return False
+
+        if not start_date_value or not end_date_value:
+            print("Both start and end dates must be provided.")
+            return False
+        if start_date > end_date:
+            print("Error: Start date cannot be later than the end date.")
+            return False
+
+        print(f"Validated Date Range: Start Date: {start_date}, End Date: {end_date}")
+        return True
+
+

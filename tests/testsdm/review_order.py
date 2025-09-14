@@ -47,7 +47,7 @@ from pages.digital_marketplace.pending_approval_orders import PendingApprovalOrd
 from pages.digital_marketplace.customers import Customers
 from pages.digital_marketplace.product_switch_history import ProductSwitchHistory
 # from pages.digital_marketplace.item_received_list import ReceivableItemListPage
-from pages.digital_marketplace.administration import Administration
+from pages.digital_marketplace.vendor_dashboard import Administration
 from pages.digital_marketplace.all_order_for_admin import AllOrderForAdminPage
 from pages.digital_marketplace.order_management import OrderManagement
 from pages.digital_marketplace.receivable_order_list import ReceivableOrderListPage
