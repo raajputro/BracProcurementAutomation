@@ -26,6 +26,8 @@ class ProcurementHomePage(BasicActionsDM):
         self.bill_payable = page.locator('//div[text()="Bill Payable"]')
         self.create_vendor_bill_payable = page.locator(
             '//div[text()="Bill Payable"]//following-sibling::ul//child::span[text()="Create Vendor Bill Payable"]')
+        self.vendor_billing_list = page.locator(
+            '//div[text()="Bill Payable"]//following-sibling::ul//child::span[text()="Vendor Billing List"]')
 
     def navigate_to_create_requisition(self):
         self.proc_item_requisition.click()
@@ -61,3 +63,6 @@ class ProcurementHomePage(BasicActionsDM):
     def goto_bill_payable(self):
         self.bill_payable.click()
         self.create_vendor_bill_payable.click()
+
+    def goto_vendor_billing_list(self):
+        self.vendor_bill_list.click()
