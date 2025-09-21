@@ -653,9 +653,33 @@ def test_14_login_to_procurement_and_view_item_receive_details(page):
 
     proc_item_receive_list_page = ProcItemReceiveListPage(page)
     proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
-    proc_item_receive_list_page.count_total_item_receive()
-    # new_page = new_tab(lambda p: proc_item_receive_list_page.count_total_item_receive())
+    proc_item_receive_list_page.item_receive_details_view()
+    # new_page = new_tab(lambda p: proc_item_receive_list_page.item_receive_details_view())
     # new_page.close()
+
+    m_page = MainNavigationBar(page)
+    m_page.exit()
+    m_page.logout()
+    m_page.get_full_page_screenshot('full_page_screenshot_')
+
+
+def test_15_login_to_procurement_and_vendor_bill_creation(page):
+    print("Test 15: Bill creation flow for Marketplace item receive in procurement system...")
+    proc_login_page = ProcurementLoginPage(page)
+    proc_login_page.perform_login(
+        given_url=proj_url,
+        user_name=proc_admin,
+        pass_word=proj_pass,
+        timeout=60000
+    )
+
+    proc_dashboard_page = DashboardPage(page)
+    proc_dashboard_page.goto_procurement()
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_63')
+
+    proc_home_page = ProcurementHomePage(page)
+    proc_home_page.goto_bill_payable()
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_64')
 
     m_page = MainNavigationBar(page)
     m_page.exit()

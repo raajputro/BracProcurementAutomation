@@ -23,7 +23,9 @@ class ProcurementHomePage(BasicActionsDM):
         self.item_receive_list = page.locator(
             '//div[text()="Item Receive"]//following-sibling::ul//child::span[text()="Item Receive List"]')
 
-        # write down all the necessary actions performed on this page as def
+        self.bill_payable = page.locator('//div[text()="Bill Payable"]')
+        self.create_vendor_bill_payable = page.locator(
+            '//div[text()="Bill Payable"]//following-sibling::ul//child::span[text()="Create Vendor Bill Payable"]')
 
     def navigate_to_create_requisition(self):
         self.proc_item_requisition.click()
@@ -55,3 +57,7 @@ class ProcurementHomePage(BasicActionsDM):
         self.item_receive.click()
         self.item_receive_list.click()
         self.wait_for_timeout(3000)
+
+    def goto_bill_payable(self):
+        self.bill_payable.click()
+        self.create_vendor_bill_payable.click()

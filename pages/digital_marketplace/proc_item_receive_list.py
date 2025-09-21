@@ -18,15 +18,10 @@ class ProcItemReceiveListPage(ProcurementHomePage, BasicActionsDM):
         self.click_on_btn(self.search_icon)
         self.wait_for_timeout(2000)
 
-    def count_total_item_receive(self):
+    def item_receive_details_view(self):
         mrr_no = self.page.locator("//td[@title and starts-with(@title, 'MRR-')]/a")
         print("Count total item received:" + str(mrr_no.count()))
         for i in range(mrr_no.count()):
             print(mrr_no.nth(i).inner_text())
             self.click_on_btn(self.mrr_no_hyperlink.nth(i))
             self.wait_for_timeout(2000)
-
-    # def view_item_receive_details(self):
-    #     # self.click_on_btn(self.mrr_no_hyperlink.nth(0))
-    #     for i in range(mrr_no.count()):
-    #         print(mrr_no.nth(i).inner_text())
