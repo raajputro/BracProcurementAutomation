@@ -49,6 +49,12 @@ class ShoppingCart(HomePage, BasicActionsDM):
 
         if requisition_matches.count() == 0:
             print(f"Requisition {requisition_number} not found in cart.")
+            #
+            self.click_on_btn(self.logo)
+            self.wait_for_timeout(2000)
+
+            # s_page = ActiveRequisitionProductList(page)
+            # s_page.requisition_item_add_shopping_cart()
             return
 
         print(f"Found {requisition_matches.count()} match(es) for requisition: {requisition_number}")

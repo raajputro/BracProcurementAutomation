@@ -16,7 +16,7 @@ class ActiveRequisitionListPage(HomePage, BasicActionsDM):
         self.search_button = page.locator('button[class="button"]')
 
         self.requisition_hyperlink = page.locator(
-            'a[href="/Requisition/ActiveRequisitionProductList?requisitionId=3568"]')
+            'a[href^="/Requisition/ActiveRequisitionProductList?requisitionId"]')
         # Need to change child id when using from table child = row
         # self.requisition_hyperlink = page.locator('.data-table > tbody:nth-child(2) > tr:nth-child(1)')
         self.add_to_cart_button = page.locator('button[id="addToCartBtn-7323"]')
@@ -26,15 +26,15 @@ class ActiveRequisitionListPage(HomePage, BasicActionsDM):
         self.input_in_element(self.order_requisition_number, requisition_number)
         self.search_button.click()
 
+    def goto_active_requisition_product_list(self):
+        self.click_on_btn(self.requisition_hyperlink)
+        self.wait_for_timeout(2000)
+
     # Need change requisition id when requisition number will be changed
     def goto_active_requisition_product_list_stg(self):
         self.navigate_to_url(
             "https://stgmarketplace.brac.net/Requisition/ActiveRequisitionProductList?requisitionId=3568")
 
-    # Use for single item order flow
-    def goto_active_requisition_product_list(self):
-        self.navigate_to_url(
-            "https://qamarketplace.bracits.com/Requisition/ActiveRequisitionProductList?requisitionId=3692")
 
     def requisition_item_add_shopping_cart(self):
         self.click_on_btn(self.add_to_cart_button)

@@ -8,6 +8,7 @@ class ItemReceivedList(OrderManagement, BasicActionsDM):
         self.page = page
 
         self.item_received_list_submenu = page.locator('a[href="/Admin/Order/CompleteOrderItemReceivedList"]')
+
         self.order_number_input = page.locator('#OrderNo')
         self.search_button_for_received_item = page.locator('button[id="search-complete-order-item-received-list"]')
         self.order_view_button = page.get_by_role("link", name="View")

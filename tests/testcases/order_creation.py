@@ -67,7 +67,6 @@ from pages.digital_marketplace.receivable_order_list import ReceivableOrderListP
 from pages.digital_marketplace.item_received_list import ItemReceivedList
 from pages.digital_marketplace.order_details_administration import OrderDetailsAdministration
 from pages.digital_marketplace.framework_order_list import FrameworkOrderListPage
-from pages.digital_marketplace.proc_item_receive_list import ProcItemReceiveListPage
 
 # For validation
 from playwright.sync_api import expect
@@ -77,12 +76,12 @@ from rich.traceback import install
 
 install()
 order_reference_number = ''
-# order_vendor = ''
+order_vendor = ''
 framework_order_no = ''
 vendor_login_id = ''
-# order_number = ''
+order_number = ''
 
-# req_num = ''
+req_num = ''
 approver_id = ''
 approver_id_2 = ''
 # order_approver = ''
@@ -298,9 +297,6 @@ def test_6_check_requisition_approved(page, new_tab):
 
 # Marketplace flow
 # Order initiation
-req_num = "REQ20250014590"
-order_vendor = "Plan for demand"
-
 
 def test_7_order_initiation(page, new_tab):
     print("Test 7: Marketplace order initiation process...")
@@ -319,12 +315,29 @@ def test_7_order_initiation(page, new_tab):
 
     cart_page = ShoppingCart(page)
     cart_page.get_full_page_screenshot('full_page_screenshot_23')
-    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014590")
-    cart_page.select_vendor_for_requisition_found(requisition_number=req_num)
+    cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014589")
+    # cart_page.select_vendor_for_requisition_found(requisition_number=req_num)
     cart_page.wait_for_timeout(2000)
+
+    home_page = HomePage(page)
+    home_page.go_to_active_requisition_list()
+
+    active_requisition_list_page = ActiveRequisitionListPage(page)
+    active_requisition_list_page.search_order_requisition_number(requisition_number="REQ20250014589")
+    # active_requisition_list_page.search_order_requisition_number(requisition_number=req_num)
+    active_requisition_list_page.get_full_page_screenshot('full_page_screenshot_48')
+
+    new_page = new_tab(lambda p: active_requisition_list_page.goto_active_requisition_product_list())
+    active_requisition_list_page.wait_for_timeout(2000)
+
+    active_requisition_product_list_page = ActiveRequisitionProductList(new_page)
+    active_requisition_product_list_page.requisition_item_add_shopping_cart()
+    active_requisition_product_list_page.goto_shopping_cart()
+    # new_page.close()
+
     cart_page = ShoppingCart(page)
-    # cart_page.select_vendor_by_name(vendor_name="Plan for demand", requisition_number="REQ20250014590")
-    cart_page.select_vendor_by_name(vendor_name=order_vendor, requisition_number=req_num)
+    cart_page.select_vendor_by_name(vendor_name="Orthomedical Bangladesh", requisition_number="REQ20250014589")
+    # cart_page.select_vendor_by_name(vendor_name=order_vendor, requisition_number=req_num)
     cart_page.wait_for_timeout(5000)
     cart_page.get_full_page_screenshot('full_page_screenshot_24')
     current_dir = os.getcwd()
@@ -335,8 +348,7 @@ def test_7_order_initiation(page, new_tab):
 
     cart_page.update_shopping_cart_value_1(qty_update="10")
     cart_page.update_cart_item_remarks(
-        requisition_number="REQ20250014590",
-        # requisition_number=req_num,
+        requisition_number=req_num,
         remarks_text="Automation test remarks"
     )
     cart_page.update_shopping_cart_info()
@@ -351,13 +363,13 @@ def test_7_order_initiation(page, new_tab):
     # checkout_page.schedule_expected_ date.fill(expected_date)
 
     checkout_page.update_expected_date()
-    checkout_page.wait_for_timeout(5000)
-    checkout_page.delivery_schedule_preparation(location=manual_delivery_location_1, pin=receiving_pin_1)
-    # checkout_page.delivery_schedule_preparation(location="manual_delivery_location_1", pin="00175050")
+    checkout_page.wait_for_timeout(2000)
+    # checkout_page.delivery_schedule_preparation(location=manual_delivery_location_1, pin=receiving_pin_1)
+    checkout_page.delivery_schedule_preparation(location="manual_delivery_location_1", pin="00175050")
     checkout_page.click_add_schedule_button.click()
     checkout_page.wait_for_timeout(2000)
-    # checkout_page.delivery_schedule_preparation(location="manual_delivery_location_2", pin="00006008")
-    checkout_page.delivery_schedule_preparation(location=manual_delivery_location_2, pin=order_initiator)
+    checkout_page.delivery_schedule_preparation(location="manual_delivery_location_2", pin="00006008")
+    # checkout_page.delivery_schedule_preparation(location=manual_delivery_location_2, pin=order_initiator)
     checkout_page.click_add_schedule_button.click()
     checkout_page.get_full_page_screenshot('full_page_screenshot_26')
     checkout_page.click_continue()
@@ -386,8 +398,7 @@ def test_8_order_approve(page):
     login_page = LoginPage(page)
     # login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
-        user_name="00155790",
-        # user_name=order_approver,
+        user_name=order_approver,
         pass_word=marketplace_password
     )
     home_page = HomePage(page)
@@ -543,7 +554,7 @@ def test_12_item_receive_by_receiver(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_52')
 
     receivable_order_list_page.receivable_order_view()
-    receivable_order_list_page.challan_no_input(fill_challan_no="Item receive by receiver_4")
+    receivable_order_list_page.challan_no_input(fill_challan_no="Item receive by receiver_1")
     receivable_order_list_page.all_item_select.click()
     receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_53')
@@ -557,14 +568,13 @@ def test_12_item_receive_by_receiver(page):
     dm_logout.logout_from_administration()
 
 
-# Partially received
 def test_13_item_receive_by_order_initiator_as_receiver(page):
     print("Test 13: Item received by receiver as order initiator...")
     login_page = LoginPage(page)
     login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
-        # user_name="00006008",
-        user_name=order_initiator,
+        user_name="00006008",
+        # user_name=order_initiator,
         pass_word=marketplace_password
     )
     home_page = HomePage(page)
@@ -581,96 +591,25 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_57')
+
     receivable_order_list_page.receivable_order_view()
     receivable_order_list_page.challan_no_input(
-        fill_challan_no="Partially item receive by receiver as order initiator_5")
+        fill_challan_no="Partially item receive 1 by receiver as order initiator")
     receivable_order_list_page.all_item_select.click()
-    receivable_order_list_page.wait_for_timeout(5000)
-    receivable_order_list_page.input_quantity_to_receive(received_quantity="1")
-
-    # current_dir = os.getcwd()
-    # document_location = os.path.join(current_dir, "utils", 'upload_file.pdf')
-    # # receivable_order_list_page.upload_file(document_location)
-    # assert receivable_order_list_page.upload_file(document_location), "File upload failed"
-
-    receivable_order_list_page.input_received_remarks(
-        receiving_remarks="Received remarks test 123 !@# for initiator partially received item 1")
+    receivable_order_list_page.input_quantity_to_receive(received_quantity="3")
+    current_dir = os.getcwd()
+    document_location = os.path.join(current_dir, "utils", 'upload_file.pdf')
+    # receivable_order_list_page.upload_file(document_location)
+    assert receivable_order_list_page.upload_file(document_location), "File upload failed"
+    receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
     receivable_order_list_page.open_item_receive_popup()
+    # receivable_order_list_page.close_item_receive_popup()
     receivable_order_list_page.confirm_receivable_order()
     receivable_order_list_page.wait_for_timeout(5000)
-
-    item_receive_list_page = ItemReceivedList(page)
-    item_receive_list_page.searched_received_order(challan_no="Partially item receive by receiver as order initiator_5")
-    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_58')
-    item_receive_list_page.search_button_for_received_item.click()
-    item_receive_list_page.order_view_button.click()
-    item_receive_list_page.wait_for_timeout(5000)
-
-    receivable_order_list_page = ReceivableOrderListPage(page)
-    receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%Y-%m-%d")
-    receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
-    receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_59')
-    receivable_order_list_page.receivable_order_view()
-    receivable_order_list_page.challan_no_input(
-        fill_challan_no="Partially item receive by receiver as order initiator_6")
-    receivable_order_list_page.all_item_select.click()
-    receivable_order_list_page.input_received_remarks(
-        receiving_remarks="Received remarks test 123 !@# for initiator partially received item 6")
-    receivable_order_list_page.open_item_receive_popup()
-    receivable_order_list_page.confirm_receivable_order()
-    receivable_order_list_page.wait_for_timeout(5000)
-
-    item_receive_list_page = ItemReceivedList(page)
-    item_receive_list_page.searched_received_order(challan_no="Partially item receive by receiver as order initiator_6")
-    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_60')
-    item_receive_list_page.search_button_for_received_item.click()
-    item_receive_list_page.order_view_button.click()
-    item_receive_list_page.wait_for_timeout(5000)
-
-    dm_logout = MainNavigationMenu(page)
-    dm_logout.logout_from_administration()
-
-
-def test_14_login_to_procurement_and_view_item_receive_details(page, new_tab):
-    print("Test 14: Marketplace item receive details view in procurement system...")
-    proc_login_page = ProcurementLoginPage(page)
-    proc_login_page.perform_login(
-        given_url=proj_url,
-        user_name=proc_admin,
-        pass_word=proj_pass,
-        timeout=60000
-    )
-
-    proc_dashboard_page = DashboardPage(page)
-    proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_61')
-
-    proc_home_page = ProcurementHomePage(page)
-    proc_home_page.goto_item_receive_list()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_62')
-
-    proc_item_receive_list_page = ProcItemReceiveListPage(page)
-    # proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
-    proc_item_receive_list_page.search_item_receive_order(receivable_item="BPD/2025/FO-2936")
-    proc_item_receive_list_page.count_total_item_receive()
-    # new_page = new_tab(lambda p: proc_item_receive_list_page.count_total_item_receive())
-    # new_page.close()
-    # proc_item_receive_list_page.get_full_page_screenshot('full_page_screenshot_63')
-    # proc_item_receive_list_page.view_item_receive_details()
-
-
-    # framework_order_list_page = FrameworkOrderListPage(page)
-    # framework_order_list_page.search_framework_order(fa_order_no=framework_order_no)
-    # framework_order_list_page.get_full_page_screenshot('full_page_screenshot_48')
     #
-    # new_page = new_tab(lambda p: framework_order_list_page.click_framework_order(framework_order_no=framework_order_no))
-    # framework_order_list_page.wait_for_timeout(5000)
-    # framework_order_list_page.get_full_page_screenshot('full_page_screenshot_49')
-    # new_page.close()
+    # # s_page = ItemReceivedList(page)
+    # # s_page.search_received_order(received_order_number=framework_order_no)
+    # # s_page.received_order_view()
     #
-    # m_page = MainNavigationBar(page)
-    # m_page.exit()
-    # m_page.logout()
-    # m_page.get_full_page_screenshot('full_page_screenshot_')
+    # dm_logout = MainNavigationMenu(page)
+    # dm_logout.logout_from_administration()

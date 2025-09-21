@@ -178,9 +178,6 @@ class BasicActionsDM:
 
     # New Method to Fill Date Range
     def fill_date_range(self, start_date: str, end_date: str):
-        """
-        Fills the StartDate and EndDate fields with the provided dates.
-        """
         start_date_field = self.page.locator('#StartDate')
         end_date_field = self.page.locator('#EndDate')
 
@@ -188,7 +185,7 @@ class BasicActionsDM:
         start_date_field.fill(start_date)
         end_date_field.fill(end_date)
 
-        print(f"Start Date: {start_date}, End Date: {end_date}")
+        print(f"Print searching order Start Date: {start_date}, End Date: {end_date}")
 
     # New Method to Validate Date Range
     def validate_date_range(self):
@@ -214,5 +211,3 @@ class BasicActionsDM:
 
         print(f"Validated Date Range: Start Date: {start_date}, End Date: {end_date}")
         return True
-
-

@@ -1,5 +1,6 @@
 import re
 from pages.digital_marketplace.order_management import OrderManagement
+from pathlib import Path
 from utils.basic_actionsdm import BasicActionsDM
 
 
@@ -66,11 +67,9 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
     def confirm_receivable_order(self):
         self.click_on_btn(self.confirm_button)
         self.wait_for_timeout(5000)
-        # self.navigate_to_url("https://stgmarketplace.brac.net/Admin/Order/CompleteOrderItemReceivedList")
-        # self.navigate_to_url("https://qamarketplace.bracits.com/Admin/Order/CompleteOrderItemReceivedList")
-        # self.wait_for_timeout(2000)
 
-    def upload_file(self, file_path: str, container: str = "#receivedRemarksDiv", index: int = 0, timeout: int = 30000):
+    def upload_file_1(self, file_path: str, container: str = "#receivedRemarksDiv", index: int = 0,
+                      timeout: int = 30000):
         p = Path(file_path).expanduser().resolve()
         if not p.exists():
             raise FileNotFoundError(f"File not found: {p}")
@@ -80,3 +79,25 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
         file_input.set_input_files(str(p))
 
         return True
+
+    # def upload_file(self, file_path: str, container: str = "#receivedRemarksDiv", timeout: int = 30000) -> bool:
+    #     try:
+    #         # Ensure the file exists
+    #         p = Path(file_path).expanduser().resolve(strict=True)
+    #
+    #         # Locate the file input inside the container
+    #         file_input = self.page.locator(f"{container} input[type='file']").first
+    #         file_input.wait_for(state="attached", timeout=timeout)
+    #
+    #         # Upload the file (bypasses OS dialog)
+    #         file_input.set_input_files(str(p))
+    #
+    #         # Verify file name is reflected (Playwright triggers 'change' event)
+    #         expect(file_input).to_have_value(re.compile(r".+"), timeout=timeout)
+    #
+    #         print(f"[INFO] Successfully uploaded: {p.name}")
+    #         return True
+    #
+    #     except Exception as e:
+    #         print(f"[ERROR] File upload failed: {e}")
+    #         return False
