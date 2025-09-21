@@ -633,7 +633,7 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
     dm_logout.logout_from_administration()
 
 
-def test_14_login_to_procurement_and_view_item_receive_details(page, new_tab):
+def test_14_login_to_procurement_and_view_item_receive_details(page):
     print("Test 14: Marketplace item receive details view in procurement system...")
     proc_login_page = ProcurementLoginPage(page)
     proc_login_page.perform_login(
@@ -652,25 +652,12 @@ def test_14_login_to_procurement_and_view_item_receive_details(page, new_tab):
     proc_home_page.get_full_page_screenshot('full_page_screenshot_62')
 
     proc_item_receive_list_page = ProcItemReceiveListPage(page)
-    # proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
-    proc_item_receive_list_page.search_item_receive_order(receivable_item="BPD/2025/FO-2936")
+    proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
     proc_item_receive_list_page.count_total_item_receive()
     # new_page = new_tab(lambda p: proc_item_receive_list_page.count_total_item_receive())
     # new_page.close()
-    # proc_item_receive_list_page.get_full_page_screenshot('full_page_screenshot_63')
-    # proc_item_receive_list_page.view_item_receive_details()
 
-
-    # framework_order_list_page = FrameworkOrderListPage(page)
-    # framework_order_list_page.search_framework_order(fa_order_no=framework_order_no)
-    # framework_order_list_page.get_full_page_screenshot('full_page_screenshot_48')
-    #
-    # new_page = new_tab(lambda p: framework_order_list_page.click_framework_order(framework_order_no=framework_order_no))
-    # framework_order_list_page.wait_for_timeout(5000)
-    # framework_order_list_page.get_full_page_screenshot('full_page_screenshot_49')
-    # new_page.close()
-    #
-    # m_page = MainNavigationBar(page)
-    # m_page.exit()
-    # m_page.logout()
-    # m_page.get_full_page_screenshot('full_page_screenshot_')
+    m_page = MainNavigationBar(page)
+    m_page.exit()
+    m_page.logout()
+    m_page.get_full_page_screenshot('full_page_screenshot_')
