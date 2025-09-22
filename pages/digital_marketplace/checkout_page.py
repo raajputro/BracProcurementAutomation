@@ -37,7 +37,7 @@ class CheckoutPage(ShoppingCart, BasicActionsDM):
         self.schedule_quantity.clear()
         self.wait_for_timeout(3000)
         self.input_in_element(self.schedule_quantity, quantity)
-        self.wait_for_timeout(5000)
+        self.wait_for_timeout(3000)
 
     def update_expected_date(self):
         self.schedule_expected_date.click()

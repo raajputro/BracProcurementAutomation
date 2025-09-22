@@ -2,10 +2,9 @@ from dotenv import load_dotenv
 import os
 import re
 import random
+import string
 from conftest import new_tab
 from datetime import datetime, timedelta
-
-from pages.digital_marketplace.bill_list import BillList
 
 load_dotenv()
 
@@ -21,10 +20,9 @@ proj_pass = os.getenv("test_user_pass")
 # assigned_person = os.getenv("test_requisition_assignee")
 # vendor_name = os.getenv("test_vendor_name")
 # dp_approver = os.getenv("test_dp_approver")
-# bill_creator = os.getenv("test_bill_creator")
+bill_creator = os.getenv("test_bill_creator")
 
 # Marketplace information
-# marketplace_url_stg = os.getenv("test_marketplace_url_stg")
 marketplace_url_qa = os.getenv("test_marketplace_url_qa")
 order_initiator = os.getenv("test_order_initiator")
 marketplace_password = os.getenv("test_marketplace_password")
@@ -50,6 +48,11 @@ from pages.digital_marketplace.main_navigation_bar import MainNavigationBar
 from pages.digital_marketplace.requisition_approve_list import RequisitionApproveList
 from pages.digital_marketplace.requisition_details_information import RequisitionDetailsInformation
 from pages.digital_marketplace.framework_information import FrameworkInformation
+from pages.digital_marketplace.framework_order_list import FrameworkOrderListPage
+from pages.digital_marketplace.proc_item_receive_list import ProcItemReceiveListPage
+from pages.digital_marketplace.bill_list import BillList
+from pages.digital_marketplace.create_vendor_bill_payable import CreateVendorBillPayable
+from pages.digital_marketplace.bill_details import BillDetails
 
 # Page models for marketplace
 from pages.digital_marketplace.login_page import LoginPage
@@ -68,8 +71,6 @@ from pages.digital_marketplace.order_management import OrderManagement
 from pages.digital_marketplace.receivable_order_list import ReceivableOrderListPage
 from pages.digital_marketplace.item_received_list import ItemReceivedList
 from pages.digital_marketplace.order_details_administration import OrderDetailsAdministration
-from pages.digital_marketplace.framework_order_list import FrameworkOrderListPage
-from pages.digital_marketplace.proc_item_receive_list import ProcItemReceiveListPage
 
 # For validation
 from playwright.sync_api import expect
@@ -78,20 +79,27 @@ from playwright.sync_api import expect
 from rich.traceback import install
 
 install()
+# Marketplace global variable
 order_reference_number = ''
-# order_vendor = ''
 framework_order_no = ''
 vendor_login_id = ''
-# order_number = ''
+challan_num_for_receiver = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+challan_num_for_order_initiator = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+challan_num_for_order_initiator_2 = ''.join(random.choices(string.ascii_letters, k=8))
 
-# req_num = ''
+# Procurement global variable
+req_num = ''
 approver_id = ''
 approver_id_2 = ''
+order_vendor = ''
 # order_approver = ''
 approver_id_3 = ''
 purchase_num = ''
 challan_num = str(random.randint(10000, 99999))
 bill_num = str(random.randint(10000, 99999))
+bill_recommender1 = ''
+bill_recommender2 = ''
+bill_approver_id = ''
 
 
 def test_1_login_to_create_and_submit_requisition(page):
@@ -300,8 +308,6 @@ def test_6_check_requisition_approved(page, new_tab):
 
 # Marketplace flow
 # Order initiation
-req_num = "REQ20250014590"
-order_vendor = "Plan for demand"
 
 
 def test_7_order_initiation(page, new_tab):
@@ -321,11 +327,8 @@ def test_7_order_initiation(page, new_tab):
 
     cart_page = ShoppingCart(page)
     cart_page.get_full_page_screenshot('full_page_screenshot_23')
-    # cart_page.select_vendor_for_requisition_found(requisition_number="REQ20250014590")
     cart_page.select_vendor_for_requisition_found(requisition_number=req_num)
     cart_page.wait_for_timeout(2000)
-    cart_page = ShoppingCart(page)
-    # cart_page.select_vendor_by_name(vendor_name="Plan for demand", requisition_number="REQ20250014590")
     cart_page.select_vendor_by_name(vendor_name=order_vendor, requisition_number=req_num)
     cart_page.wait_for_timeout(5000)
     cart_page.get_full_page_screenshot('full_page_screenshot_24')
@@ -337,7 +340,6 @@ def test_7_order_initiation(page, new_tab):
 
     cart_page.update_shopping_cart_value_1(qty_update="10")
     cart_page.update_cart_item_remarks(
-        # requisition_number="REQ20250014590",
         requisition_number=req_num,
         remarks_text="Automation test remarks"
     )
@@ -355,10 +357,8 @@ def test_7_order_initiation(page, new_tab):
     checkout_page.update_expected_date()
     checkout_page.wait_for_timeout(5000)
     checkout_page.delivery_schedule_preparation(location=manual_delivery_location_1, pin=receiving_pin_1)
-    # checkout_page.delivery_schedule_preparation(location="manual_delivery_location_1", pin="00175050")
     checkout_page.click_add_schedule_button.click()
     checkout_page.wait_for_timeout(2000)
-    # checkout_page.delivery_schedule_preparation(location="manual_delivery_location_2", pin="00006008")
     checkout_page.delivery_schedule_preparation(location=manual_delivery_location_2, pin=order_initiator)
     checkout_page.click_add_schedule_button.click()
     checkout_page.get_full_page_screenshot('full_page_screenshot_26')
@@ -376,8 +376,6 @@ def test_7_order_initiation(page, new_tab):
     checkout_page.get_full_page_screenshot('full_page_screenshot_29')
     checkout_page.wait_for_timeout(5000)
 
-    # new_page.close()
-
     dm_logout = MainNavigationMenu(page)
     dm_logout.perform_logout()
     dm_logout.get_full_page_screenshot('full_page_screenshot_30')
@@ -386,12 +384,11 @@ def test_7_order_initiation(page, new_tab):
 def test_8_order_approve(page):
     print("Test 8: Order approval process...")
     login_page = LoginPage(page)
-    # login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
-        # user_name="00155790",
         user_name=order_approver,
         pass_word=marketplace_password
     )
+
     home_page = HomePage(page)
     home_page.get_full_page_screenshot('full_page_screenshot_31')
     home_page.goto_order_list()
@@ -420,7 +417,6 @@ def test_8_order_approve(page):
 def test_9_find_vendor_credential_for_order(page):
     print("Test 9: Find vendor credential for order...")
     login_page = LoginPage(page)
-    # login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
         user_name=dm_admin,
         pass_word=marketplace_password
@@ -456,17 +452,18 @@ def test_9_find_vendor_credential_for_order(page):
 def test_10_vendor_acknowledgement(page):
     print("Test 10: Vendor acknowledgement process...")
     login_page = LoginPage(page)
-    # login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_vendor_login(
         user_name=vendor_login_id,
         pass_word=marketplace_password
     )
+
     vendor_dashboard = VendorDashboard(page)
     vendor_dashboard.get_full_page_screenshot('full_page_screenshot_41')
     vendor_dashboard.print_card_title()
     vendor_dashboard.print_table_data()
-    vendor_dashboard.click_action_for_order(order_reference=order_reference_number)
     vendor_dashboard.get_full_page_screenshot('full_page_screenshot_42')
+    vendor_dashboard.click_action_for_order(order_reference=order_reference_number)
+    vendor_dashboard.get_full_page_screenshot('full_page_screenshot_43')
     vendor_dashboard.wait_for_timeout(5000)
 
     order_details_administration = OrderDetailsAdministration(page)
@@ -474,13 +471,15 @@ def test_10_vendor_acknowledgement(page):
     framework_order_no = order_details_administration.confirmation_acknowledgment_by_yes()
     print("Generate framework order number", framework_order_no)
     order_details_administration.wait_for_timeout(5000)
-    order_details_administration.get_full_page_screenshot('full_page_screenshot_43')
-    order_details_administration.click_back_to_order_list()
     order_details_administration.get_full_page_screenshot('full_page_screenshot_44')
+    order_details_administration.click_back_to_order_list()
+    order_details_administration.get_full_page_screenshot('full_page_screenshot_45')
 
     order_list = OrderManagement(page)
+    current_date = datetime.today().strftime("%d-%m-%Y")
+    order_list.fill_date_range(start_date=current_date, end_date=current_date)
     order_list.search_order(order_no=framework_order_no)
-    order_list.get_full_page_screenshot('full_page_screenshot_45')
+    order_list.get_full_page_screenshot('full_page_screenshot_46')
     order_list.wait_for_timeout(5000)
 
     dm_logout = MainNavigationMenu(page)
@@ -499,25 +498,25 @@ def test_11_login_to_procurement_and_view_work_order_details(page, new_tab):
 
     proc_dashboard_page = DashboardPage(page)
     proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_46')
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_47')
 
     proc_home_page = ProcurementHomePage(page)
     proc_home_page.navigate_to_framework_order_list()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_47')
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_48')
 
     framework_order_list_page = FrameworkOrderListPage(page)
     framework_order_list_page.search_framework_order(fa_order_no=framework_order_no)
-    framework_order_list_page.get_full_page_screenshot('full_page_screenshot_48')
+    framework_order_list_page.get_full_page_screenshot('full_page_screenshot_49')
 
     new_page = new_tab(lambda p: framework_order_list_page.click_framework_order(framework_order_no=framework_order_no))
     framework_order_list_page.wait_for_timeout(5000)
-    framework_order_list_page.get_full_page_screenshot('full_page_screenshot_49')
+    framework_order_list_page.get_full_page_screenshot('full_page_screenshot_50')
     new_page.close()
 
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_50')
+    m_page.get_full_page_screenshot('full_page_screenshot_51')
 
 
 # Item receive by receiver
@@ -531,7 +530,7 @@ def test_12_item_receive_by_receiver(page):
     )
     home_page = HomePage(page)
     home_page.goto_administration()
-    home_page.get_full_page_screenshot('full_page_screenshot_51')
+    home_page.get_full_page_screenshot('full_page_screenshot_52')
     home_page.wait_for_timeout(2000)
 
     order_list = OrderManagement(page)
@@ -539,39 +538,61 @@ def test_12_item_receive_by_receiver(page):
 
     receivable_order_list_page = ReceivableOrderListPage(page)
     receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%Y-%m-%d")
+    current_date = datetime.today().strftime("%d-%m-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_52')
-
-    receivable_order_list_page.receivable_order_view()
-    receivable_order_list_page.challan_no_input(fill_challan_no="Item receive by receiver_10")
-    receivable_order_list_page.all_item_select.click()
-    receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_53')
-    receivable_order_list_page.open_item_receive_popup()
+    receivable_order_list_page.receivable_order_view()
+
+    global challan_num_for_receiver
+    receivable_order_list_page.challan_no_input(fill_challan_no=challan_num_for_receiver)
+    print("Print generated challan number for receiver: ", challan_num_for_receiver)
+
+    receivable_order_list_page.all_item_select.click()
+
+    current_dir = os.getcwd()
+    document_location = os.path.join(current_dir, "utils", "upload_file.pdf")
+    assert receivable_order_list_page.receiving_upload_attachment(document_location), "File upload failed"
+
+    receivable_order_list_page.wait_for_timeout(5000)
+
+    receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_54')
+    receivable_order_list_page.open_item_receive_popup()
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_55')
     receivable_order_list_page.confirm_receivable_order()
     receivable_order_list_page.wait_for_timeout(5000)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_55')
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_56')
+
+    item_receive_list_page = ItemReceivedList(page)
+    current_date = datetime.today().strftime("%d-%m-%Y")
+    item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
+    item_receive_list_page.search_received_order(received_order_number=framework_order_no)
+    item_receive_list_page.searched_received_order(
+        challan_no=challan_num_for_receiver
+    )
+
+    item_receive_list_page.search_button_for_received_item.click()
+    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_57')
+    item_receive_list_page.order_view_button.click()
+    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_58')
+    item_receive_list_page.wait_for_timeout(5000)
 
     dm_logout = MainNavigationMenu(page)
     dm_logout.logout_from_administration()
 
 
-# Partially received
 def test_13_item_receive_by_order_initiator_as_receiver(page):
     print("Test 13: Item received by receiver as order initiator...")
     login_page = LoginPage(page)
     login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
-        # user_name="00006008",
         user_name=order_initiator,
         pass_word=marketplace_password
     )
     home_page = HomePage(page)
     home_page.goto_administration()
-    home_page.get_full_page_screenshot('full_page_screenshot_56')
+    home_page.get_full_page_screenshot('full_page_screenshot_59')
     home_page.wait_for_timeout(2000)
 
     order_list = OrderManagement(page)
@@ -579,59 +600,88 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
 
     receivable_order_list_page = ReceivableOrderListPage(page)
     receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%Y-%m-%d")
+    current_date = datetime.today().strftime("%d-%m-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_57')
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_60')
     receivable_order_list_page.receivable_order_view()
-    receivable_order_list_page.challan_no_input(
-        fill_challan_no="Partially item receive by receiver as order initiator_11")
+
+    global challan_num_for_order_initiator
+    receivable_order_list_page.challan_no_input(fill_challan_no=challan_num_for_order_initiator)
+    print("Print generated challan number for order initiator: ", challan_num_for_order_initiator
+          )
+
     receivable_order_list_page.all_item_select.click()
     receivable_order_list_page.wait_for_timeout(5000)
     receivable_order_list_page.input_quantity_to_receive(received_quantity="1")
 
-    # current_dir = os.getcwd()
-    # document_location = os.path.join(current_dir, "utils", 'upload_file.pdf')
-    # # receivable_order_list_page.upload_file(document_location)
-    # assert receivable_order_list_page.upload_file(document_location), "File upload failed"
+    current_dir = os.getcwd()
+    document_location = os.path.join(current_dir, "utils", "image_png.png")
+    assert receivable_order_list_page.receiving_upload_attachment(document_location), "File upload failed"
 
     receivable_order_list_page.input_received_remarks(
-        receiving_remarks="Received remarks test 123 !@# for initiator partially received item 1")
+        receiving_remarks="Partially received item 1")
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_61')
     receivable_order_list_page.open_item_receive_popup()
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_62')
     receivable_order_list_page.confirm_receivable_order()
     receivable_order_list_page.wait_for_timeout(5000)
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_63')
 
     item_receive_list_page = ItemReceivedList(page)
+    current_date = datetime.today().strftime("%d-%m-%Y")
+    item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
+    item_receive_list_page.search_received_order(received_order_number=framework_order_no)
     item_receive_list_page.searched_received_order(
-        challan_no="Partially item receive by receiver as order initiator_11")
-    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_58')
+
+        challan_no=challan_num_for_order_initiator
+    )
     item_receive_list_page.search_button_for_received_item.click()
+    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_64')
     item_receive_list_page.order_view_button.click()
     item_receive_list_page.wait_for_timeout(5000)
+    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_65')
 
     receivable_order_list_page = ReceivableOrderListPage(page)
     receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%Y-%m-%d")
+    current_date = datetime.today().strftime("%d-%m-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_59')
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_66')
     receivable_order_list_page.receivable_order_view()
-    receivable_order_list_page.challan_no_input(
-        fill_challan_no="Partially item receive by receiver as order initiator_12")
+
+    global challan_num_for_order_initiator_2
+    receivable_order_list_page.challan_no_input(fill_challan_no=challan_num_for_order_initiator_2)
+    print("Print generated challan number for order initiator: ", challan_num_for_order_initiator_2
+          )
+
     receivable_order_list_page.all_item_select.click()
+
+    current_dir = os.getcwd()
+    document_location = os.path.join(current_dir, "utils", "Zip.zip")
+    assert receivable_order_list_page.receiving_upload_attachment(document_location), "File upload failed"
+
     receivable_order_list_page.input_received_remarks(
-        receiving_remarks="Received remarks test 123 !@# for initiator partially received item 6")
+        receiving_remarks="Received remarks test123.")
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_67')
     receivable_order_list_page.open_item_receive_popup()
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_68')
     receivable_order_list_page.confirm_receivable_order()
     receivable_order_list_page.wait_for_timeout(5000)
+    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_69')
 
     item_receive_list_page = ItemReceivedList(page)
+    current_date = datetime.today().strftime("%d-%m-%Y")
+    item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
+    item_receive_list_page.search_received_order(received_order_number=framework_order_no)
     item_receive_list_page.searched_received_order(
-        challan_no="Partially item receive by receiver as order initiator_12")
-    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_60')
+        challan_no=challan_num_for_order_initiator_2
+    )
     item_receive_list_page.search_button_for_received_item.click()
+    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_70')
     item_receive_list_page.order_view_button.click()
     item_receive_list_page.wait_for_timeout(5000)
+    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_71')
 
     dm_logout = MainNavigationMenu(page)
     dm_logout.logout_from_administration()
@@ -649,23 +699,22 @@ def test_14_login_to_procurement_and_view_item_receive_details(page):
 
     proc_dashboard_page = DashboardPage(page)
     proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_61')
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_72')
 
     proc_home_page = ProcurementHomePage(page)
     proc_home_page.goto_item_receive_list()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_62')
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_73')
 
     proc_item_receive_list_page = ProcItemReceiveListPage(page)
-    proc_item_receive_list_page.search_item_receive_order(receivable_item="BPD/2025/FO-2936")
-    # proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
+    proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
+    proc_item_receive_list_page.get_full_page_screenshot('full_page_screenshot_74')
     proc_item_receive_list_page.item_receive_details_view()
-    # new_page = new_tab(lambda p: proc_item_receive_list_page.item_receive_details_view())
-    # new_page.close()
+    proc_item_receive_list_page.get_full_page_screenshot('full_page_screenshot_75')
 
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_')
+    m_page.get_full_page_screenshot('full_page_screenshot_76')
 
 
 def test_15_login_to_procurement_and_vendor_bill_creation(page):
@@ -680,16 +729,16 @@ def test_15_login_to_procurement_and_vendor_bill_creation(page):
 
     proc_dashboard_page = DashboardPage(page)
     proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_63')
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_77')
 
     proc_home_page = ProcurementHomePage(page)
     proc_home_page.goto_bill_payable()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_64')
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_78')
 
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_65')
+    m_page.get_full_page_screenshot('full_page_screenshot_79')
 
 
 def test_16_bill_creation_and_submit(page):
@@ -704,40 +753,39 @@ def test_16_bill_creation_and_submit(page):
 
     proc_dashboard_page = DashboardPage(page)
     proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_66')
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_80')
 
     proc_home_page = ProcurementHomePage(page)
     proc_home_page.goto_bill_payable()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_67')
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_81')
 
     create_vendor_bill = CreateVendorBillPayable(page)
     create_vendor_bill.vendor_bill_payable_information_for_framework_order()
     create_vendor_bill.search_vendor(vendor_name=order_vendor)
-    # create_vendor_bill.search_vendor(vendor_name="Plan for demand")
     create_vendor_bill.select_order_no(order_num=framework_order_no)
-    # create_vendor_bill.select_order_no(order_num="BPD/2025/FO-2936")
-    create_vendor_bill.select_challan_no(challan_no=challan_num)
-    create_vendor_bill.select_challan_no("Partially item receive by receiver as order initiator_6")
+    create_vendor_bill.select_challan_no(challan_no=challan_num_for_receiver)
 
     global bill_num
-    # bill_num = "QA_bill_1"
     create_vendor_bill.bill_number(bill_no_1=bill_num)
     create_vendor_bill.bill_date_with_text(create_vendor_bill.select_date())
     create_vendor_bill.bill_receive_date_with_text(create_vendor_bill.select_date())
     create_vendor_bill.select_all_items()
-    create_vendor_bill.Bill_recommender2_selecting("00009026")
+    create_vendor_bill.Bill_recommender2_selecting(recommender="00009026")
+    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_82')
     create_vendor_bill.submit_bill()
-    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_68')
+    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_83')
     create_vendor_bill.confirm_submission()
-    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_69')
     create_vendor_bill.wait_for_timeout(5000)
+    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_84')
 
     bill_list_page = BillList(page)
     bill_list_page.go_to_billing_list()
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_85')
     bill_list_page.search_bill(bill_num)
     global bill_recommender1
     bill_recommender1 = str(int(bill_list_page.find_approver_id(bill_num)))
     print(f"Bill Recommender 1: {bill_recommender1}")
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_86')
 
 
 def test_17_vendor_bill_recommender1_approval(page, new_tab):
@@ -752,11 +800,10 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
     bill_detail_page.upload_document(document_location)
     # print(f"Document directory: {document_location}")
     #  Continuing rest of the test
-    bill_detail_page.get_full_page_screenshot('full_page_screenshot_70')
     bill_detail_page.select_bill_type("Regular")
-    bill_detail_page.get_full_page_screenshot('full_page_screenshot_71')
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_87')
     bill_detail_page.approve_bill()
-    bill_detail_page.get_full_page_screenshot('full_page_screenshot_72')
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_88')
     new_page.close()
 
     bill_list_page = BillList(page)
@@ -764,12 +811,12 @@ def test_17_vendor_bill_recommender1_approval(page, new_tab):
     global bill_recommender2
     bill_recommender2 = str(int(bill_list_page.find_approver_id(bill_num)))
     print(f"Bill Recommender 2: {bill_recommender2}")
-    bill_list_page.get_full_page_screenshot('full_page_screenshot_73')
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_89')
 
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_74')
+    m_page.get_full_page_screenshot('full_page_screenshot_90')
 
 
 def test_18_vendor_bill_recommender2_approval(page, new_tab):
@@ -784,12 +831,12 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
 
     proc_dashboard_page = DashboardPage(page)
     proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_75')
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_91')
 
     proc_home_page = ProcurementHomePage(page)
     proc_home_page.bill_payable.click()
     proc_home_page.goto_vendor_billing_list()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_76')
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_92')
 
     bill_list_page = BillList(page)
     bill_list_page.search_bill(bill_num)
@@ -797,7 +844,7 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
 
     bill_detail_page = BillDetails(new_page)
     bill_detail_page.approve_bill()
-    bill_detail_page.get_full_page_screenshot('full_page_screenshot_77')
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_93')
     new_page.close()
 
     bill_list_page = BillList(page)
@@ -806,17 +853,16 @@ def test_18_vendor_bill_recommender2_approval(page, new_tab):
     #     bill_list_page.navigate_to_url(bill_payable_url)
     bill_list_page.search_bill(bill_num)
     bill_list_page.wait_for_timeout(5000)
-    bill_list_page.get_full_page_screenshot('full_page_screenshot_78')
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_94')
     global bill_approver_id
     bill_approver_id = str(int(bill_list_page.find_approver_id(bill_num)))
     print(f"Bill Approver : {bill_approver_id}")
-    bill_list_page.get_full_page_screenshot('full_page_screenshot_79')
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_95')
 
-    # logout from the page
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_80')
+    m_page.get_full_page_screenshot('full_page_screenshot_96')
 
 
 def test_19_vendor_bill_approver_approval(page, new_tab):
@@ -831,33 +877,37 @@ def test_19_vendor_bill_approver_approval(page, new_tab):
 
     proc_dashboard_page = DashboardPage(page)
     proc_dashboard_page.goto_procurement()
-    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_81')
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_97')
 
     proc_home_page = ProcurementHomePage(page)
     proc_home_page.bill_payable.click()
     proc_home_page.goto_vendor_billing_list()
-    proc_home_page.get_full_page_screenshot('full_page_screenshot_82')
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_98')
 
     bill_list_page = BillList(page)
     bill_list_page.search_bill(bill_num)
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_99')
     new_page = new_tab(lambda p: bill_list_page.click_on_bill_num(bill_num))
 
     bill_detail_page = BillDetails(new_page)
     bill_detail_page.wait_for_timeout(5000)
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_100')
     bill_detail_page.approve_bill()
-    bill_detail_page.get_full_page_screenshot('full_page_screenshot_83')
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_101')
     new_page.close()
 
     bill_list_page = BillList(page)
     #     bill_list_page.navigate_to_url(bill_payable_url)
     page.reload()
+    bill_list_page.wait_for_timeout(5000)
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_102')
     bill_list_page.search_bill(bill_num)
     bill_list_page.wait_for_timeout(5000)
     bill_status = bill_list_page.find_bill_status(bill_num)
     print("Bill STATUS:", bill_status)
-    bill_list_page.get_full_page_screenshot('full_page_screenshot_84')
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_103')
 
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_85')
+    m_page.get_full_page_screenshot('full_page_screenshot_104')
