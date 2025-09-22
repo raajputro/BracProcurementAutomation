@@ -25,6 +25,8 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActionsDM):
         self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
         self.framework_order_no = page.locator('input[id="fwoNo"]')
 
+
+
     def vendor_bill_payable_information_for_framework_order(self):
         self.wait_for_timeout(7000)
         self.click_on_btn(self.framework_order_no)
@@ -196,7 +198,6 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActionsDM):
         s_result.hover()
         s_result.click()
 
-
     def submit_bill(self):
         self.submit.scroll_into_view_if_needed()
         self.submit.click()
@@ -210,10 +211,11 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActionsDM):
         print(toast_msg_text)
         self.wait_for_timeout(5000)
 
-
     def search_challan_number(self, challan_num):
         self.challan_no.fill(challan_num)
         self.page.keyboard.press('End')
         self.page.keyboard.press(' ')
         self.wait_for_timeout(1000)
         self.page.keyboard.press('Enter')
+
+

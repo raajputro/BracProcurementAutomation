@@ -65,4 +65,4 @@ class ProcurementHomePage(BasicActionsDM):
         self.create_vendor_bill_payable.click()
 
     def goto_vendor_billing_list(self):
-        self.vendor_bill_list.click()
+        self.vendor_billing_list.click()

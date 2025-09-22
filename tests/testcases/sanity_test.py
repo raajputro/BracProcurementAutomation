@@ -5,6 +5,8 @@ import random
 from conftest import new_tab
 from datetime import datetime, timedelta
 
+from pages.digital_marketplace.bill_list import BillList
+
 load_dotenv()
 
 # Project URLs
@@ -687,4 +689,175 @@ def test_15_login_to_procurement_and_vendor_bill_creation(page):
     m_page = MainNavigationBar(page)
     m_page.exit()
     m_page.logout()
-    m_page.get_full_page_screenshot('full_page_screenshot_')
+    m_page.get_full_page_screenshot('full_page_screenshot_65')
+
+
+def test_16_bill_creation_and_submit(page):
+    print("Test 16: Bill creation and submission flow for Marketplace item receive in procurement system...")
+    proc_login_page = ProcurementLoginPage(page)
+    proc_login_page.perform_login(
+        given_url=proj_url,
+        user_name=bill_creator,
+        pass_word=proj_pass,
+        timeout=60000
+    )
+
+    proc_dashboard_page = DashboardPage(page)
+    proc_dashboard_page.goto_procurement()
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_66')
+
+    proc_home_page = ProcurementHomePage(page)
+    proc_home_page.goto_bill_payable()
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_67')
+
+    create_vendor_bill = CreateVendorBillPayable(page)
+    create_vendor_bill.vendor_bill_payable_information_for_framework_order()
+    create_vendor_bill.search_vendor(vendor_name=order_vendor)
+    # create_vendor_bill.search_vendor(vendor_name="Plan for demand")
+    create_vendor_bill.select_order_no(order_num=framework_order_no)
+    # create_vendor_bill.select_order_no(order_num="BPD/2025/FO-2936")
+    create_vendor_bill.select_challan_no(challan_no=challan_num)
+    create_vendor_bill.select_challan_no("Partially item receive by receiver as order initiator_6")
+
+    global bill_num
+    # bill_num = "QA_bill_1"
+    create_vendor_bill.bill_number(bill_no_1=bill_num)
+    create_vendor_bill.bill_date_with_text(create_vendor_bill.select_date())
+    create_vendor_bill.bill_receive_date_with_text(create_vendor_bill.select_date())
+    create_vendor_bill.select_all_items()
+    create_vendor_bill.Bill_recommender2_selecting("00009026")
+    create_vendor_bill.submit_bill()
+    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_68')
+    create_vendor_bill.confirm_submission()
+    create_vendor_bill.get_full_page_screenshot('full_page_screenshot_69')
+    create_vendor_bill.wait_for_timeout(5000)
+
+    bill_list_page = BillList(page)
+    bill_list_page.go_to_billing_list()
+    bill_list_page.search_bill(bill_num)
+    global bill_recommender1
+    bill_recommender1 = str(int(bill_list_page.find_approver_id(bill_num)))
+    print(f"Bill Recommender 1: {bill_recommender1}")
+
+
+def test_17_vendor_bill_recommender1_approval(page, new_tab):
+    print("Test 17: Vendor bill recommender1 approval...")
+    bill_list_page = BillList(page)
+    new_page = new_tab(lambda p: bill_list_page.click_on_bill_num(bill_num))
+
+    bill_detail_page = BillDetails(new_page)
+    current_dir = os.getcwd()
+    # print(f"Current directory: {current_dir}")
+    document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
+    bill_detail_page.upload_document(document_location)
+    # print(f"Document directory: {document_location}")
+    #  Continuing rest of the test
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_70')
+    bill_detail_page.select_bill_type("Regular")
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_71')
+    bill_detail_page.approve_bill()
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_72')
+    new_page.close()
+
+    bill_list_page = BillList(page)
+    bill_list_page.search_bill(bill_num)
+    global bill_recommender2
+    bill_recommender2 = str(int(bill_list_page.find_approver_id(bill_num)))
+    print(f"Bill Recommender 2: {bill_recommender2}")
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_73')
+
+    m_page = MainNavigationBar(page)
+    m_page.exit()
+    m_page.logout()
+    m_page.get_full_page_screenshot('full_page_screenshot_74')
+
+
+def test_18_vendor_bill_recommender2_approval(page, new_tab):
+    print("Test 18: Vendor bill recommender2 approval...")
+    proc_login_page = ProcurementLoginPage(page)
+    proc_login_page.perform_login(
+        given_url=proj_url,
+        user_name=bill_recommender2,
+        pass_word=proj_pass,
+        timeout=60000
+    )
+
+    proc_dashboard_page = DashboardPage(page)
+    proc_dashboard_page.goto_procurement()
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_75')
+
+    proc_home_page = ProcurementHomePage(page)
+    proc_home_page.bill_payable.click()
+    proc_home_page.goto_vendor_billing_list()
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_76')
+
+    bill_list_page = BillList(page)
+    bill_list_page.search_bill(bill_num)
+    new_page = new_tab(lambda p: bill_list_page.click_on_bill_num(bill_num))
+
+    bill_detail_page = BillDetails(new_page)
+    bill_detail_page.approve_bill()
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_77')
+    new_page.close()
+
+    bill_list_page = BillList(page)
+    page.reload()
+    # bill_list_page.wait_for_timeout(5000)
+    #     bill_list_page.navigate_to_url(bill_payable_url)
+    bill_list_page.search_bill(bill_num)
+    bill_list_page.wait_for_timeout(5000)
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_78')
+    global bill_approver_id
+    bill_approver_id = str(int(bill_list_page.find_approver_id(bill_num)))
+    print(f"Bill Approver : {bill_approver_id}")
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_79')
+
+    # logout from the page
+    m_page = MainNavigationBar(page)
+    m_page.exit()
+    m_page.logout()
+    m_page.get_full_page_screenshot('full_page_screenshot_80')
+
+
+def test_19_vendor_bill_approver_approval(page, new_tab):
+    print("Test 19: Vendor bill approver approval...")
+    proc_login_page = ProcurementLoginPage(page)
+    proc_login_page.perform_login(
+        given_url=proj_url,
+        user_name=bill_approver_id,
+        pass_word=proj_pass,
+        timeout=60000
+    )
+
+    proc_dashboard_page = DashboardPage(page)
+    proc_dashboard_page.goto_procurement()
+    proc_dashboard_page.get_full_page_screenshot('full_page_screenshot_81')
+
+    proc_home_page = ProcurementHomePage(page)
+    proc_home_page.bill_payable.click()
+    proc_home_page.goto_vendor_billing_list()
+    proc_home_page.get_full_page_screenshot('full_page_screenshot_82')
+
+    bill_list_page = BillList(page)
+    bill_list_page.search_bill(bill_num)
+    new_page = new_tab(lambda p: bill_list_page.click_on_bill_num(bill_num))
+
+    bill_detail_page = BillDetails(new_page)
+    bill_detail_page.wait_for_timeout(5000)
+    bill_detail_page.approve_bill()
+    bill_detail_page.get_full_page_screenshot('full_page_screenshot_83')
+    new_page.close()
+
+    bill_list_page = BillList(page)
+    #     bill_list_page.navigate_to_url(bill_payable_url)
+    page.reload()
+    bill_list_page.search_bill(bill_num)
+    bill_list_page.wait_for_timeout(5000)
+    bill_status = bill_list_page.find_bill_status(bill_num)
+    print("Bill STATUS:", bill_status)
+    bill_list_page.get_full_page_screenshot('full_page_screenshot_84')
+
+    m_page = MainNavigationBar(page)
+    m_page.exit()
+    m_page.logout()
+    m_page.get_full_page_screenshot('full_page_screenshot_85')

@@ -8,8 +8,18 @@ class BillList(BasicActionsDM):
         super().__init__(page)
         self.bill_payable_search_box = page.get_by_role('textbox', name='Search Vendor Bill Payable')
         self.bill_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
+        self.bill_payable = page.locator('//div[text()="Bill Payable"]')
+        self.create_vendor_bill_payable = page.locator(
+            '//div[text()="Bill Payable"]//following-sibling::ul//child::span[text()="Create Vendor Bill Payable"]')
+        self.vendor_billing_list = page.locator(
+            '//div[text()="Bill Payable"]//following-sibling::ul//child::span[text()="Vendor Billing List"]')
         # self.bill_status = page.locator("//table[@id='jqgrid-grid-thirdPartyBillPayableList']/tbody/tr[2]/td[14]")
         # self.bill_status2 = page.locator("//table[@id='jqgrid-grid-thirdPartyBillPayableList']").get_by_role("link", name=bill_num, exact=True)
+
+    def go_to_billing_list(self):
+        self.bill_payable.click()
+        self.vendor_billing_list.click()
+        self.wait_for_timeout(3000)
 
     def search_bill(self, bill_number):
         print("Searching for Bill Number:", bill_number)
