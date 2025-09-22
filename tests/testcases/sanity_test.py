@@ -335,8 +335,8 @@ def test_7_order_initiation(page, new_tab):
 
     cart_page.update_shopping_cart_value_1(qty_update="10")
     cart_page.update_cart_item_remarks(
-        requisition_number="REQ20250014590",
-        # requisition_number=req_num,
+        # requisition_number="REQ20250014590",
+        requisition_number=req_num,
         remarks_text="Automation test remarks"
     )
     cart_page.update_shopping_cart_info()
@@ -386,8 +386,8 @@ def test_8_order_approve(page):
     login_page = LoginPage(page)
     # login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
-        user_name="00155790",
-        # user_name=order_approver,
+        # user_name="00155790",
+        user_name=order_approver,
         pass_word=marketplace_password
     )
     home_page = HomePage(page)
@@ -543,7 +543,7 @@ def test_12_item_receive_by_receiver(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_52')
 
     receivable_order_list_page.receivable_order_view()
-    receivable_order_list_page.challan_no_input(fill_challan_no="Item receive by receiver_4")
+    receivable_order_list_page.challan_no_input(fill_challan_no="Item receive by receiver_10")
     receivable_order_list_page.all_item_select.click()
     receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_53')
@@ -583,7 +583,7 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_57')
     receivable_order_list_page.receivable_order_view()
     receivable_order_list_page.challan_no_input(
-        fill_challan_no="Partially item receive by receiver as order initiator_5")
+        fill_challan_no="Partially item receive by receiver as order initiator_11")
     receivable_order_list_page.all_item_select.click()
     receivable_order_list_page.wait_for_timeout(5000)
     receivable_order_list_page.input_quantity_to_receive(received_quantity="1")
@@ -600,7 +600,8 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
     receivable_order_list_page.wait_for_timeout(5000)
 
     item_receive_list_page = ItemReceivedList(page)
-    item_receive_list_page.searched_received_order(challan_no="Partially item receive by receiver as order initiator_5")
+    item_receive_list_page.searched_received_order(
+        challan_no="Partially item receive by receiver as order initiator_11")
     item_receive_list_page.get_full_page_screenshot('full_page_screenshot_58')
     item_receive_list_page.search_button_for_received_item.click()
     item_receive_list_page.order_view_button.click()
@@ -614,7 +615,7 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_59')
     receivable_order_list_page.receivable_order_view()
     receivable_order_list_page.challan_no_input(
-        fill_challan_no="Partially item receive by receiver as order initiator_6")
+        fill_challan_no="Partially item receive by receiver as order initiator_12")
     receivable_order_list_page.all_item_select.click()
     receivable_order_list_page.input_received_remarks(
         receiving_remarks="Received remarks test 123 !@# for initiator partially received item 6")
@@ -623,7 +624,8 @@ def test_13_item_receive_by_order_initiator_as_receiver(page):
     receivable_order_list_page.wait_for_timeout(5000)
 
     item_receive_list_page = ItemReceivedList(page)
-    item_receive_list_page.searched_received_order(challan_no="Partially item receive by receiver as order initiator_6")
+    item_receive_list_page.searched_received_order(
+        challan_no="Partially item receive by receiver as order initiator_12")
     item_receive_list_page.get_full_page_screenshot('full_page_screenshot_60')
     item_receive_list_page.search_button_for_received_item.click()
     item_receive_list_page.order_view_button.click()
@@ -652,7 +654,8 @@ def test_14_login_to_procurement_and_view_item_receive_details(page):
     proc_home_page.get_full_page_screenshot('full_page_screenshot_62')
 
     proc_item_receive_list_page = ProcItemReceiveListPage(page)
-    proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
+    proc_item_receive_list_page.search_item_receive_order(receivable_item="BPD/2025/FO-2936")
+    # proc_item_receive_list_page.search_item_receive_order(receivable_item=framework_order_no)
     proc_item_receive_list_page.item_receive_details_view()
     # new_page = new_tab(lambda p: proc_item_receive_list_page.item_receive_details_view())
     # new_page.close()
