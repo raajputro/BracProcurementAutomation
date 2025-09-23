@@ -331,6 +331,7 @@ def test_9_requisition_accept(page):
     sec__menu_item = ["Requisition", "Requisition Assign", "Requisition Accept List"]
     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
     # r_page.navigate_to_url(requisition_accept_url)
+    r_page.select_status("Assigned")
     r_page.search_requisition(req_num)
     r_page.select_all_requisitions()
     r_page.accept_requisition()
@@ -358,7 +359,7 @@ def test_10_create_tender_initiation(page):
 
     t_page.same_delivery_schedule()
     # t_page.estimated_delivery_date_with_text("01-09-2025")
-    t_page.estimated_delivery_date_with_text(t_page.add_days_to_current_date(10))
+    t_page.estimated_delivery_date_with_text(t_page.select_date(10))
     
     t_page.delivery_location_dropdown_select()
     t_page.delivery_location("Dhaka, Bangladesh")
@@ -611,7 +612,7 @@ def test_18_Create_Work_Order(page):
     r_page.get_full_page_screenshot('full_page_screenshot_37_2')
     r_page.add_item_to_grid()
     r_page.same_delivery_schedule()
-    delivary_date = r_page.add_days_to_current_date(5)
+    delivary_date = r_page.select_date(5)
     r_page.estimated_delivery_date_with_text(delivary_date)
     r_page.delivery_location_dropdown_select()
     r_page.delivery_location("Dhaka, Bangladesh")

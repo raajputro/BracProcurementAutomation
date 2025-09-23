@@ -9,15 +9,11 @@ from playwright.sync_api import expect
 class RequisitionApproveList(ProcurementHomePage, BasicActions):
     def __init__(self, page):
         super().__init__(page)
-        # write down all the elements here with locator format
-        # self.search_box = page.locator("//input[@name='keyword']")
-        # self.search_box = page.get_by_role("input", name="keyword")
         self.search_box = page.get_by_placeholder("Search Requisition No")
         self.approve= page.locator("//input[@type='button' and @value='Approve']")
         self.confirmation_message_approve_locator = page.locator("//button/span[contains(text(),'Approve')]")
-        # self.confirmation_message_approve = page.locator(
-        #     'button.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only', has_text="Approve")
-
+        self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
+        
 
     def search_requisition(self, requisition_number):
         print("Searching for Requisition Number:", requisition_number)
@@ -49,4 +45,6 @@ class RequisitionApproveList(ProcurementHomePage, BasicActions):
         # Click the confirmation message approve button
         self.wait_to_load_element(self.confirmation_message_approve_locator)
         self.confirmation_message_approve_locator.click()
+        toast_msg_text = self.toast_msg.text_content()
+        self.print_important_toast(toast_msg_text)
         self.page.wait_for_timeout(2000)

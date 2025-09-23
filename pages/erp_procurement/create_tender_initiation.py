@@ -293,6 +293,8 @@ class CreateTenderInitiation(ProcurementHomePage, BasicActions):
     def confirm_submission(self):
         print("clicked on confirm submission button")
         self.submit_confirmation.click()
+        toast_msg_text = self.toast_msg.text_content()
+        self.print_important_toast(toast_msg_text)
         self.wait_for_timeout(5000)
         self.get_full_page_screenshot("tender_initiation_submitted")
 

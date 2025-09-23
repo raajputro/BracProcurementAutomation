@@ -11,24 +11,24 @@ class RequisitionAcceptList(ProcurementHomePage, BasicActions):
         self.find = page.get_by_role("button", name="Find")
         self.select_all = page.get_by_role("link", name="Select All", exact=True)
         self.accept = page.get_by_role("button", name=re.compile("Accept", re.IGNORECASE))
+        self.status_dropdown = page.locator("select#acceptStatus")
         self.confirmation_message_accept = page.locator('span.ui-button-text', has_text="Accept")
+        self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
+
+
+    def select_status(self, status_text: str):
+        self.status_dropdown.select_option(label=status_text)
+        self.page.wait_for_timeout(1000)
         
     def search_requisition(self, requisition_number):
-        self.input_in_element(self.req_no, requisition_number + " ") # adding a trailing space to ensure the input is recognized
-        self.page.wait_for_timeout(1000)
-        self.req_no.click()  # focus the input field
-        self.page.keyboard.press("End")  # move cursor to the end
-        self.page.keyboard.press("Backspace")  # delete trailing space
-
-        # Dynamic locator for suggestion dropdown
-        #suggestion = self.page.locator(f'//ul[contains(@class, "ui-autocomplete")]//a[contains(@class, "ui-corner-all") and contains(text(), "{requisition_number}")]')
-        suggestest_requisition_number = self.page.locator('a.ui-corner-all:has-text("' + requisition_number + '")')
-        # Wait and click
-        suggestest_requisition_number.wait_for(state="visible", timeout=5000)
-        suggestest_requisition_number.hover()
-        suggestest_requisition_number.click()
+        self.req_no.type(requisition_number)
         self.page.wait_for_timeout(2000)
-        # self.find.click()
+        s_result = self.page.get_by_text(requisition_number).nth(0)
+        s_result.wait_for(state="visible", timeout=5000)
+        s_result.hover()
+        s_result.click()
+        self.page.wait_for_timeout(2000)
+
 
     def select_all_requisitions(self):
         self.select_all.click()
@@ -42,5 +42,7 @@ class RequisitionAcceptList(ProcurementHomePage, BasicActions):
         self.confirmation_message_accept.hover()
         self.page.wait_for_timeout(1000)
         self.confirmation_message_accept.click()
+        toast_msg_text = self.toast_msg.text_content()
+        self.print_important_toast(toast_msg_text)
         self.page.wait_for_timeout(5000)
         
