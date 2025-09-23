@@ -1,6 +1,6 @@
 # ===== User toggles =====
 headless_flag = False
-slow_mo_speed = 2000
+slow_mo_speed = 1000
 
 from sys import maxsize
 import os

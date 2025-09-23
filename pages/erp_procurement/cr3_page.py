@@ -17,11 +17,15 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
             #page.get_by_role("textbox", name="remarks").filter(has=page.get_by_placeholder("Max size of requisition remarks 300 characters"))
         # elements for requisition details
         self.item_info_selector = page.locator("//*[@id='itemInfo']")
+        self.item_measure_box_selector = page.locator("#mUnitDiv_input")
         self.item_measure_selector = page.locator("#mUnitDiv_arrow")
         self.item_tor_selector = page.locator("//*[@id='itemSpecification']")
         self.item_qty_selector = page.locator("#quantity")
         self.item_unit_price_selector = page.locator("#unitPrice")
         # elements for requisition for
+        self.single_project_selector = page.get_by_role('radio').get_by_text("Single Project")
+        self.multi_project_selector = page.locator(f'#multiProjectRadio')
+
         self.gl_code_selector = page.locator("#glInfo_0Div_arrow")
         self.req_for_remarks_selector = page.locator("#reqDetailsRemarks")
         self.schedule_selector = page.get_by_role("checkbox", name="Same schedule")
@@ -53,34 +57,96 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.fund_source_remarks_selector.fill(fund_remarks)
 
 
-    def setting_requisition_details(self, item_info_1, item_info_2, item_tor, qty, unit_price):
+    def setting_requisition_details(self, item_info_1, item_info_2, item_tor, measure_unit, qty, unit_price):
         self.item_info_selector.click()
-        self.item_info_selector.fill(item_info_1)
+        self.item_info_selector.fill(item_info_1)       # This info will search for item list
         self.page.keyboard.press(' ')
         self.wait_for_timeout(2500)
-        self.page.get_by_text(item_info_2).click()
-        self.item_measure_selector.click()
-        self.page.locator('//*[@id="17"]').click()
-        self.item_tor_selector.fill(item_tor)
+        self.page.get_by_text(item_info_2).click()      # This is to select EXACT item from the list
+        
+        if self.item_measure_box_selector.text_content() is None:
+            self.item_measure_selector.click()
+            self.page.locator(f'//*[@val="{measure_unit}"]').click()        
+        
+        if self.item_tor_selector.text_content() is None:
+            self.item_tor_selector.fill(item_tor)
+        
         self.item_qty_selector.fill(qty)
         self.item_unit_price_selector.fill(unit_price)
 
 
-    def setting_requisition_for_details(self, gl_code, gl_remarks, del_date, del_loc, del_loc_details):
+    def setting_requisition_for_details_for_single_project(self, gl_code, gl_remarks):
         self.gl_code_selector.click()
         self.page.get_by_text(gl_code).click()
-        self.req_for_remarks_selector.fill(gl_code)
+        # self.req_for_remarks_selector.fill(gl_code)        
+
+    
+    def select_multi_project(self):
+        self.multi_project_selector.click()
+        self.wait_for_timeout(500)
+
+    
+    def set_multi_project_data(self, project_name, qty, gl_code, row_index=0,ref_code=None, area_code=None):
+        if row_index != 0:
+            self.page.locator('//input[@type="button" and @value="Add"]').click()
+            self.wait_for_timeout(500)
+
+        self.select_from_input_dropdown(self.page.locator(f'#projectInfo_{row_index}Div_input'), project_name)
+        self.select_from_input_dropdown(self.page.locator(f'#glInfo_{row_index}Div_input'), gl_code)
+        if ref_code != None:
+            self.select_from_input_dropdown(self.page.locator(f'#refCodeId_{row_index}Div_input'), ref_code)
+        if area_code != None:
+            self.select_from_input_dropdown(self.page.locator(f'#deptInfo_{row_index}Div_input'), area_code)
+
+        # # Selecting Project Name
+        # self.page.locator(f'#projectInfo_{row_index}Div_input').fill(project_name)        
+        # self.page.keyboard.press(' ')
+        # self.page.locator(f"#projectInfo_{row_index}Div_arrow").click()        
+        # self.page.locator(f'//div[@id="projectInfo_{row_index}Div_ctr"]/descendant::div[@val="{project_name}"]').click()
+ 
+        # # Selecting GL Code
+        # self.page.locator(f'#glInfo_{row_index}Div_input').fill(gl_code)
+        # self.page.keyboard.press(' ')
+        # self.page.locator(f'#glInfo_{row_index}Div_arrow').click()
+        # self.page.locator(f'//div[@id="glInfo_{row_index}Div_ctr"]/descendant::div[@val="{gl_code}"]').click()
+        
+        # # Selecting Ref Code
+        # if ref_code != None:
+        #     self.page.locator(f'#refCodeId_{row_index}Div_input').fill(ref_code)
+        #     self.page.keyboard.press(' ')
+        #     self.page.locator(f'#refCodeId_{row_index}Div_arrow').click()
+        #     self.page.locator(f'//div[@id="refCodeId_{row_index}Div_ctr"]/descendant::div[text()="{ref_code}"]').click()
+            
+        # # Selecting Area Code
+        # if area_code != None:
+        #     self.page.locator(f'#deptInfo_{row_index}Div_input').fill(area_code)
+        #     self.page.keyboard.press(' ')
+        #     self.page.locator(f'#deptInfo_{row_index}Div_arrow').click()
+        #     self.page.locator(f'//div[@id="deptInfo_{row_index}Div_ctr"]/descendant::div[text()="{area_code}"]').click()
+            
+        # Setting Quantity
+        self.page.locator(f'#amountQty_{row_index}').fill(qty)
+        self.wait_for_timeout(500)
+
+
+    def setting_requisition_for_details_for_multiple_projects(self):
+        ""
+
+
+    def schedule_selection(self, del_date, del_loc, del_loc_details):
         self.schedule_selector.click()
         self.date_selector.fill(del_date)
         self.delivery_location_selector.select_option(label=del_loc)
         self.delivery_location_details_selector.fill(del_loc_details)
         self.wait_for_timeout(5000)
-        #self.add_to_grid_selector.click()
-
-
-    def save_requisition(self) -> str:
+        
+    
+    def add_requisition_to_grid(self):
         self.add_to_grid_selector.click()
         self.wait_for_timeout(5000)
+
+
+    def save_requisition(self) -> str:        
         self.save_btn_selector.click()
         self.wait_to_load_element(self.requisition_number)
         value = self.requisition_number.text_content()
@@ -89,9 +155,7 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         #print("Last Value: " + val[-1])
 
 
-    def submit_requisition(self) -> str:
-        self.add_to_grid_selector.click()
-        self.wait_for_timeout(5000)
+    def submit_requisition(self) -> str:        
         self.submit_btn_selector.click()
         self.wait_to_load_element(self.submit_confirmation_btn_selector)
         self.submit_confirmation_btn_selector.click()
@@ -99,3 +163,9 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         value = self.requisition_number.text_content()
         self.print_important_toast(value)
         return value.split(' ')[-1]
+
+
+    def select_from_input_dropdown(self, locator, value):
+        locator.fill(value)
+        self.page.keyboard.press(" ")
+        self.page.get_by_text(value, exact=True).click()
