@@ -87,50 +87,25 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
 
     
     def set_multi_project_data(self, project_name, qty, gl_code, row_index=0,ref_code=None, area_code=None):
+        print(f'Row Index: {row_index}')
         if row_index != 0:
             self.page.locator('//input[@type="button" and @value="Add"]').click()
             self.wait_for_timeout(500)
 
+        # # Selecting Project Name
         self.select_from_input_dropdown(self.page.locator(f'#projectInfo_{row_index}Div_input'), project_name)
+        # # Selecting GL Code
         self.select_from_input_dropdown(self.page.locator(f'#glInfo_{row_index}Div_input'), gl_code)
+        # Selecting Ref Code
         if ref_code != None:
             self.select_from_input_dropdown(self.page.locator(f'#refCodeId_{row_index}Div_input'), ref_code)
+        # Selecting Area Code
         if area_code != None:
             self.select_from_input_dropdown(self.page.locator(f'#deptInfo_{row_index}Div_input'), area_code)
-
-        # # Selecting Project Name
-        # self.page.locator(f'#projectInfo_{row_index}Div_input').fill(project_name)        
-        # self.page.keyboard.press(' ')
-        # self.page.locator(f"#projectInfo_{row_index}Div_arrow").click()        
-        # self.page.locator(f'//div[@id="projectInfo_{row_index}Div_ctr"]/descendant::div[@val="{project_name}"]').click()
- 
-        # # Selecting GL Code
-        # self.page.locator(f'#glInfo_{row_index}Div_input').fill(gl_code)
-        # self.page.keyboard.press(' ')
-        # self.page.locator(f'#glInfo_{row_index}Div_arrow').click()
-        # self.page.locator(f'//div[@id="glInfo_{row_index}Div_ctr"]/descendant::div[@val="{gl_code}"]').click()
-        
-        # # Selecting Ref Code
-        # if ref_code != None:
-        #     self.page.locator(f'#refCodeId_{row_index}Div_input').fill(ref_code)
-        #     self.page.keyboard.press(' ')
-        #     self.page.locator(f'#refCodeId_{row_index}Div_arrow').click()
-        #     self.page.locator(f'//div[@id="refCodeId_{row_index}Div_ctr"]/descendant::div[text()="{ref_code}"]').click()
-            
-        # # Selecting Area Code
-        # if area_code != None:
-        #     self.page.locator(f'#deptInfo_{row_index}Div_input').fill(area_code)
-        #     self.page.keyboard.press(' ')
-        #     self.page.locator(f'#deptInfo_{row_index}Div_arrow').click()
-        #     self.page.locator(f'//div[@id="deptInfo_{row_index}Div_ctr"]/descendant::div[text()="{area_code}"]').click()
             
         # Setting Quantity
         self.page.locator(f'#amountQty_{row_index}').fill(qty)
         self.wait_for_timeout(500)
-
-
-    def setting_requisition_for_details_for_multiple_projects(self):
-        ""
 
 
     def schedule_selection(self, del_date, del_loc, del_loc_details):

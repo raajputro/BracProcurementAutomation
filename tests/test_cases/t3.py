@@ -112,8 +112,8 @@ def test_3_create_and_submit_requisition(page):
     c_page.setting_requisition_information("BRAC Fund", "Remarks for funding")
     c_page.setting_requisition_details(item_info_1="glue",item_info_2="[19193]-Glue Stick (Fevi Stick)-(Supplies and Stationeries->Supplies and Stationeries->Stationery)", item_tor="Tor for Item",measure_unit="Pcs",qty="100",unit_price="19")
     c_page.select_multi_project()
-    c_page.set_multi_project_data(row_index=0, project_name="[105]- BRAC Chicken", gl_code="[2101010201-12] Salary Allowance Payable", ref_code=None, area_code=None, qty="60")
-    c_page.set_multi_project_data(row_index=1, project_name="[C04]- Administratiion", gl_code="[2101010602-01] Withholding VAT Payable (WVP)", ref_code=None, area_code=None, qty="40")
+    c_page.set_multi_project_data(row_index=0, project_name="[105]- BRAC Chicken", gl_code="[2101010201-12] Salary Allowance Payable", ref_code=None, area_code=None, qty="100")
+    # c_page.set_multi_project_data(row_index=1, project_name="[C04]- Administratiion", gl_code="[2101010602-01] Withholding VAT Payable (WVP)", ref_code=None, area_code=None, qty="40")
     c_page.add_requisition_to_grid()
     c_page.schedule_selection(del_date=c_page.select_date(20), del_loc="Head Office", del_loc_details="ABC Road")
 
