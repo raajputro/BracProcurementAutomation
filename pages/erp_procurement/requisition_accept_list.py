@@ -23,7 +23,7 @@ class RequisitionAcceptList(ProcurementHomePage, BasicActions):
     def search_requisition(self, requisition_number):
         self.req_no.type(requisition_number)
         self.page.wait_for_timeout(2000)
-        s_result = self.page.get_by_text(requisition_number).nth(0)
+        s_result = self.page.locator('a.ui-corner-all:has-text("' + requisition_number + '")')
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()

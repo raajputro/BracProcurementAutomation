@@ -404,6 +404,8 @@ def test_10_create_tender_initiation(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_30')
     r2_page.wait_for_timeout(5000)
 
+
+
 def test_11_approve_tender_initiation(page, new_tab):
     print("Test 11: ...")
     s_page = LoginPage(page)
@@ -418,6 +420,7 @@ def test_11_approve_tender_initiation(page, new_tab):
     try:
         tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
         t_page.navigate_to_url(tender_initiation_list_url)
+        # tender_num = "BPD/2025/RFQ-1913"
         t_page.search_tender(tender_num)
         new_page = new_tab(lambda p:t_page.navigate_to_tender_detail_page(tender_num))
         b_page = TenderDetails(new_page)
@@ -447,6 +450,7 @@ def test_12_vendor1_participation_in_tender(page):
     x_page.go_to_participate_in_tender()
     x_page.get_full_page_screenshot('full_page_screenshot_30_1')
     x_page.wait_for_timeout(15000)
+    # tender_num = "BPD/2025/RFQ-1913"
     x_page.search_tender_EoI(tender_num)
     x_page.get_full_page_screenshot('full_page_screenshot_30_2')
     x_page.click_apply_button_for_tender(tender_num)

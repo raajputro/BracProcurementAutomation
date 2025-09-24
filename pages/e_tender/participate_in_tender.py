@@ -161,13 +161,13 @@ class PerticipateTenderList(BasicActions):
         #Get the calculated subtotal
         sub_total = self.page.locator('input#subTotalCost').input_value()
         print(f"Subtotal calculated: {sub_total}")
-        self.page.wait_for_timeout(2000)
+        self.page.wait_for_timeout(5000)
 
         # Click on Save button
         financial_info_save_button = self.page.locator('button#saveFinInfo')
-        financial_info_save_button.scroll_into_view_if_needed()
+        # financial_info_save_button.scroll_into_view_if_needed()
         financial_info_save_button.click(timeout=60000)
-        self.page.wait_for_timeout(3000)
+        self.page.wait_for_timeout(6000)
 
 
     def click_on_submit(self):
