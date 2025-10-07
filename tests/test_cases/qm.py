@@ -45,6 +45,7 @@ evaluation_approver = os.getenv("test_evaluation_approver")
 evaluation_recommender = os.getenv("test_evaluation_recommender")
 opening_approver = os.getenv("test_opening_approver")
 work_order_approver = os.getenv("test_work_order_approver")
+WAIT_TIME_IN_MILLISECONDS = os.getenv("WAIT_TIME_IN_MILLISECONDS")
 
 
 #======================================================================================================================
@@ -166,7 +167,7 @@ def test_3_find_budget_recommender_of_the_requisition(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_7')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_4_login_as_budget_recommender_and_approve(page):
@@ -176,7 +177,7 @@ def test_4_login_as_budget_recommender_and_approve(page):
         given_url=proj_url,
         user_name=approver_id,
         pass_word=proj_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     main_menu_item = "Procurement"
@@ -197,7 +198,7 @@ def test_4_login_as_budget_recommender_and_approve(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_10')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_5_find_approver_of_the_requisition_2(page):
@@ -225,7 +226,7 @@ def test_5_find_approver_of_the_requisition_2(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_13')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_6_login_as_approver_and_approve_2(page):
@@ -236,7 +237,7 @@ def test_6_login_as_approver_and_approve_2(page):
         given_url=proj_url,
         user_name=approver_id_2,
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     main_menu_item = "Procurement"
@@ -255,7 +256,7 @@ def test_6_login_as_approver_and_approve_2(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_16')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_7_check_requisition_approved(page):
@@ -285,7 +286,7 @@ def test_7_check_requisition_approved(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_19')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_8_check_requisition_assign(page):
@@ -296,7 +297,7 @@ def test_8_check_requisition_assign(page):
         user_name=admin_user,
         pass_word=proj_gen_pass,
         given_url=proj_url,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     r_page = AssignRequisition(page)
@@ -314,7 +315,7 @@ def test_8_check_requisition_assign(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_23')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 def test_9_requisition_accept(page):
     print("Test 9: Accepting requisition...")
@@ -323,7 +324,7 @@ def test_9_requisition_accept(page):
         given_url=proj_url,
         user_name=str(int(assigned_person)),
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     r_page = RequisitionAcceptList(page)
@@ -402,7 +403,7 @@ def test_10_create_tender_initiation(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_30')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 
@@ -413,7 +414,7 @@ def test_11_approve_tender_initiation(page, new_tab):
         given_url=proj_url,
         user_name=str(int(tender_approver)),
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     t_page = TenderInitiationList(page)
@@ -435,7 +436,7 @@ def test_11_approve_tender_initiation(page, new_tab):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_30')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 def test_12_vendor1_participation_in_tender(page):
     print("Test 12: ...")
@@ -444,7 +445,7 @@ def test_12_vendor1_participation_in_tender(page):
         given_url=eTender_url,
         user_name="Skylark",
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
     x_page = PerticipateTenderList(page)
     x_page.go_to_participate_in_tender()
@@ -479,7 +480,7 @@ def test_13_tender_opening(page,new_tab):
         given_url=eTender_url,
         user_name=str(int(opening_approver)),
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
     x_page = TenderList(page)
     x_page.go_to_tender_list()
@@ -503,7 +504,7 @@ def test_14_tender_shortlist(page,new_tab):
         given_url=eTender_url,
         user_name=assigned_person,
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     supplier_name="Skylark Printers"
@@ -537,7 +538,7 @@ def test_15_Evaluation_recommender_approve(page,new_tab):
         given_url=eTender_url,
         user_name=str(int(evaluation_recommender)),
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
     x_page = TenderEvaluationList(page)
     x_page.go_to_tender_evaluation_list()
@@ -559,7 +560,7 @@ def test_16_Evaluation_approver_approve(page,new_tab):
         given_url=eTender_url,
         user_name=evaluation_approver,
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
     x_page = TenderEvaluationList(page)
     x_page.go_to_tender_evaluation_list()
@@ -579,7 +580,7 @@ def test_17_Creating_Noal(page,new_tab):
         given_url=eTender_url,
         user_name=assigned_person,
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
 
     supplier_name="Skylark Printers"
@@ -602,7 +603,7 @@ def test_18_Create_Work_Order(page):
         given_url=proj_url,
         user_name=assigned_person,
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
     work_order_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/show"
     
@@ -635,7 +636,7 @@ def test_18_Create_Work_Order(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_39')
-    r2_page.wait_for_timeout(5000) 
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS) 
 
 
 def test_19_Approving_Work_Order(page,new_tab):
@@ -646,7 +647,7 @@ def test_19_Approving_Work_Order(page,new_tab):
         given_url=proj_url,
         user_name=str(int(work_order_approver)),
         pass_word=proj_gen_pass,
-        timeout=60000  # Increased timeout for login
+        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
     )
     work_order_list_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/list"
     r_page = PurchaseOrderList(page)
@@ -674,7 +675,7 @@ def test_20_item_receive(page):
         given_url=proj_url,
         user_name=str(int(assigned_person)),
         pass_word=proj_gen_pass,
-        timeout=60000
+        timeout=WAIT_TIME_IN_MILLISECONDS
     )
     t_page = ItemReceive(page)
     main_menu_item = "Procurement"
@@ -694,7 +695,7 @@ def test_20_item_receive(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_32')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 
@@ -705,7 +706,7 @@ def test_21_bill_creation_and_submit(page):
         given_url=proj_url,
         user_name=str(int(bill_creator)),
         pass_word=proj_gen_pass,
-        timeout=60000
+        timeout=WAIT_TIME_IN_MILLISECONDS
     )
     t_page = CreateVendorBillPayable(page)
     main_menu_item = "Procurement"
@@ -737,7 +738,7 @@ def test_21_bill_creation_and_submit(page):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_35')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 def test_22_vendor_bill_recommender1_approval(page, new_tab):
     print("Test 22: Vendor bill recommender1 approval...")
@@ -746,7 +747,7 @@ def test_22_vendor_bill_recommender1_approval(page, new_tab):
         given_url=proj_url,
         user_name=bill_recommender1,
         pass_word=proj_gen_pass,
-        timeout=60000
+        timeout=WAIT_TIME_IN_MILLISECONDS
     )
 
     l2_page = BillList(page)
@@ -791,7 +792,7 @@ def test_22_vendor_bill_recommender1_approval(page, new_tab):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_39')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_23_vendor_bill_recommender2_approval(page, new_tab):
@@ -801,7 +802,7 @@ def test_23_vendor_bill_recommender2_approval(page, new_tab):
         given_url=proj_url,
         user_name=bill_recommender2,
         pass_word=proj_gen_pass,
-        timeout=60000
+        timeout=WAIT_TIME_IN_MILLISECONDS
     )
     l2_page = BillList(page)
     main_menu_item = "Procurement"
@@ -819,7 +820,7 @@ def test_23_vendor_bill_recommender2_approval(page, new_tab):
     l3_page = BillList(page)
     l3_page.navigate_to_url(bill_payable_url)
     l3_page.search_bill(bill_num)
-    l3_page.wait_for_timeout(5000)
+    l3_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
     l3_page.get_full_page_screenshot('full_page_screenshot_41')
     global bill_approver_id
     bill_approver_id = str(int(l3_page.find_approver_id(bill_num)))
@@ -830,7 +831,7 @@ def test_23_vendor_bill_recommender2_approval(page, new_tab):
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_41')
-    r2_page.wait_for_timeout(5000)
+    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 def test_24_vendor_bill_approver_approval(page, new_tab):
@@ -840,7 +841,7 @@ def test_24_vendor_bill_approver_approval(page, new_tab):
         given_url=proj_url,
         user_name=bill_approver_id,
         pass_word=proj_gen_pass,
-        timeout=60000
+        timeout=WAIT_TIME_IN_MILLISECONDS
     )
 
     l2_page = BillList(page)
@@ -852,7 +853,7 @@ def test_24_vendor_bill_approver_approval(page, new_tab):
 
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
-    b_page.wait_for_timeout(5000)
+    b_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
     b_page.approve_bill()
     b_page.get_full_page_screenshot('full_page_screenshot_42')
     new_page.close()
@@ -860,7 +861,7 @@ def test_24_vendor_bill_approver_approval(page, new_tab):
     l3_page = BillList(page)
     l3_page.navigate_to_url(bill_payable_url)
     l3_page.search_bill(bill_num)
-    l3_page.wait_for_timeout(5000)
+    l3_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
     bill_status=l3_page.find_bill_status(bill_num)
     print("Bill STATUS:", bill_status)
     l3_page.get_full_page_screenshot('full_page_screenshot_43')

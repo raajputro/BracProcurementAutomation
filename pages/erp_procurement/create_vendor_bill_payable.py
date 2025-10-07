@@ -3,6 +3,7 @@ from pages.erp_procurement.procurement_home_page import ProcurementHomePage
 from playwright.sync_api import expect
 
 
+
 class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
 
     def __init__(self, page):
@@ -120,11 +121,13 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         self.toast_msg.wait_for(state="visible", timeout=10000)
         toast_msg_text = self.toast_msg.text_content()
         print(toast_msg_text)
-        self.wait_for_timeout(5000)
+        # self.wait_for_timeout(5000)
+        self.browser_wait_for()
 
     def search_challan_number(self, challan_num):
         self.challan_no.fill(challan_num)
         self.page.keyboard.press('End')
         self.page.keyboard.press(' ')
-        self.wait_for_timeout(1000)
+        # self.wait_for_timeout(1000)
+        self.browser_wait_for()
         self.page.keyboard.press('Enter')

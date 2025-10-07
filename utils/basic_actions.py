@@ -7,7 +7,10 @@ from pathlib import Path
 from playwright.sync_api import expect
 from datetime import datetime
 import time
+from dotenv import load_dotenv
 
+load_dotenv()
+WAIT_TIME_IN_MILLISECONDS = os.getenv("WAIT_TIME_IN_MILLISECONDS")
 
 def is_element_visible(elem):
     return elem.is_visible()
@@ -206,3 +209,10 @@ class BasicActions:
             self.page.context.clear_permissions()
         except Exception as e:
             print(f"⚠️ Failed to clear cache: {e}")
+
+
+    def browser_wait_for(self):
+        # Use this function instead of hardcoded
+        # timeout in methods
+        wait_time = WAIT_TIME_IN_MILLISECONDS
+        self.wait_for_timeout(wait_time)
