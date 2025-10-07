@@ -15,6 +15,10 @@ install()
 from dotenv import load_dotenv
 load_dotenv()
 
+# This dictionary will keep
+# needed data in key:value pair
+RESULT_DICT = {}
+
 #======================================================================================================================
 #======================================================================================================================
 # Project URLs
@@ -81,6 +85,7 @@ from pages.e_tender.prepare_short_list import PrepareShortList
 from pages.e_tender.tender_evaluation_list import TenderEvaluationList
 from pages.e_tender.tender_list import TenderList
 from pages.e_tender.tender_short_list import TenderShortList
+# from utils.basic_actions import save_dict_to_json_file
 
 
 #======================================================================================================================
@@ -110,7 +115,6 @@ item1 = {
         'unit': "25",
         "gl_code": "1202010501-01",
     }
-
 #======================================================================================================================
 #======================================================================================================================
 # # ============================================ Test Cases onwards =============================================== # #
@@ -145,6 +149,9 @@ def test_2_create_and_submit_requisition(page):
     req_num = c_page.submit_requisition()
     print("REQ NUM:", req_num)
     c_page.get_full_page_screenshot('full_page_screenshot_4')
+    # Add value to the dict
+    RESULT_DICT['requisition_number'] = req_num
+
 
 
 def test_3_find_budget_recommender_of_the_requisition(page):
@@ -163,11 +170,17 @@ def test_3_find_budget_recommender_of_the_requisition(page):
     print("APPROVER ID:", approver_id)
     r_page.get_full_page_screenshot('full_page_screenshot_6')
 
+    RESULT_DICT['approver_id'] = approver_id
+    print(f"RESULT_DICT: {RESULT_DICT}")
+    r_page.save_dict_to_json_file(RESULT_DICT)
+
     r2_page = MainNavigationBar(page)
     r2_page.exit()
     r2_page.logout()
     r2_page.get_full_page_screenshot('full_page_screenshot_7')
     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+
+
 
 
 def test_4_login_as_budget_recommender_and_approve(page):

@@ -2,12 +2,15 @@
 from datetime import datetime, timedelta
 import os
 import re
+from fileinput import filename
 from typing import Optional
 from pathlib import Path
 from playwright.sync_api import expect
 from datetime import datetime
 import time
 from dotenv import load_dotenv
+import json
+from datetime import datetime
 
 load_dotenv()
 WAIT_TIME_IN_MILLISECONDS = os.getenv("WAIT_TIME_IN_MILLISECONDS")
@@ -212,7 +215,28 @@ class BasicActions:
 
 
     def browser_wait_for(self):
-        # Use this function instead of hardcoded
-        # timeout in methods
+        """
+        This utility function gives a central wait time
+        from .env file that can be used anywhere in
+        test methods / any methods as per needs
+        """
         wait_time = WAIT_TIME_IN_MILLISECONDS
         self.wait_for_timeout(wait_time)
+
+    def save_dict_to_json_file(self, data_dict: dict):
+        """
+        This utility function converts a dictionary into
+        A json file from within test cases where needed
+        """
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        # create Data directory
+        file_name = f"data_json_file_{timestamp}.json"
+        os.makedirs("data", exist_ok=True)
+        json_file_path = os.path.join("data", file_name)
+        print("Directory created")
+
+        # Write the data_dict into a valid json file
+        with open(json_file_path, "w", encoding='utf-8') as json_file_object:
+            json.dump(data_dict, json_file_object, indent=4, ensure_ascii=False)
+        print(f"Json file created in {json_file_path}")

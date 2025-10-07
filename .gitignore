@@ -17,3 +17,4 @@ __pychache__
 **/.venv
 **/.idea
 **.idea
+data/*.json
