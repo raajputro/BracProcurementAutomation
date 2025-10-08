@@ -17,25 +17,27 @@ class ItemReceive(ProcurementHomePage, BasicActions):
         self.submit = page.get_by_role("button", name="Submit")
         self.submit_confirmation = page.get_by_label("Submit Confirmation").get_by_role("button", name="Submit")
 
+
     def search_order_for_item_receive(self, oder_no: str):
-        self.search_order.fill(oder_no)
-        self.page.keyboard.press("End")
-        self.page.keyboard.type(" ")
-        self.page.keyboard.press("Backspace") 
+        self.search_order.type(oder_no)
         s_result = self.page.get_by_text(oder_no)
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
+
 
     def set_challan_number(self, challan_number):
         self.challan_no.fill(challan_number)
-        self.wait_for_timeout(2000)
+        self.browser_wait_for()
+
 
     def challan_date(self, date: str):
         # Fill the challan date input field
         self.challan_date.scroll_into_view_if_needed()
         self.challan_date.fill(date)
+
+
     def received_date(self, date: str):
         # Fill the received date input field
         self.receive_date.scroll_into_view_if_needed()
@@ -45,25 +47,25 @@ class ItemReceive(ProcurementHomePage, BasicActions):
     def receive_place(self, place_name: str):
         self.received_place.scroll_into_view_if_needed()
         self.received_place.fill(place_name) 
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def select_all_items(self):
         self.select_all.scroll_into_view_if_needed()
         self.select_all.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def unselect_all_items(self): 
         self.unselect_all.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
 
     def submit_item_receive(self):
         self.submit.scroll_into_view_if_needed()
         self.submit.click()
-        self.wait_for_timeout(2000)
+        self.browser_wait_for()
 
 
     def confirm_submission(self):
         self.submit_confirmation.scroll_into_view_if_needed()
         self.submit_confirmation.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()

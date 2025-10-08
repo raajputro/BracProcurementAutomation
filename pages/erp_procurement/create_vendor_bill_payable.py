@@ -35,30 +35,31 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         search_result.wait_for(state="visible", timeout=5000)
         search_result.hover()
         search_result.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
 
     def select_order_no(self, order_num: str):
         self.order_no.type(order_num)
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
         s_result = self.page.get_by_text(order_num).nth(0)
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.browser_wait_for()
 
     def select_challan_no(self, challan_no: str):
-        self.challan_no.fill(challan_no)
-        self.page.keyboard.press("End")
-        self.page.keyboard.type(" ")
-        self.page.keyboard.press("Backspace")
+        self.challan_no.type(challan_no)
+        # self.page.keyboard.press("End")
+        # self.page.keyboard.type(" ")
+        # self.page.keyboard.press("Backspace")
         s_result = self.page.get_by_text(challan_no).nth(0)
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.browser_wait_for()
 
-        self.wait_for_timeout(1000)
 
     def bill_number(self, bill_no_1: str):
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
         self.bill_no.fill(bill_no_1)
         # self.page.keyboard.type(" ")
         # self.page.keyboard.press("Backspace")
@@ -68,22 +69,22 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         # Fill the estimated delivery date input field
         self.bill_date.scroll_into_view_if_needed()
         self.bill_date.fill(date)
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def bill_receive_date_with_text(self, date: str):
         # Fill the estimated delivery date input field
         self.bill_receive_date.scroll_into_view_if_needed()
         self.bill_receive_date.fill(date)
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def select_all_items(self):
         self.select_all.scroll_into_view_if_needed()
         self.select_all.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def unselect_all_items(self):
         self.unselect_all.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def Bill_recommender1_selecting(self, recommender: str):
         self.bill_recommender1.scroll_into_view_if_needed()
@@ -92,6 +93,7 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.browser_wait_for()
 
     def Bill_recommender2_selecting(self, recommender: str):
         self.bill_recommender2.scroll_into_view_if_needed()
@@ -100,6 +102,7 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.browser_wait_for()
 
     def Bill_approver_selecting(self, approver: str):
         self.bill_approver.scroll_into_view_if_needed()
@@ -108,12 +111,13 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActions):
         s_result.wait_for(state="visible", timeout=5000)
         s_result.hover()
         s_result.click()
+        self.browser_wait_for()
 
 
     def submit_bill(self):
         self.submit.scroll_into_view_if_needed()
         self.submit.click()
-        self.wait_for_timeout(2000)
+        self.browser_wait_for()
 
     def confirm_submission(self):
         self.submit_confirmation.scroll_into_view_if_needed()

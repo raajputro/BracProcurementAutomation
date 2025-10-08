@@ -19,7 +19,7 @@ class ETenderDetails(BasicActions):
         self.open_tender_button.wait_for(state="visible", timeout=2000)
         self.open_tender_button.scroll_into_view_if_needed()
         self.open_tender_button.click()
-        self.page.wait_for_timeout(2000)
+        self.browser_wait_for() 
         print("Clicked the 'Open' button.")
 
 

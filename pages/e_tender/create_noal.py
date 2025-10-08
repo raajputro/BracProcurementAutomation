@@ -19,12 +19,12 @@ class CreateNoal(BasicActions):
     def click_create_noal(self):
         # Step 1: Click on "Tender Finalize"
         self.tender_finalize.click()
-        self.page.wait_for_timeout(2000)  # wait for the submenu to appear or load
+        self.browser_wait_for()  # wait for the submenu to appear or load
 
         # Step 2: Click on "Create NOAL"
         self.create_noal.scroll_into_view_if_needed()
         self.create_noal.click()
-        self.page.wait_for_timeout(2000)  # wait for the NOAL section/page to load
+        self.browser_wait_for()   # wait for the NOAL section/page to load
 
 
     def search_tender(self, tender_title: str):
@@ -37,7 +37,7 @@ class CreateNoal(BasicActions):
         self.tender_search.press("Enter")
 
         # Optionally wait for the grid to load results
-        self.page.wait_for_timeout(2000)  # wait for search results to load
+        self.browser_wait_for()   # wait for search results to load
 
 
     def select_items_by_tender_supplier_payment_type(self, tender_no: str, supplier_name: str, payment_type: str):
@@ -77,12 +77,14 @@ class CreateNoal(BasicActions):
                 checkbox_value = checkbox.get_attribute("value")
                 if checkbox.is_visible():
                     checkbox.check()
+                    self.browser_wait_for() 
 
                 # Specific payment checkbox
                 payment_checkbox = row.locator(f'input.paymentType_{checkbox_value}#' + f'{payment_type}_{checkbox_value}')
                 if payment_checkbox.is_visible():
                     payment_checkbox.check()
                     print(f"Checked {payment_type.capitalize()} checkbox in row {i+1}")
+                    self.browser_wait_for() 
                 else:
                     print(f"Payment type checkbox '{payment_type}' not found or not visible in row {i+1}")
 
@@ -99,11 +101,11 @@ class CreateNoal(BasicActions):
         print("Clicking the Submit button...")
 
         # Wait for it to be visible and enabled
-        self.submit_button.wait_for(state='visible', timeout=3000)
+        self.submit_button.wait_for(state='visible', timeout=6000)
         self.submit_button.scroll_into_view_if_needed()
-        self.submit_button.click()
-        self.page.wait_for_timeout(2000)  
+        self.submit_button.click()  
         print("Submit button clicked.")
+        self.browser_wait_for() 
 
 
     def confirm_submission(self):
@@ -118,5 +120,5 @@ class CreateNoal(BasicActions):
         self.toast_msg.wait_for(state="visible", timeout=10000)
         toast_msg_value = self.toast_msg.text_content()
         self.print_important_toast(toast_msg_value)
-        self.page.wait_for_timeout(2000)  
+        self.browser_wait_for()   
         

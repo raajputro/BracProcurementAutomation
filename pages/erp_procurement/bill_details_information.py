@@ -29,7 +29,7 @@ class BillDetails(BasicActions):
         :param bill_type: The type of bill to select (e.g., 'Regular', 'Emergency').
         """
         self.bill_type_selector.select_option(bill_type)
-        self.page.wait_for_timeout(2000)
+        self.browser_wait_for()
 
     def approve_bill(self):
         """
@@ -37,8 +37,8 @@ class BillDetails(BasicActions):
         """
         self.wait_to_load_element(self.approve_button)
         self.approve_button.click()
-        # self.page.wait_for_timeout(2000)
         self.toast_msg.wait_for(state="visible", timeout=10000)
         toast_msg = self.toast_msg.text_content()
         print(toast_msg)
+        self.browser_wait_for()
 

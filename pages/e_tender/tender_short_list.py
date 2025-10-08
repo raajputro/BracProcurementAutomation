@@ -18,12 +18,12 @@ class TenderShortList(BasicActions):
     
         self.tender_evaluation_menu.wait_for(state="visible", timeout=2000)
         self.tender_evaluation_menu.click()
-        self.page.wait_for_timeout(1000)  # Allow sub-menu to expand
+        self.browser_wait_for()  # Allow sub-menu to expand
 
         # Step 2: Click on 'Tender Short List' sub-menu item
         self.tender_short_list_link.wait_for(state="visible", timeout=2000)
         self.tender_short_list_link.click()
-        self.page.wait_for_timeout(3000)  # Allow page to load
+        self.browser_wait_for()  # Allow page to load
 
         print("Navigated to Tender Short List.")
 
@@ -32,11 +32,11 @@ class TenderShortList(BasicActions):
         
         # Enter the tender title in the search box
         self.tender_search.fill(tender_no)
-        self.page.wait_for_timeout(1000)
+        self.browser_wait_for()
 
         # Press Enter to initiate the search
         self.tender_search.press("Enter")
-        self.page.wait_for_timeout(2000)
+        self.browser_wait_for()
         print(f"Searched for tender with title: {tender_no}")
         
 
@@ -53,5 +53,5 @@ class TenderShortList(BasicActions):
         tender_no.scroll_into_view_if_needed()
         tender_no.click()
     
-        self.page.wait_for_timeout(2000)  # Optional delay to allow next page to load
+        self.browser_wait_for()  # Optional delay to allow next page to load
         print(f"Clicked tender number: {tender_number}")

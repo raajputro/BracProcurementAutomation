@@ -74,13 +74,13 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
         self.date_selector.fill(del_date)
         self.delivery_location_selector.select_option(label=del_loc)
         self.delivery_location_details_selector.fill(del_loc_details)
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
         #self.add_to_grid_selector.click()
 
 
     def save_requisition(self) -> str:
         self.add_to_grid_selector.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
         self.save_btn_selector.click()
         self.wait_to_load_element(self.requisition_number)
         value = self.requisition_number.text_content()
@@ -91,7 +91,7 @@ class CreateReqPage(ProcurementHomePage, BasicActions):
 
     def submit_requisition(self) -> str:
         self.add_to_grid_selector.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
         self.submit_btn_selector.click()
         self.wait_to_load_element(self.submit_confirmation_btn_selector)
         self.submit_confirmation_btn_selector.click()

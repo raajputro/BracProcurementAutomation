@@ -154,727 +154,727 @@ def test_2_create_and_submit_requisition(page):
 
 
 
-def test_3_find_budget_recommender_of_the_requisition(page):
-    print("Test 3: Finding approver of the requisition...")
+# def test_3_find_budget_recommender_of_the_requisition(page):
+#     print("Test 3: Finding approver of the requisition...")
 
-    r_page = RequisitionList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition List"]
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     r_page = RequisitionList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition List"]
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
 
-    # r_page.navigate_to_url(requisition_list_url)
-    r_page.get_full_page_screenshot('full_page_screenshot_5')
-    r_page.search_requisition(req_num)
-    global approver_id
-    approver_id = str(int(r_page.find_approver_id()))
-    print("APPROVER ID:", approver_id)
-    r_page.get_full_page_screenshot('full_page_screenshot_6')
+#     # r_page.navigate_to_url(requisition_list_url)
+#     r_page.get_full_page_screenshot('full_page_screenshot_5')
+#     r_page.search_requisition(req_num)
+#     global approver_id
+#     approver_id = str(int(r_page.find_approver_id()))
+#     print("APPROVER ID:", approver_id)
+#     r_page.get_full_page_screenshot('full_page_screenshot_6')
 
-    RESULT_DICT['approver_id'] = approver_id
-    print(f"RESULT_DICT: {RESULT_DICT}")
-    r_page.save_dict_to_json_file(RESULT_DICT)
+#     RESULT_DICT['approver_id'] = approver_id
+#     print(f"RESULT_DICT: {RESULT_DICT}")
+#     r_page.save_dict_to_json_file(RESULT_DICT)
 
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_7')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-
-
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_7')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
-def test_4_login_as_budget_recommender_and_approve(page):
-    print("Test 4: Logging in as approver and approving requisition...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=approver_id,
-        pass_word=proj_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition Approve List"]
-    r_page = RequisitionApproveList(page)
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-
-    r_page.get_full_page_screenshot('full_page_screenshot_8')
-    print(f"Req Number: {req_num}")
-    # r_page.wait_for_timeout(10000)
-    r_page.search_requisition(req_num)
-    r_page.select_requisition(req_num)
-    r_page.approve_requisition()
-    r_page.confirmation_message_approve()
-    r_page.get_full_page_screenshot('full_page_screenshot_9')
-
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_10')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
-def test_5_find_approver_of_the_requisition_2(page):
-    print("Test 5: Finding approver of the requisition again...")
-    s_page  = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=proj_user,
-        pass_word=proj_pass
-    )
+# def test_4_login_as_budget_recommender_and_approve(page):
+#     print("Test 4: Logging in as approver and approving requisition...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=approver_id,
+#         pass_word=proj_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
 
-    r_page = RequisitionList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition List"]
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition Approve List"]
+#     r_page = RequisitionApproveList(page)
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
 
-    r_page.get_full_page_screenshot('full_page_screenshot_11')
-    r_page.search_requisition(req_num)
-    global approver_id_2
-    approver_id_2 = str(int(r_page.find_approver_id()))
-    print("APPROVER ID 2:", approver_id_2)
-    r_page.get_full_page_screenshot('full_page_screenshot_12')
+#     r_page.get_full_page_screenshot('full_page_screenshot_8')
+#     print(f"Req Number: {req_num}")
+#     # r_page.wait_for_timeout(10000)
+#     r_page.search_requisition(req_num)
+#     r_page.select_requisition(req_num)
+#     r_page.approve_requisition()
+#     r_page.confirmation_message_approve()
+#     r_page.get_full_page_screenshot('full_page_screenshot_9')
 
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_13')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-
-
-def test_6_login_as_approver_and_approve_2(page):
-    print("Test 6: Logging in as second approver and approving requisition...")
-    s_page = LoginPage(page)
-    # s_page.navigate_to_url(proj_url)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=approver_id_2,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition Approve List"]
-    r_page = RequisitionApproveList(page)
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-
-    r_page.get_full_page_screenshot('full_page_screenshot_14')
-    r_page.search_requisition(req_num)
-    r_page.select_requisition(req_num)
-    r_page.approve_requisition()
-    r_page.confirmation_message_approve()
-    r_page.get_full_page_screenshot('full_page_screenshot_15')
-
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_16')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_10')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
-def test_7_check_requisition_approved(page):
-    print("Test 7: Checking requisition status after approval...")
-    s_page  = LoginPage(page)
-    # s_page.navigate_to_url(proj_url)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=proj_user,
-        pass_word=proj_pass
-    )
+# def test_5_find_approver_of_the_requisition_2(page):
+#     print("Test 5: Finding approver of the requisition again...")
+#     s_page  = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=proj_user,
+#         pass_word=proj_pass
+#     )
 
-    r_page = RequisitionList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition List"]
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     r_page = RequisitionList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition List"]
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
 
-    r_page.navigate_to_url(requisition_list_url)
-    r_page.get_full_page_screenshot('full_page_screenshot_17')
-    r_page.search_requisition(req_num)
-    r_page.get_full_page_screenshot('full_page_screenshot_18')
-    req_status = r_page.find_requisition_status()
-    print("REQ STATUS:", req_status)
-    #expect(req_status).to_be_equal("Approved")
+#     r_page.get_full_page_screenshot('full_page_screenshot_11')
+#     r_page.search_requisition(req_num)
+#     global approver_id_2
+#     approver_id_2 = str(int(r_page.find_approver_id()))
+#     print("APPROVER ID 2:", approver_id_2)
+#     r_page.get_full_page_screenshot('full_page_screenshot_12')
 
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_19')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_13')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
-def test_8_check_requisition_assign(page):
-    print("Test 8: Assigning requisition to a person...")
-    s_page = LoginPage(page)
-    # s_page.navigate_to_url(proj_url)
-    s_page.perform_login(
-        user_name=admin_user,
-        pass_word=proj_gen_pass,
-        given_url=proj_url,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
+# def test_6_login_as_approver_and_approve_2(page):
+#     print("Test 6: Logging in as second approver and approving requisition...")
+#     s_page = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=approver_id_2,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
 
-    r_page = AssignRequisition(page)
-    # r_page.navigate_to_url(requisition_assign_url)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition Assign", "Assign Requisition"]
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    r_page.assigning_person(assigned_person)
-    r_page.search_requisition_for_assigning(req_num)
-    r_page.add_item_to_assign(req_num)
-    r_page.assigning_items()
-    r_page.get_full_page_screenshot('full_page_screenshot_22')
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition Approve List"]
+#     r_page = RequisitionApproveList(page)
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
 
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_23')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     r_page.get_full_page_screenshot('full_page_screenshot_14')
+#     r_page.search_requisition(req_num)
+#     r_page.select_requisition(req_num)
+#     r_page.approve_requisition()
+#     r_page.confirmation_message_approve()
+#     r_page.get_full_page_screenshot('full_page_screenshot_15')
 
-def test_9_requisition_accept(page):
-    print("Test 9: Accepting requisition...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(assigned_person)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_16')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
-    r_page = RequisitionAcceptList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Requisition", "Requisition Assign", "Requisition Accept List"]
-    r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    # r_page.navigate_to_url(requisition_accept_url)
-    r_page.select_status("Assigned")
-    r_page.search_requisition(req_num)
-    r_page.select_all_requisitions()
-    r_page.accept_requisition()
-    r_page.get_full_page_screenshot('full_page_screenshot_24')
-    r_page.confirm_acceptance()
 
-def test_10_create_tender_initiation(page):
-    print("Test 10: Creating tender initiation...")
-    req_num2 = "REQ20250004556"
-    t_page = CreateTenderInitiation(page)
-    t_page.navigate_to_url(tender_initiation_url)
-    t_page.search_requisition(req_num)
-    t_page.select_all_items()
-    t_page.select_Quotation_method()
-    t_page.fill_remarks("Remarks for tender initiation")
-    t_page.go_to_save_next()
+# def test_7_check_requisition_approved(page):
+#     print("Test 7: Checking requisition status after approval...")
+#     s_page  = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=proj_user,
+#         pass_word=proj_pass
+#     )
 
-    global tender_num
-    tender_num = t_page.get_tender_number()
-    print("Purchase number: "+tender_num)
+#     r_page = RequisitionList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition List"]
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
 
-    t_page.select_all_items()
-    t_page.add_item_to_grid()
-    t_page.go_to_save_next()
+#     r_page.navigate_to_url(requisition_list_url)
+#     r_page.get_full_page_screenshot('full_page_screenshot_17')
+#     r_page.search_requisition(req_num)
+#     r_page.get_full_page_screenshot('full_page_screenshot_18')
+#     req_status = r_page.find_requisition_status()
+#     print("REQ STATUS:", req_status)
+#     #expect(req_status).to_be_equal("Approved")
 
-    t_page.same_delivery_schedule()
-    # t_page.estimated_delivery_date_with_text("01-09-2025")
-    t_page.estimated_delivery_date_with_text(t_page.select_date(10))
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_19')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+
+
+# def test_8_check_requisition_assign(page):
+#     print("Test 8: Assigning requisition to a person...")
+#     s_page = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         user_name=admin_user,
+#         pass_word=proj_gen_pass,
+#         given_url=proj_url,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+
+#     r_page = AssignRequisition(page)
+#     # r_page.navigate_to_url(requisition_assign_url)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition Assign", "Assign Requisition"]
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     r_page.assigning_person(assigned_person)
+#     r_page.search_requisition_for_assigning(req_num)
+#     r_page.add_item_to_assign(req_num)
+#     r_page.assigning_items()
+#     r_page.get_full_page_screenshot('full_page_screenshot_22')
+
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_23')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+
+# def test_9_requisition_accept(page):
+#     print("Test 9: Accepting requisition...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(assigned_person)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+
+#     r_page = RequisitionAcceptList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Requisition", "Requisition Assign", "Requisition Accept List"]
+#     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     # r_page.navigate_to_url(requisition_accept_url)
+#     r_page.select_status("Assigned")
+#     r_page.search_requisition(req_num)
+#     r_page.select_all_requisitions()
+#     r_page.accept_requisition()
+#     r_page.get_full_page_screenshot('full_page_screenshot_24')
+#     r_page.confirm_acceptance()
+
+# def test_10_create_tender_initiation(page):
+#     print("Test 10: Creating tender initiation...")
+#     req_num2 = "REQ20250004556"
+#     t_page = CreateTenderInitiation(page)
+#     t_page.navigate_to_url(tender_initiation_url)
+#     t_page.search_requisition(req_num)
+#     t_page.select_all_items()
+#     t_page.select_Quotation_method()
+#     t_page.fill_remarks("Remarks for tender initiation")
+#     t_page.go_to_save_next()
+
+#     global tender_num
+#     tender_num = t_page.get_tender_number()
+#     print("Purchase number: "+tender_num)
+
+#     t_page.select_all_items()
+#     t_page.add_item_to_grid()
+#     t_page.go_to_save_next()
+
+#     t_page.same_delivery_schedule()
+#     # t_page.estimated_delivery_date_with_text("01-09-2025")
+#     t_page.estimated_delivery_date_with_text(t_page.select_date(10))
     
-    t_page.delivery_location_dropdown_select()
-    t_page.delivery_location("Dhaka, Bangladesh")
-    t_page.default_evaluation_criteria("Manufacturer authorization letter")
-    t_page.tender_submission_criteria("TIN Certificate")
-    t_page.go_to_save_next()
+#     t_page.delivery_location_dropdown_select()
+#     t_page.delivery_location("Dhaka, Bangladesh")
+#     t_page.default_evaluation_criteria("Manufacturer authorization letter")
+#     t_page.tender_submission_criteria("TIN Certificate")
+#     t_page.go_to_save_next()
 
-    t_page.tender_template_selection("QM Template")
-    current_time = datetime.now()
-    global submission_date_str, opening_date_str
-    submission_date_str = (current_time + timedelta(minutes=7)).strftime("%d-%m-%Y %I:%M %p")
-    opening_date_str = (current_time + timedelta(minutes=9)).strftime("%d-%m-%Y %I:%M %p")
-    print("Submission Date:", submission_date_str)
-    print("Opening Date:", opening_date_str)
-    t_page.submission_date(submission_date_str)
-    t_page.opening_date(opening_date_str)
-    t_page.opening_place("BRAC Center, 75 Mohakhali, Dhaka-1212")
-    t_page.opening_offer_validity("30")
-    t_page.terms_condition_template_selection("QM Terms And Conditions")
-    t_page.award_notification_template_selection("QM Award Notifications")
-    t_page.tender_approver_selecting(tender_approver)
-    t_page.go_to_save_next()
+#     t_page.tender_template_selection("QM Template")
+#     current_time = datetime.now()
+#     global submission_date_str, opening_date_str
+#     submission_date_str = (current_time + timedelta(minutes=7)).strftime("%d-%m-%Y %I:%M %p")
+#     opening_date_str = (current_time + timedelta(minutes=9)).strftime("%d-%m-%Y %I:%M %p")
+#     print("Submission Date:", submission_date_str)
+#     print("Opening Date:", opening_date_str)
+#     t_page.submission_date(submission_date_str)
+#     t_page.opening_date(opening_date_str)
+#     t_page.opening_place("BRAC Center, 75 Mohakhali, Dhaka-1212")
+#     t_page.opening_offer_validity("30")
+#     t_page.terms_condition_template_selection("QM Terms And Conditions")
+#     t_page.award_notification_template_selection("QM Award Notifications")
+#     t_page.tender_approver_selecting(tender_approver)
+#     t_page.go_to_save_next()
 
-    t_page.committee_type_selection("Evaluation committee")
-    t_page.member_type_selection("APPROVER")
-    t_page.select_member(evaluation_approver)
-    t_page.add_committee_member_to_grid()
-    t_page.committee_type_selection("Evaluation committee")
-    t_page.member_type_selection("RECOMMENDER") 
-    t_page.select_member(evaluation_recommender)
-    t_page.add_committee_member_to_grid()
-    t_page.committee_type_selection("Opening committee")
-    t_page.member_type_selection("APPROVER")
-    t_page.select_member(opening_approver)
-    t_page.add_committee_member_to_grid()
-    t_page.submit_tender_initiation()
-    t_page.confirm_submission()
-    t_page.get_full_page_screenshot('full_page_screenshot_25')
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_30')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     t_page.committee_type_selection("Evaluation committee")
+#     t_page.member_type_selection("APPROVER")
+#     t_page.select_member(evaluation_approver)
+#     t_page.add_committee_member_to_grid()
+#     t_page.committee_type_selection("Evaluation committee")
+#     t_page.member_type_selection("RECOMMENDER") 
+#     t_page.select_member(evaluation_recommender)
+#     t_page.add_committee_member_to_grid()
+#     t_page.committee_type_selection("Opening committee")
+#     t_page.member_type_selection("APPROVER")
+#     t_page.select_member(opening_approver)
+#     t_page.add_committee_member_to_grid()
+#     t_page.submit_tender_initiation()
+#     t_page.confirm_submission()
+#     t_page.get_full_page_screenshot('full_page_screenshot_25')
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_30')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
 
-def test_11_approve_tender_initiation(page, new_tab):
-    print("Test 11: ...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(tender_approver)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
+# def test_11_approve_tender_initiation(page, new_tab):
+#     print("Test 11: ...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(tender_approver)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
 
-    t_page = TenderInitiationList(page)
-    try:
-        tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
-        t_page.navigate_to_url(tender_initiation_list_url)
-        # tender_num = "BPD/2025/RFQ-1913"
-        t_page.search_tender(tender_num)
-        new_page = new_tab(lambda p:t_page.navigate_to_tender_detail_page(tender_num))
-        b_page = TenderDetails(new_page)
-        b_page.approve_tender_from_details_page()
-        b_page.get_full_page_screenshot('full_page_screenshot_29')
-        new_page.close()
-    except Exception as e:
-        t_page.get_full_page_screenshot('full_page_screenshot_test_13')
-        print(e)
+#     t_page = TenderInitiationList(page)
+#     try:
+#         tender_initiation_list_url = proj_url + "/procurementDashboard/myDashboard#!/tenderInitiation/list"
+#         t_page.navigate_to_url(tender_initiation_list_url)
+#         # tender_num = "BPD/2025/RFQ-1913"
+#         t_page.search_tender(tender_num)
+#         new_page = new_tab(lambda p:t_page.navigate_to_tender_detail_page(tender_num))
+#         b_page = TenderDetails(new_page)
+#         b_page.approve_tender_from_details_page()
+#         b_page.get_full_page_screenshot('full_page_screenshot_29')
+#         new_page.close()
+#     except Exception as e:
+#         t_page.get_full_page_screenshot('full_page_screenshot_test_13')
+#         print(e)
 
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_30')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_30')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
-def test_12_vendor1_participation_in_tender(page):
-    print("Test 12: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name="Skylark",
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-    x_page = PerticipateTenderList(page)
-    x_page.go_to_participate_in_tender()
-    x_page.get_full_page_screenshot('full_page_screenshot_30_1')
-    x_page.wait_for_timeout(15000)
-    # tender_num = "BPD/2025/RFQ-1913"
-    x_page.search_tender_EoI(tender_num)
-    x_page.get_full_page_screenshot('full_page_screenshot_30_2')
-    x_page.click_apply_button_for_tender(tender_num)
-    x_page.get_full_page_screenshot('full_page_screenshot_30_3')
-    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
-    x_page.fill_criteria_row("Manufacturer authorization letter", "Yes", "All good", document_location)
-    x_page.get_full_page_screenshot('full_page_screenshot_30_4')
-    x_page.fill_required_document_fields("TIN Certificate", "Here is the document", document_location)
-    x_page.get_full_page_screenshot('full_page_screenshot_30_5')
-    x_page.click_on_save_and_next()
-    x_page.get_full_page_screenshot('full_page_screenshot_30_6')
-    x_page.selecting_item("Glue Stick (Fevi Stick)")
-    x_page.selecting_technical_button("Glue Stick (Fevi Stick)", "Yes", "All good", document_location)
-    x_page.get_full_page_screenshot('full_page_screenshot_30_7')
-    x_page.selecting_financial_button("Glue Stick (Fevi Stick)", "BDT", "15")
-    x_page.get_full_page_screenshot('full_page_screenshot_30_8')
-    x_page.click_on_submit()
-    x_page.get_full_page_screenshot('full_page_screenshot_30_9')
-    s_page.logout()
-    s_page.get_full_page_screenshot('full_page_screenshot_30_10') 
+# def test_12_vendor1_participation_in_tender(page):
+#     print("Test 12: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name="Skylark",
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+#     x_page = PerticipateTenderList(page)
+#     x_page.go_to_participate_in_tender()
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_1')
+#     x_page.wait_for_timeout(15000)
+#     # tender_num = "BPD/2025/RFQ-1913"
+#     x_page.search_tender_EoI(tender_num)
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_2')
+#     x_page.click_apply_button_for_tender(tender_num)
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_3')
+#     document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+#     x_page.fill_criteria_row("Manufacturer authorization letter", "Yes", "All good", document_location)
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_4')
+#     x_page.fill_required_document_fields("TIN Certificate", "Here is the document", document_location)
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_5')
+#     x_page.click_on_save_and_next()
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_6')
+#     x_page.selecting_item("Glue Stick (Fevi Stick)")
+#     x_page.selecting_technical_button("Glue Stick (Fevi Stick)", "Yes", "All good", document_location)
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_7')
+#     x_page.selecting_financial_button("Glue Stick (Fevi Stick)", "BDT", "15")
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_8')
+#     x_page.click_on_submit()
+#     x_page.get_full_page_screenshot('full_page_screenshot_30_9')
+#     s_page.logout()
+#     s_page.get_full_page_screenshot('full_page_screenshot_30_10') 
 
-def test_13_tender_opening(page,new_tab):
-    print("Test 13: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name=str(int(opening_approver)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-    x_page = TenderList(page)
-    x_page.go_to_tender_list()
-    x_page.search_tender(tender_num)
+# def test_13_tender_opening(page,new_tab):
+#     print("Test 13: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=str(int(opening_approver)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+#     x_page = TenderList(page)
+#     x_page.go_to_tender_list()
+#     x_page.search_tender(tender_num)
 
-    new_page = new_tab(lambda p:x_page.navigate_to_tender_details_page(tender_num))
-    b_page = ETenderDetails(new_page)
-    b_page.wait_until(opening_date_str)
-    b_page.click_open_button()
-    b_page.confirm_open_tender() 
-    b_page.get_full_page_screenshot('full_page_screenshot_32_1')
-    new_page.close()
+#     new_page = new_tab(lambda p:x_page.navigate_to_tender_details_page(tender_num))
+#     b_page = ETenderDetails(new_page)
+#     b_page.wait_until(opening_date_str)
+#     b_page.click_open_button()
+#     b_page.confirm_open_tender() 
+#     b_page.get_full_page_screenshot('full_page_screenshot_32_1')
+#     new_page.close()
 
-    s_page.logout()
-    s_page.get_full_page_screenshot('full_page_screenshot_32_2')  
+#     s_page.logout()
+#     s_page.get_full_page_screenshot('full_page_screenshot_32_2')  
 
-def test_14_tender_shortlist(page,new_tab):
-    print("Test 14: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name=assigned_person,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
+# def test_14_tender_shortlist(page,new_tab):
+#     print("Test 14: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=assigned_person,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
 
-    supplier_name="Skylark Printers"
-    x_page = TenderShortList(page)
-    x_page.go_to_tender_short_list()
-    x_page.search_tender(tender_num)
-    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
-    b_page = PrepareShortList(new_page)
-    b_page.click_save_compliance()
-    b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
-    b_page.get_full_page_screenshot('full_page_screenshot_33_1')
-    document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
-    b_page.fill_supplier_details(supplier_name, True,"All good", document_location, 5, 0)
-    # b_page.fill_supplier_details("Inventory Test", False,"Not responsive",document_location)
-    # b_page.fill_supplier_details("sadia enterprise 2", False,"Not responsive",document_location)
-    b_page.get_full_page_screenshot('full_page_screenshot_33_2')
-    b_page.click_shortlist_button()
-    b_page.get_full_page_screenshot('full_page_screenshot_33_3')
-    b_page.fill_recommendation_field("Ready to approve")
-    b_page.get_full_page_screenshot('full_page_screenshot_33_4')    
-    b_page.click_forward_to_committee()
-    b_page.get_full_page_screenshot('full_page_screenshot_33_5')
-    new_page.close()
-    s_page.logout()
-    s_page.get_full_page_screenshot('full_page_screenshot_33_6')
+#     supplier_name="Skylark Printers"
+#     x_page = TenderShortList(page)
+#     x_page.go_to_tender_short_list()
+#     x_page.search_tender(tender_num)
+#     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+#     b_page = PrepareShortList(new_page)
+#     b_page.click_save_compliance()
+#     b_page.click_details_of_item(req_num, "Glue Stick (Fevi Stick)")
+#     b_page.get_full_page_screenshot('full_page_screenshot_33_1')
+#     document_location = r"C:\Users\shamima.sultana\Downloads\upload_file.pdf"
+#     b_page.fill_supplier_details(supplier_name, True,"All good", document_location, 5, 0)
+#     # b_page.fill_supplier_details("Inventory Test", False,"Not responsive",document_location)
+#     # b_page.fill_supplier_details("sadia enterprise 2", False,"Not responsive",document_location)
+#     b_page.get_full_page_screenshot('full_page_screenshot_33_2')
+#     b_page.click_shortlist_button()
+#     b_page.get_full_page_screenshot('full_page_screenshot_33_3')
+#     b_page.fill_recommendation_field("Ready to approve")
+#     b_page.get_full_page_screenshot('full_page_screenshot_33_4')    
+#     b_page.click_forward_to_committee()
+#     b_page.get_full_page_screenshot('full_page_screenshot_33_5')
+#     new_page.close()
+#     s_page.logout()
+#     s_page.get_full_page_screenshot('full_page_screenshot_33_6')
 
-def test_15_Evaluation_recommender_approve(page,new_tab):
-    print("Test 15: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name=str(int(evaluation_recommender)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-    x_page = TenderEvaluationList(page)
-    x_page.go_to_tender_evaluation_list()
-    x_page.search_tender(tender_num)
-    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
-    b_page = FinancialEvaluation(new_page)
-    b_page.click_select_all_recommendations()
-    b_page.get_full_page_screenshot('full_page_screenshot_34_1')
-    b_page.click_bulk_accept()
-    b_page.selecting_confirm_yes()
-    b_page.get_full_page_screenshot('full_page_screenshot_34_2')
-    new_page.close()
-    s_page.logout()
+# def test_15_Evaluation_recommender_approve(page,new_tab):
+#     print("Test 15: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=str(int(evaluation_recommender)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+#     x_page = TenderEvaluationList(page)
+#     x_page.go_to_tender_evaluation_list()
+#     x_page.search_tender(tender_num)
+#     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+#     b_page = FinancialEvaluation(new_page)
+#     b_page.click_select_all_recommendations()
+#     b_page.get_full_page_screenshot('full_page_screenshot_34_1')
+#     b_page.click_bulk_accept()
+#     b_page.selecting_confirm_yes()
+#     b_page.get_full_page_screenshot('full_page_screenshot_34_2')
+#     new_page.close()
+#     s_page.logout()
 
-def test_16_Evaluation_approver_approve(page,new_tab):
-    print("Test 16: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name=evaluation_approver,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-    x_page = TenderEvaluationList(page)
-    x_page.go_to_tender_evaluation_list()
-    x_page.search_tender(tender_num)
-    new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
-    b_page = FinancialEvaluation(new_page)
-    b_page.click_nominate_for_award()
-    b_page.selecting_confirm_yes()
-    b_page.get_full_page_screenshot('full_page_screenshot_35_1')
-    new_page.close()
-    s_page.logout()
+# def test_16_Evaluation_approver_approve(page,new_tab):
+#     print("Test 16: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=evaluation_approver,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+#     x_page = TenderEvaluationList(page)
+#     x_page.go_to_tender_evaluation_list()
+#     x_page.search_tender(tender_num)
+#     new_page = new_tab(lambda p:x_page.click_tender_number(tender_num))
+#     b_page = FinancialEvaluation(new_page)
+#     b_page.click_nominate_for_award()
+#     b_page.selecting_confirm_yes()
+#     b_page.get_full_page_screenshot('full_page_screenshot_35_1')
+#     new_page.close()
+#     s_page.logout()
 
-def test_17_Creating_Noal(page,new_tab):
-    print("Test 17: ...")
-    s_page = EtenderLoginPage(page)
-    s_page.perform_login(
-        given_url=eTender_url,
-        user_name=assigned_person,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
+# def test_17_Creating_Noal(page,new_tab):
+#     print("Test 17: ...")
+#     s_page = EtenderLoginPage(page)
+#     s_page.perform_login(
+#         given_url=eTender_url,
+#         user_name=assigned_person,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
 
-    supplier_name="Skylark Printers"
-    x_page = CreateNoal(page)
-    x_page.click_create_noal()
-    x_page.search_tender(tender_num)
-    x_page.select_items_by_tender_supplier_payment_type(tender_num,supplier_name,"Bank")
-    x_page.get_full_page_screenshot('full_page_screenshot_36_1')
-    x_page.click_submit_button()
-    x_page.get_full_page_screenshot('full_page_screenshot_36_2')
-    x_page.confirm_submission()
-    x_page.get_full_page_screenshot('full_page_screenshot_36_3')
-    s_page.logout()
+#     supplier_name="Skylark Printers"
+#     x_page = CreateNoal(page)
+#     x_page.click_create_noal()
+#     x_page.search_tender(tender_num)
+#     x_page.select_items_by_tender_supplier_payment_type(tender_num,supplier_name,"Bank")
+#     x_page.get_full_page_screenshot('full_page_screenshot_36_1')
+#     x_page.click_submit_button()
+#     x_page.get_full_page_screenshot('full_page_screenshot_36_2')
+#     x_page.confirm_submission()
+#     x_page.get_full_page_screenshot('full_page_screenshot_36_3')
+#     s_page.logout()
 
-def test_18_Create_Work_Order(page):
-    print("Test 18: Create Work Order...")
-    s_page = LoginPage(page)
-    # s_page.navigate_to_url(proj_url)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=assigned_person,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-    work_order_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/show"
+# def test_18_Create_Work_Order(page):
+#     print("Test 18: Create Work Order...")
+#     s_page = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=assigned_person,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+#     work_order_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/show"
     
-    r_page = CreateWorkOrder(page)
-    r_page.navigate_to_url(work_order_url)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_1')  
-    supplier_name="Skylark Printers"
-    r_page.select_vendor(supplier_name)
-    r_page.select_payment_mode("Bank")
-    r_page.select_first_checkbox_by_tender(tender_num)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_2')
-    r_page.add_item_to_grid()
-    r_page.same_delivery_schedule()
-    delivary_date = r_page.select_date(5)
-    r_page.estimated_delivery_date_with_text(delivary_date)
-    r_page.delivery_location_dropdown_select()
-    r_page.delivery_location("Dhaka, Bangladesh")
-    r_page.go_to_save_next()
-    global work_order_num
-    work_order_num = r_page.get_work_order_number()
-    r_page.select_purchase_order_template("Purchase Order Template")
-    r_page.select_payment_template("Purchase Order Payment")
-    r_page.select_terms_template("Purchase Order Terms and Condions")
-    r_page.work_order_approver_selecting(work_order_approver)
-    r_page.get_full_page_screenshot('full_page_screenshot_37_3')
-    r_page.submit_work_order()
-    r_page.get_full_page_screenshot('full_page_screenshot_37_4')
-    #  logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_39')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS) 
+#     r_page = CreateWorkOrder(page)
+#     r_page.navigate_to_url(work_order_url)
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_1')  
+#     supplier_name="Skylark Printers"
+#     r_page.select_vendor(supplier_name)
+#     r_page.select_payment_mode("Bank")
+#     r_page.select_first_checkbox_by_tender(tender_num)
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_2')
+#     r_page.add_item_to_grid()
+#     r_page.same_delivery_schedule()
+#     delivary_date = r_page.select_date(5)
+#     r_page.estimated_delivery_date_with_text(delivary_date)
+#     r_page.delivery_location_dropdown_select()
+#     r_page.delivery_location("Dhaka, Bangladesh")
+#     r_page.go_to_save_next()
+#     global work_order_num
+#     work_order_num = r_page.get_work_order_number()
+#     r_page.select_purchase_order_template("Purchase Order Template")
+#     r_page.select_payment_template("Purchase Order Payment")
+#     r_page.select_terms_template("Purchase Order Terms and Condions")
+#     r_page.work_order_approver_selecting(work_order_approver)
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_3')
+#     r_page.submit_work_order()
+#     r_page.get_full_page_screenshot('full_page_screenshot_37_4')
+#     #  logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_39')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS) 
 
 
-def test_19_Approving_Work_Order(page,new_tab):
-    print("Test 19: Approving Work Order...")
-    s_page = LoginPage(page)
-    # s_page.navigate_to_url(proj_url)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(work_order_approver)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
-    )
-    work_order_list_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/list"
-    r_page = PurchaseOrderList(page)
-    r_page.navigate_to_url(work_order_list_url)
-    r_page.get_full_page_screenshot('full_page_screenshot_38_1')
-    r_page.search_work_order(work_order_num)
-    new_page = new_tab(lambda p:r_page.click_on_work_order_num(work_order_num))
-    b_page = PurchaseOrderDetailsInformation(new_page)
-    # b_page.approve_work_order()
-    b_page.get_full_page_screenshot('full_page_screenshot_38_2')
-    new_page.close()
-    r_page.search_work_order(work_order_num)
-    r_page.find_work_order_status()
-    b_page.get_full_page_screenshot('full_page_screenshot_38_3')
-    # logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_39')
+# def test_19_Approving_Work_Order(page,new_tab):
+#     print("Test 19: Approving Work Order...")
+#     s_page = LoginPage(page)
+#     # s_page.navigate_to_url(proj_url)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(work_order_approver)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS  # Increased timeout for login
+#     )
+#     work_order_list_url = proj_url + "/procurementDashboard/myDashboard#!/workOrder/list"
+#     r_page = PurchaseOrderList(page)
+#     r_page.navigate_to_url(work_order_list_url)
+#     r_page.get_full_page_screenshot('full_page_screenshot_38_1')
+#     r_page.search_work_order(work_order_num)
+#     new_page = new_tab(lambda p:r_page.click_on_work_order_num(work_order_num))
+#     b_page = PurchaseOrderDetailsInformation(new_page)
+#     # b_page.approve_work_order()
+#     b_page.get_full_page_screenshot('full_page_screenshot_38_2')
+#     new_page.close()
+#     r_page.search_work_order(work_order_num)
+#     r_page.find_work_order_status()
+#     b_page.get_full_page_screenshot('full_page_screenshot_38_3')
+#     # logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_39')
 
-def test_20_item_receive(page):
-    print("Test 20: Receiving items...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(assigned_person)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS
-    )
-    t_page = ItemReceive(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Item Receive", "Item Receive"]
-    # t_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    t_page.navigate_to_url(item_receive_url)
-    t_page.search_order_for_item_receive(purchase_num)
-    t_page.set_challan_number(challan_num)
-    t_page.receive_place("Dhaka, Bangladesh")
-    t_page.select_all_items()
-    t_page.submit_item_receive()
-    t_page.confirm_submission()
-    t_page.get_full_page_screenshot('full_page_screenshot_31')
+# def test_20_item_receive(page):
+#     print("Test 20: Receiving items...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(assigned_person)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS
+#     )
+#     t_page = ItemReceive(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Item Receive", "Item Receive"]
+#     # t_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     t_page.navigate_to_url(item_receive_url)
+#     t_page.search_order_for_item_receive(purchase_num)
+#     t_page.set_challan_number(challan_num)
+#     t_page.receive_place("Dhaka, Bangladesh")
+#     t_page.select_all_items()
+#     t_page.submit_item_receive()
+#     t_page.confirm_submission()
+#     t_page.get_full_page_screenshot('full_page_screenshot_31')
 
-    # logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_32')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-
-
-
-def test_21_bill_creation_and_submit(page):
-    print("Test 21: Creating and submitting vendor bill payable...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=str(int(bill_creator)),
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS
-    )
-    t_page = CreateVendorBillPayable(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Bill Payable", "Create Vendor Bill Payable"]
-    t_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    # t_page.navigate_to_url(vendor_bill_payable_url)
-    t_page.search_vendor(vendor_name)
-
-    t_page.search_challan_number(challan_num)
-    t_page.bill_number(bill_num)
-    t_page.bill_date_with_text(t_page.select_date())
-    t_page.bill_receive_date_with_text(t_page.select_date())
-    t_page.select_all_items()
-    t_page.submit_bill()
-    t_page.get_full_page_screenshot('full_page_screenshot_33')
-    t_page.confirm_submission()
-    t_page.get_full_page_screenshot('full_page_screenshot_34')
-
-    l2_page = BillList(page)
-
-    l2_page.navigate_to_url(bill_payable_url)
-    l2_page.search_bill(bill_num)
-    global bill_recommender1
-    bill_recommender1 = str(int(l2_page.find_approver_id(bill_num)))
-    print(f"Bill Recommender 1: {bill_recommender1}")
-
-    # logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_35')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-
-def test_22_vendor_bill_recommender1_approval(page, new_tab):
-    print("Test 22: Vendor bill recommender1 approval...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=bill_recommender1,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS
-    )
-
-    l2_page = BillList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Bill Payable", "Vendor Billing List"]
-    l2_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    # l2_page.navigate_to_url(bill_payable_url)
-    l2_page.search_bill(bill_num)
-
-    # # Opening new tab
-    new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
-    b_page = BillDetails(new_page)
-
-    # # Preparing document location
-    current_dir = os.getcwd()
-    # print(f"Current directory: {current_dir}")
-    document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
-    b_page.upload_document(document_location)
-
-    # print(f"Document directory: {document_location}")
-
-    # #  Continuing rest of the test
-    b_page.get_full_page_screenshot('full_page_screenshot_36')
-    b_page.select_bill_type("Regular")
-    b_page.get_full_page_screenshot('full_page_screenshot_37')
-    b_page.approve_bill()
-    b_page.get_full_page_screenshot('full_page_screenshot_38')
-
-    # # Closing new tab
-    new_page.close()
-
-    # # Continuing rest of the test in parent tab
-    l3_page = BillList(page)
-    l3_page.navigate_to_url(bill_payable_url)
-    l3_page.search_bill(bill_num)
-    global bill_recommender2
-    bill_recommender2 = str(int(l3_page.find_approver_id(bill_num)))
-    print(f"Bill Recommender 2: {bill_recommender2}")
-
-    # logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_39')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     # logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_32')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
-def test_23_vendor_bill_recommender2_approval(page, new_tab):
-    print("Test 23: Vendor bill recommender2 approval...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=bill_recommender2,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS
-    )
-    l2_page = BillList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Bill Payable", "Vendor Billing List"]
-    l2_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    # l2_page.navigate_to_url(bill_payable_url)
-    l2_page.search_bill(bill_num)
 
-    new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
-    b_page = BillDetails(new_page)
-    b_page.approve_bill()
-    b_page.get_full_page_screenshot('full_page_screenshot_40')
-    new_page.close()
+# def test_21_bill_creation_and_submit(page):
+#     print("Test 21: Creating and submitting vendor bill payable...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=str(int(bill_creator)),
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS
+#     )
+#     t_page = CreateVendorBillPayable(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Bill Payable", "Create Vendor Bill Payable"]
+#     t_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     # t_page.navigate_to_url(vendor_bill_payable_url)
+#     t_page.search_vendor(vendor_name)
 
-    l3_page = BillList(page)
-    l3_page.navigate_to_url(bill_payable_url)
-    l3_page.search_bill(bill_num)
-    l3_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-    l3_page.get_full_page_screenshot('full_page_screenshot_41')
-    global bill_approver_id
-    bill_approver_id = str(int(l3_page.find_approver_id(bill_num)))
-    print(f"Bill Approver : {bill_approver_id}")
+#     t_page.search_challan_number(challan_num)
+#     t_page.bill_number(bill_num)
+#     t_page.bill_date_with_text(t_page.select_date())
+#     t_page.bill_receive_date_with_text(t_page.select_date())
+#     t_page.select_all_items()
+#     t_page.submit_bill()
+#     t_page.get_full_page_screenshot('full_page_screenshot_33')
+#     t_page.confirm_submission()
+#     t_page.get_full_page_screenshot('full_page_screenshot_34')
 
-    # logout from the page
-    r2_page = MainNavigationBar(page)
-    r2_page.exit()
-    r2_page.logout()
-    r2_page.get_full_page_screenshot('full_page_screenshot_41')
-    r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     l2_page = BillList(page)
+
+#     l2_page.navigate_to_url(bill_payable_url)
+#     l2_page.search_bill(bill_num)
+#     global bill_recommender1
+#     bill_recommender1 = str(int(l2_page.find_approver_id(bill_num)))
+#     print(f"Bill Recommender 1: {bill_recommender1}")
+
+#     # logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_35')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+
+# def test_22_vendor_bill_recommender1_approval(page, new_tab):
+#     print("Test 22: Vendor bill recommender1 approval...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=bill_recommender1,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS
+#     )
+
+#     l2_page = BillList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Bill Payable", "Vendor Billing List"]
+#     l2_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     # l2_page.navigate_to_url(bill_payable_url)
+#     l2_page.search_bill(bill_num)
+
+#     # # Opening new tab
+#     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
+#     b_page = BillDetails(new_page)
+
+#     # # Preparing document location
+#     current_dir = os.getcwd()
+#     # print(f"Current directory: {current_dir}")
+#     document_location = os.path.join(current_dir, 'utils', 'upload_file.pdf')
+#     b_page.upload_document(document_location)
+
+#     # print(f"Document directory: {document_location}")
+
+#     # #  Continuing rest of the test
+#     b_page.get_full_page_screenshot('full_page_screenshot_36')
+#     b_page.select_bill_type("Regular")
+#     b_page.get_full_page_screenshot('full_page_screenshot_37')
+#     b_page.approve_bill()
+#     b_page.get_full_page_screenshot('full_page_screenshot_38')
+
+#     # # Closing new tab
+#     new_page.close()
+
+#     # # Continuing rest of the test in parent tab
+#     l3_page = BillList(page)
+#     l3_page.navigate_to_url(bill_payable_url)
+#     l3_page.search_bill(bill_num)
+#     global bill_recommender2
+#     bill_recommender2 = str(int(l3_page.find_approver_id(bill_num)))
+#     print(f"Bill Recommender 2: {bill_recommender2}")
+
+#     # logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_39')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
 
 
-def test_24_vendor_bill_approver_approval(page, new_tab):
-    print("Test 24: Vendor bill approver approval...")
-    s_page = LoginPage(page)
-    s_page.perform_login(
-        given_url=proj_url,
-        user_name=bill_approver_id,
-        pass_word=proj_gen_pass,
-        timeout=WAIT_TIME_IN_MILLISECONDS
-    )
+# def test_23_vendor_bill_recommender2_approval(page, new_tab):
+#     print("Test 23: Vendor bill recommender2 approval...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=bill_recommender2,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS
+#     )
+#     l2_page = BillList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Bill Payable", "Vendor Billing List"]
+#     l2_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     # l2_page.navigate_to_url(bill_payable_url)
+#     l2_page.search_bill(bill_num)
 
-    l2_page = BillList(page)
-    main_menu_item = "Procurement"
-    sec__menu_item = ["Bill Payable", "Vendor Billing List"]
-    l2_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-    # l2_page.navigate_to_url(bill_payable_url)
-    l2_page.search_bill(bill_num)
+#     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
+#     b_page = BillDetails(new_page)
+#     b_page.approve_bill()
+#     b_page.get_full_page_screenshot('full_page_screenshot_40')
+#     new_page.close()
 
-    new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
-    b_page = BillDetails(new_page)
-    b_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-    b_page.approve_bill()
-    b_page.get_full_page_screenshot('full_page_screenshot_42')
-    new_page.close()
+#     l3_page = BillList(page)
+#     l3_page.navigate_to_url(bill_payable_url)
+#     l3_page.search_bill(bill_num)
+#     l3_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     l3_page.get_full_page_screenshot('full_page_screenshot_41')
+#     global bill_approver_id
+#     bill_approver_id = str(int(l3_page.find_approver_id(bill_num)))
+#     print(f"Bill Approver : {bill_approver_id}")
 
-    l3_page = BillList(page)
-    l3_page.navigate_to_url(bill_payable_url)
-    l3_page.search_bill(bill_num)
-    l3_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
-    bill_status=l3_page.find_bill_status(bill_num)
-    print("Bill STATUS:", bill_status)
-    l3_page.get_full_page_screenshot('full_page_screenshot_43')
+#     # logout from the page
+#     r2_page = MainNavigationBar(page)
+#     r2_page.exit()
+#     r2_page.logout()
+#     r2_page.get_full_page_screenshot('full_page_screenshot_41')
+#     r2_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+
+
+# def test_24_vendor_bill_approver_approval(page, new_tab):
+#     print("Test 24: Vendor bill approver approval...")
+#     s_page = LoginPage(page)
+#     s_page.perform_login(
+#         given_url=proj_url,
+#         user_name=bill_approver_id,
+#         pass_word=proj_gen_pass,
+#         timeout=WAIT_TIME_IN_MILLISECONDS
+#     )
+
+#     l2_page = BillList(page)
+#     main_menu_item = "Procurement"
+#     sec__menu_item = ["Bill Payable", "Vendor Billing List"]
+#     l2_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
+#     # l2_page.navigate_to_url(bill_payable_url)
+#     l2_page.search_bill(bill_num)
+
+#     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
+#     b_page = BillDetails(new_page)
+#     b_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     b_page.approve_bill()
+#     b_page.get_full_page_screenshot('full_page_screenshot_42')
+#     new_page.close()
+
+#     l3_page = BillList(page)
+#     l3_page.navigate_to_url(bill_payable_url)
+#     l3_page.search_bill(bill_num)
+#     l3_page.wait_for_timeout(WAIT_TIME_IN_MILLISECONDS)
+#     bill_status=l3_page.find_bill_status(bill_num)
+#     print("Bill STATUS:", bill_status)
+#     l3_page.get_full_page_screenshot('full_page_screenshot_43')

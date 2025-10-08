@@ -32,7 +32,7 @@ class PrepareShortList(BasicActions):
         print(f"Status found: '{status}' for Requisition No: {requisition_no} and Item: {item_title}")
         click_details = row.locator('button:has-text("Details")')
         click_details.click()
-        self.page.wait_for_timeout(5000)
+        self.browser_wait_for()
 
         # if status.lower() == "pending":
         #     print("Clicking Details button since status is Pending.")
@@ -70,13 +70,13 @@ class PrepareShortList(BasicActions):
         # 1. Select Responsive / Non-Responsive radio button
         select_responsiveness = self.page.locator(f'#res_{supplier_id}' if is_responsive else f'#non_res_{supplier_id}')
         select_responsiveness.check()
-        self.page.wait_for_timeout(5000)
+        self.browser_wait_for()
 
         if is_responsive:
             # 2. Propose Vendor Selection checkbox and Proposed Quantity
             propose_vendor_selection_checkbox = self.page.locator(f'#checkSuggest_{supplier_id}')
             propose_vendor_selection_checkbox.check(force=True)
-            self.page.wait_for_timeout(3000)
+            self.browser_wait_for()
             if proposed_qty is not None:
                 proposed_quantity = self.page.locator(f'#awardQty_{supplier_id}')
                 proposed_quantity.fill(str(proposed_qty))
@@ -93,20 +93,20 @@ class PrepareShortList(BasicActions):
         if upload_file_path:
             upload_document_file = self.page.locator(f'#document_{supplier_id} input[type="file"]')
             upload_document_file.set_input_files(upload_file_path)
-            self.page.wait_for_timeout(1000)  # Allow time for upload
+            self.browser_wait_for()  # Allow time for upload
 
         # 5. Write comment
         comment_box = self.page.locator(f'#input_comment_{supplier_id}')
         comment_box.fill(comment_text)
-        self.page.wait_for_timeout(5000)
+        self.browser_wait_for()
 
 
     def click_shortlist_button(self):
-        self.page.wait_for_timeout(2000)
+        self.browser_wait_for()
         print("Clicking Shortlist button...")
         self.shortlist_button.click()
         print("Shortlist button clicked.")
-        self.page.wait_for_timeout(2000)  # Optional: wait after click
+        self.browser_wait_for()  # Optional: wait after click
 
 
     def fill_recommendation_field(self, note_text: str):
@@ -124,11 +124,11 @@ class PrepareShortList(BasicActions):
         else:
             self.recommendation_box.fill(note_text)
             print("Recommendation field filled successfully")
-            self.page.wait_for_timeout(2000)  
+            self.browser_wait_for()  
 
 
     def click_forward_to_committee(self):
         self.forward_button.scroll_into_view_if_needed()
         print("Clicking 'Forward to Committee' button...")
         self.forward_button.click()
-        self.page.wait_for_timeout(1000)  # Optional: wait for post-click UI changes
+        self.browser_wait_for()  # Optional: wait for post-click UI changes

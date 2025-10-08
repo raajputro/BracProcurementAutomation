@@ -9,36 +9,24 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
         super().__init__(page)
         self.po_value = ''
         self.vendor_info = page.get_by_role("textbox", name="Min 3 characters")
-        
         self.select_all_checkbox = page.get_by_role("link", name="Select All", exact=True)
         self.unselect_all_checkbox = page.get_by_role("link", name="Unselect All", exact=True)
         self.search_requisition = page.get_by_role("textbox", name="Please enter item name or REQ")
         self.save_next_page = page.get_by_role("button", name="Save & Next ->>")
         self.same_schedule = page.get_by_role("checkbox", name="Same schedule")
-        self.estimated_delivery_date_using_calendar_box = page.locator("#sameDeliveryScheduleId").get_by_role("img",
-                                                                                                              name="Select date")
+        self.estimated_delivery_date_using_calendar_box = page.locator("#sameDeliveryScheduleId").get_by_role("img",name="Select date")
         self.est_delivery_date_with_text = page.locator('input#defaultDeliveryDate[placeholder="DD-MM-YYYY"]')
         self.delivery_location_dropdown = page.locator("#defaultDeliveryStoreId")
-        self.delivery_location_box = page.get_by_placeholder(
-            "Note: 1. Address 2. Contact Person Name 3. Cell Number 4. Delivery Time")
-        # self.location_central_store = self.page.get_by_role("option", name="Central Store")
-        # self.location_head_office = self.page.get_by_role("option", name="Head Office")
-        # self.location_other = self.page.get_by_role("option", name="Other")
-        # self.location_select_delivery_location = self.page.get_by_role("option", name="-Select Delivery Location -")
+        self.delivery_location_box = page.get_by_placeholder("Note: 1. Address 2. Contact Person Name 3. Cell Number 4. Delivery Time")
         self.template_selection_dropdown = page.locator("#purchaseLetterBodyTemplateId")
         self.direct_purchase_approver = page.locator("#signatoryMemberDiv_input")
-        # self.direct_purchase_approver_selection = page.get_by_text(TestResources.test_purchase_approver)
         self.purchase_submit = page.get_by_role("button", name="Submit")
-        self.purchase_submit_confirmation = page.get_by_label("Submit Confirmation").get_by_role("button",
-                                                                                                 name="Submit")
+        self.purchase_submit_confirmation = page.get_by_label("Submit Confirmation").get_by_role("button",name="Submit")
         self.purchase_order_no_field = page.locator("#refNo")
 
     def search_vendor(self, vendor_name: str):
-        self.vendor_info.fill(vendor_name)
-        self.page.keyboard.press("End")
-        self.page.keyboard.type(" ")
-        self.page.keyboard.press("Backspace")
-
+        self.vendor_info.type(vendor_name)
+        self.browser_wait_for()
         search_result = self.page.get_by_text(vendor_name)
         search_result.wait_for(state="visible", timeout=5000)
         search_result.hover()
@@ -47,7 +35,7 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
     def same_delivery_schedule(self):
         self.same_schedule.scroll_into_view_if_needed()
         self.same_schedule.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def estimated_delivery_date_with_text(self, date: str):
         # Fill the estimated delivery date input field
@@ -66,21 +54,6 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
         # self.delivery_location_dropdown.click()
         self.select_from_list_by_value(self.delivery_location_dropdown, delivery_location)
 
-    # def delivery_location_central_store(self):
-    #     self.location_central_store.hover()
-    #     self.location_central_store.click()
-
-    # def delivery_location_Head_Office(self):
-    #     self.location_head_office.hover()
-    #     self.location_head_office.click()
-
-    # def delivery_location_Other(self):
-    #     self.location_other.hover()
-    #     self.location_other.click()
-
-    # def delivery_location_Select_Delivery_Location(self):
-    #     self.location_select_delivery_location.hover()
-    #     self.location_select_delivery_location.click()
 
     def delivery_location(self, location: str):
         # Fill the delivery location input field
@@ -92,21 +65,21 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
         self.search_requisition.fill(item_name)
         self.page.keyboard.press("End")
         self.page.keyboard.type(" ")  # Adding a space to trigger the search
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
 
     def select_all_items(self):
         self.select_all_checkbox.scroll_into_view_if_needed()
         self.select_all_checkbox.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def unselect_all_items(self):
         self.unselect_all_checkbox.click()
-        self.wait_for_timeout(1000)
+        self.browser_wait_for()
 
     def save_and_next(self):
         self.save_next_page.scroll_into_view_if_needed()
         self.save_next_page.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()
 
     def get_purchase_order_number(self) -> str:
         self.po_value = self.purchase_order_no_field.input_value()
@@ -120,21 +93,20 @@ class CreateDirectPurchase(ProcurementHomePage, BasicActions):
 
     def direct_purchase_approver_selecting(self, approver: str):
         self.direct_purchase_approver.scroll_into_view_if_needed()
-        self.direct_purchase_approver.fill(approver)
-        self.page.keyboard.press("End")
-        self.page.keyboard.type(" ")
-        self.page.keyboard.press("Backspace")
+        self.direct_purchase_approver.type(approver)
+        self.browser_wait_for()
         direct_purchase_approver_selection = self.page.get_by_text(approver)
         direct_purchase_approver_selection.wait_for(state="visible", timeout=5000)
         direct_purchase_approver_selection.hover()
         direct_purchase_approver_selection.click()
+        self.browser_wait_for()
 
     def submit_direct_purchase(self):
         self.purchase_submit.scroll_into_view_if_needed()
         self.purchase_submit.click()
-        self.wait_for_timeout(2000)
+        self.browser_wait_for()
 
     def confirm_submission(self):
         self.purchase_submit_confirmation.scroll_into_view_if_needed()
         self.purchase_submit_confirmation.click()
-        self.wait_for_timeout(5000)
+        self.browser_wait_for()

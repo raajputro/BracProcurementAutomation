@@ -15,9 +15,9 @@ class AssignRequisition(BasicActions):
     def assigning_person(self, assigned_person):
         self.input_in_element(self.assigned_to, assigned_person)
         self.page.keyboard.press(' ')
-        self.page.wait_for_timeout(3000)
+        self.browser_wait_for()
         self.page.keyboard.press("Enter")
-        self.page.wait_for_timeout(1000)
+        self.browser_wait_for()
 
 
     def add_item_to_assign(self, req_num):
@@ -25,7 +25,7 @@ class AssignRequisition(BasicActions):
         add_item = self.page.locator("//div[@id='tabs-1']//child::li[contains(text(),'" + req_num + "')][1]//following-sibling::a/span[@class='ui-corner-all ui-icon ui-icon-plus']")
         while add_item.is_visible():
             add_item.click()
-            self.page.wait_for_timeout(5000)
+            self.browser_wait_for()
             self.get_full_page_screenshot('item_added_for_assigning_' + str(i))
             i = i + 1
 
@@ -33,11 +33,11 @@ class AssignRequisition(BasicActions):
     def search_requisition_for_assigning(self, requisition_number):
         self.input_in_element(self.requisition_search_box, requisition_number)
         self.page.keyboard.press("Enter")
-        self.page.wait_for_timeout(5000)
+        self.browser_wait_for()
 
 
     def assigning_items(self):
         self.assign_button.click()
-        self.page.wait_for_timeout(2000)
+        self.browser_wait_for()
         self.confirmation_message_assign.click()
-        self.page.wait_for_timeout(2000)
+        self.browser_wait_for()

@@ -22,7 +22,7 @@ class FinancialEvaluation(BasicActions):
         # Scroll into view and click
         self.select_all_button.scroll_into_view_if_needed()
         self.select_all_button.click()
-        self.page.wait_for_timeout(1000)
+        self.browser_wait_for()
         print("'Select All' button clicked.")
 
 
@@ -35,7 +35,7 @@ class FinancialEvaluation(BasicActions):
         self.bulk_accept_button.scroll_into_view_if_needed()
         self.bulk_accept_button.click()
 
-        self.page.wait_for_timeout(1000)
+        self.browser_wait_for()
         print("'Bulk Accept' button clicked.")
         
 
@@ -45,7 +45,7 @@ class FinancialEvaluation(BasicActions):
         self.confirm_yes.wait_for(state='visible', timeout=5000)
         # Click the 'Yes' button
         self.confirm_yes.click()
-        self.page.wait_for_timeout(5000)
+        self.browser_wait_for()
         print("Clicked 'Yes' on confirmation dialog.")
 
 
@@ -56,5 +56,5 @@ class FinancialEvaluation(BasicActions):
         # Scroll into view and click
         self.nominate_button.scroll_into_view_if_needed()
         self.nominate_button.click()
-        self.page.wait_for_timeout(3000)
+        self.browser_wait_for()
         print("'Nominate for Award' button clicked.")
