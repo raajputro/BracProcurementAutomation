@@ -92,6 +92,12 @@ bill_num = str(random.randint(10000, 99999))
 
 
 def test_1_login_to_create_and_submit_requisition(page):
+    """
+           Step 1: Go to the procurement login page and input the login credential
+           Step 2: Go to the ERP Dashboard page and go to the procurement dashboard
+           Step 3: 
+           add all your information, description here
+    """
     proc_login_page = ProcurementLoginPage(page)
     proc_login_page.perform_login(
         given_url=proj_url,

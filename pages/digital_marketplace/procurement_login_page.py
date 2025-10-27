@@ -27,7 +27,7 @@ class ProcurementLoginPage(BasicActionsDM):
             given_url: str,
             user_name: str,
             pass_word: str,
-            timeout: Optional[int] = 30_000,
+            timeout: Optional[int] = 40_000,
             post_login_selector: Optional[str] = None,  # fallback dashboard shell
     ) -> bool:
         """Log in robustly; handle post-login overlay; verify success."""
@@ -48,7 +48,7 @@ class ProcurementLoginPage(BasicActionsDM):
         # 3) Wait for either overlay or dashboard
         overlay_seen = False
         try:
-            self.overlayModal.wait_for(state="visible", timeout=5000)
+            self.overlayModal.wait_for(state="visible", timeout=6000)
             overlay_seen = True
         except PlaywrightTimeoutError:
             pass

@@ -16,4 +16,3 @@ class LoginPage(BasicActions):
         self.input_in_element(self.userName, user_name)
         self.input_in_element(self.passWord, pass_word)
         self.click_on_btn(self.signBtn)
-

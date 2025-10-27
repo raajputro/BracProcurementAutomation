@@ -210,7 +210,26 @@ from playwright.sync_api import (
     sync_playwright,
     Locator,
 )
+# =========================
+# Show Test Docstring in HTML Report
+# =========================
+# from pytest_html import extras
+# from pytest_html.html import html
+from py.xml import html  # uncomment this import at top if commented
+from pytest_html import extras
 
+def pytest_html_results_table_header(cells):
+    """Add a Description column to the HTML report."""
+    cells.insert(1, html.th('Description'))
+
+# def pytest_html_results_
+
+def pytest_html_results_table_row(report, cells):
+    """Insert each test's docstring into the new column."""
+    doc = getattr(report, "docstring", "") or ""
+    # short_doc = doc.strip().split("\n")[0][:120]  # show first line (trim long)
+    full_doc = html.pre(doc.strip())  # preserve newlines and formatting
+    cells.insert(1, html.td(full_doc))
 # =========================
 # Config
 # =========================
@@ -431,6 +450,9 @@ def new_tab(context: BrowserContext) -> Callable[[Callable[[Page], None]], Page]
 def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
+    # Add new line
+    rep.docstring = item.obj.__doc__
+
     setattr(item, "rep_" + rep.when, rep)
 
     if rep.when == "call" and rep.failed:
@@ -530,3 +552,5 @@ def _install_auto_highlighter():
         setattr(Locator, method_name, make_loc_wrapper(original, method_name))
 
     setattr(Page, "_auto_highlight_installed", True)
+
+

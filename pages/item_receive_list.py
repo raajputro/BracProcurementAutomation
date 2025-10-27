@@ -11,4 +11,3 @@ class ItemReceiveListPage(BasicActions):
 
         self.search_order = page.get_by_role("textbox", name="Search DP/FO/PO/CO Order No.")
         self.challan_no = page.locator("#challanNo")
-        

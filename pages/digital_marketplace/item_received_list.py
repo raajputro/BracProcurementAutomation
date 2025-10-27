@@ -21,7 +21,7 @@ class ItemReceivedList(OrderManagement, BasicActionsDM):
 
     def search_received_order(self, received_order_number):
         self.order_number_input.click()
-        self.input_in_element(self.order_number_input, received_order_number)
+        self.input_in_element(self.order_number_input.nth(0), received_order_number)
         self.click_on_btn(self.search_button_for_received_item)
 
     def received_order_view(self):
@@ -30,4 +30,4 @@ class ItemReceivedList(OrderManagement, BasicActionsDM):
         # self.order_view_button.nth(0).click()
 
     def searched_received_order(self, challan_no):
-        self.input_in_element(self.challan_no_input, challan_no)
+        self.input_in_element(self.challan_no_input.nth(0), challan_no)
