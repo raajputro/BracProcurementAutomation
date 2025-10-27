@@ -1,6 +1,9 @@
 import re
+from time import time
 from utils.basic_actions import BasicActions
 from pages.erp_procurement.procurement_home_page import ProcurementHomePage
+from playwright.sync_api import TimeoutError
+from playwright.sync_api import TimeoutError
 
 
 class PerticipateTenderList(BasicActions):
@@ -11,7 +14,7 @@ class PerticipateTenderList(BasicActions):
         self.tender_EoI_search = page.locator("#tenderTitleSearch")
         self.tender_participation_menu = page.get_by_role("link", name="Tender Participation")
         self.participate_in_tender_link = page.get_by_role("link", name="Participate In Tender")
-        self.save_and_next_button = page.locator('#savePrimary')
+        self.save_and_next_button = page.locator('#savePrimary').get_by_role("button", name="Save & Next")
         self.submit_button = page.locator("button#submit:has-text('Submit')")
 
     
@@ -81,16 +84,55 @@ class PerticipateTenderList(BasicActions):
         self.page.wait_for_timeout(2000)
         
 
-    def click_on_save_and_next(self):
-        self.save_and_next_button.scroll_into_view_if_needed()
-        self.page.wait_for_timeout(2000)
-        self.save_and_next_button.click()
-        self.page.wait_for_timeout(5000)
+    # def click_on_save_and_next(self):
+    #     # self.save_and_next_button.scroll_into_view_if_needed()
+    #     self.page.wait_for_timeout(4000)
+    #     self.save_and_next_button.click()
+    #     self.page.wait_for_timeout(5000)
 
+    # def click_on_save_and_next(self, timeout=30):
+    # # Wait for the button to become enabled, retrying for up to 'timeout' seconds.
+    #     try:
+    #     # Wait until the button is enabled (or timeout occurs)
+    #         self.page.wait_for_selector(
+    #             self.save_and_next_button, 
+    #             state='enabled',  # This waits for the button to be enabled
+    #             timeout=timeout * 1000  # Timeout in milliseconds
+    #         )
+
+    #         # Once it's enabled, click the button
+    #         self.save_and_next_button.click()
+    #         self.page.wait_for_timeout(5000)  # Wait for 5 seconds after clicking
+
+    #     except TimeoutError:
+    #         # If the button isn't enabled within the specified timeout, print a message
+    #         print(f"Button is still disabled after waiting for {timeout} seconds.")
+def click_on_save_and_next(self, timeout=30):
+    # Wait for some time to ensure the page is loaded
+    self.page.wait_for_timeout(4000)
+    
+    # Start a timer to keep track of the wait time
+    start_time = time.time()
+
+    while True:
+        # Check if the button is enabled
+        if self.save_and_next_button.is_enabled():
+            # If enabled, click on the button and break out of the loop
+            self.save_and_next_button.click()
+            self.page.wait_for_timeout(5000)
+            break
+
+        # Check if the timeout is reached
+        if time.time() - start_time > timeout:
+            print("Button is still disabled after waiting for {} seconds".format(timeout))
+            break
+        
+        # Wait for a short time before checking again (polling interval)
+        self.page.wait_for_timeout(500)
 
     def selecting_item(self,item_name: str):
         row = self.page.locator(f'table#jqGridTenderItem tr:has-text("{item_name}")')
-        self.page.wait_for_timeout(2000)
+        self.page.wait_for_timeout(4000)
 
         # Checkbox
         checkbox = row.locator('input[type="checkbox"]')

@@ -37,6 +37,22 @@ screen_width, screen_height = pyautogui.size()
 RUN_TS = datetime.now().strftime("%Y%m%d_%H%M%S")
 DEFAULT_REPORT = REPORTS_DIR / f"report_{RUN_TS}.html"
 
+from py.xml import html  # uncomment this import at top if commented
+from pytest_html import extras
+
+def pytest_html_results_table_header(cells):
+    """Add a Description column to the HTML report."""
+    cells.insert(1, html.th('Description'))
+
+# def pytest_html_results_
+
+def pytest_html_results_table_row(report, cells):
+    """Insert each test's docstring into the new column."""
+    doc = getattr(report, "docstring", "") or ""
+    # short_doc = doc.strip().split("\n")[0][:120]  # show first line (trim long)
+    full_doc = html.pre(doc.strip())  # preserve newlines and formatting
+    cells.insert(1, html.td(full_doc))
+
 # =========================
 # Auto-highlighter settings
 # =========================
@@ -258,6 +274,7 @@ except ImportError:
 def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
+    rep.docstring = item.obj.__doc__
     setattr(item, "rep_" + rep.when, rep)
 
     if rep.when != "call":

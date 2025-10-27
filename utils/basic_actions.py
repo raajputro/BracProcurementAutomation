@@ -18,6 +18,29 @@ class BasicActions:
         self.page = page
         self.main_nav = self.page.locator('//*[@class="top_nav_container"]')
 
+    def validate_heading(self, validation_point, element_name: str):
+            """
+            Validates if the given locator is visible.
+            Prints the element text if visible, otherwise prints the given element_name
+            and the current visible heading.
+            """
+            try:
+                expect(validation_point).to_be_visible()
+                element_text = validation_point.text_content()
+                visible_name = element_text.strip() if element_text else element_name
+                print(f"✅ Validation passed: '{visible_name}' is visible.")
+            except Exception as e:
+                # Try to get the current visible heading
+                try:
+                    current_heading = self.page.get_by_role("heading").first.text_content()
+                    current_heading = current_heading.strip() if current_heading else "No heading found"
+                except Exception:
+                    current_heading = "No heading found"
+
+                print(f"❌ Validation failed: '{element_name}' is not visible on the page.")
+                print(f"🔹 Current visible heading: '{current_heading}'")
+                print(f"Error details: {e}")
+
 
     def print_important_toast(self, toast_msg: str):
         """

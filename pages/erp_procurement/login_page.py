@@ -128,4 +128,3 @@ class LoginPage(BasicActions):
 #
 #         # Fallback: URL change and login button gone
 #         return self.page.url != given_url and not self.signBtn.is_visible()
-
