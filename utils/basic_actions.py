@@ -143,11 +143,28 @@ class BasicActions:
         btn.wait_for(state='visible', timeout=timeout)
         btn.click()
 
+    # @staticmethod
+    # def input_in_element(elem, input_text):
+    #     # elem.to_be_visible()
+    #     elem.click()
+    #     elem.fill(input_text)
     @staticmethod
-    def input_in_element(elem, input_text):
-        # elem.to_be_visible()
-        elem.click()
-        elem.fill(input_text)
+    def input_in_element(elem, input_text, field_name):
+        """
+        Inputs text into the given element after ensuring it is visible.
+        Prints which field was filled.
+        """
+        try:
+            expect(elem).to_be_visible(timeout=5000)
+            elem.click()
+            elem.fill(input_text)
+            print(f"✅ {field_name}: '{input_text}'")
+        except TimeoutError as te:
+            print(f"❌ Timeout Error: {field_name} field not visible. Details: {te}")
+            raise te
+        except Exception as e:
+            print(f"❌ Error while entering text in {field_name}. Details: {e}")
+            raise e
 
     @staticmethod
     def select_from_list_by_value(elem, value):
@@ -171,14 +188,102 @@ class BasicActions:
         self.page.keyboard.press("Enter")
         self.page.wait_for_timeout(5000)
 
-    def select_option_from_dropdown(self, elem, text):
-        elem.wait_for(state='visible')
-        elem.click()
-        elem.fill(text)
-        # Wait for the dropdown options to appear
-        self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
-        # Click on the first matching option
-        self.page.get_by_text(text).click()
+    # def select_option_from_dropdown(self, elem, text):
+    #     elem.wait_for(state='visible')
+    #     elem.click()
+    #     elem.fill(text)
+    #     # Wait for the dropdown options to appear
+    #     self.page.wait_for_selector(f'div:text-matches("{text}", "i")', state='visible')
+    #     # Click on the first matching option
+    #     self.page.get_by_text(text).click()
+
+    # def select_option_from_dropdown(self, elem, value, field_name):
+    #     """
+    #     Selects an option from a searchable dropdown.
+    #     Types the given value, waits for matching options, and selects it.
+    #     Prints clear messages for success, missing options, or errors.
+    #     """
+    #     try:
+    #         expect(elem).to_be_visible(timeout=5000)
+    #         elem.click()
+    #         elem.type(value)
+    #         print(f"✅ Typed '{value}' into {field_name} dropdown.")
+
+    #         # Wait briefly for dropdown options to load
+    #         self.page.wait_for_timeout(1000)
+
+    #         options = self.page.locator(f"div:text-matches('{value}', 'i')")
+    #         count = options.count()
+
+    #         if count == 0:
+    #             print(f"⚠️ No matching option found for '{value}' in {field_name} dropdown.")
+    #             return
+
+    #         option = options.first
+    #         expect(option).to_be_visible(timeout=5000)
+    #         option.click()
+    #         print(f"✅ {field_name} selected: '{value}'")
+
+    #     except TimeoutError as te:
+    #         print(f"❌ Timeout Error: Could not select '{value}' in {field_name} dropdown. Details: {te}")
+    #         raise te
+    #     except Exception as e:
+    #         print(f"❌ Error while selecting value in {field_name} dropdown. Details: {e}")
+    #         raise e
+    from playwright.sync_api import expect, TimeoutError
+
+    def select_option_from_dropdown(self, elem, value, field_name):
+        """
+        Selects the first matching option from a searchable dropdown.
+        Steps:
+        1. Clicks and types into the dropdown input.
+        2. Waits for suggestions to appear.
+        3. Selects the first matching suggestion.
+        4. Prints detailed logs for success or failure.
+
+        Args:
+            elem: Playwright locator for the dropdown input element.
+            value (str): The text value to search/select.
+            field_name (str): The field label (for logging clarity).
+        """
+        try:
+            print(f"➡ Step: Selecting '{value}' from {field_name} dropdown")
+
+            # Ensure the input is visible and focusable
+            expect(elem).to_be_visible(timeout=5000)
+            elem.click()
+            elem.fill("")  # Clear previous text if any
+            elem.type(value)
+            print(f"✅ Typed '{value}' into {field_name} dropdown.")
+
+            # Try to find matching options (retry 3 times if slow UI)
+            option_found = False
+            for attempt in range(3):
+                options = self.page.get_by_text(value, exact=False)
+                count = options.count()
+                if count > 0:
+                    option_found = True
+                    break
+                self.page.wait_for_timeout(500)  # small retry delay
+
+            if not option_found:
+                print(f"⚠️ No data found named: '{value}' in {field_name} dropdown.")
+                return
+
+            # Select the first matching option
+            first_option = options.first
+            expect(first_option).to_be_visible(timeout=5000)
+            option_text = first_option.inner_text().strip()
+            first_option.click()
+
+            print(f"✅ {field_name} selected: '{option_text}'")
+
+        except TimeoutError:
+            print(f"❌ Timeout Error: Could not select '{value}' in {field_name} dropdown.")
+            raise
+        except Exception as e:
+            print(f"❌ Error while selecting value in {field_name} dropdown. Details: {e}")
+            raise
 
 
     def upload_file(self, container, file_path: str, index: int = 0, timeout: int = 120000):

@@ -61,6 +61,10 @@ RequisitionForInfo = {
         'office': "Dhaka(DO0015)",
         'project': "[H04] - Procurement-BRAC"
     }
+RequisitionInformation = {
+        'source_of_fund': "Dutch Embassyy",
+        'remarks': "Creating requisition for regular item."
+    }
 
 
 
@@ -111,5 +115,9 @@ def test_2_create_and_submit_requisition(page):
     c_page.setting_requisition_for_OO(
         office_name=RequisitionForInfo['office'],
         project_name=RequisitionForInfo['project']
+    )
+    c_page.set_requisition_information(
+        source_of_fund=RequisitionInformation['source_of_fund'],
+        remarks=RequisitionInformation['remarks']
     )
 
