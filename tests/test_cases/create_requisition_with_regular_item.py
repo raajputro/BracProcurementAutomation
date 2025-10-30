@@ -58,11 +58,12 @@ bill_recommender2 = ''
 #======================================================================================================================
 # #User Data
 RequisitionForInfo = {
-        'office': "Dhaka(DO0015)",
-        'project': "[H04] - Procurement-BRAC"
-    }
+    'requisition_type': "OO",            #HO or "OO"
+    'office': "Dhaka(DO0015)",           # only used if requisition_type == "OO"
+    'project': "[H04] - Procurement-BRAC"
+}
 RequisitionInformation = {
-        'source_of_fund': "Dutch Embassyy",
+        'source_of_fund': "Dutch Embassy",
         'remarks': "Creating requisition for regular item."
     }
 
@@ -111,10 +112,10 @@ def test_2_create_and_submit_requisition(page):
     c_page = CreateRequisitionPage(page)
     c_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
     c_page.validate_create_requisition_heading()
-    # c_page.setting_requisition_for_HO(RequisitionForInfo['project'])
-    c_page.setting_requisition_for_OO(
-        office_name=RequisitionForInfo['office'],
-        project_name=RequisitionForInfo['project']
+    c_page.set_requisition_for(
+    requisition_type=RequisitionForInfo['requisition_type'],
+    project_name=RequisitionForInfo['project'],
+    office_name=RequisitionForInfo.get('office')  # safely handles None for HO
     )
     c_page.set_requisition_information(
         source_of_fund=RequisitionInformation['source_of_fund'],

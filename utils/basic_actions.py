@@ -52,6 +52,70 @@ class BasicActions:
 
         print(f"{highlight} 🔔 {toast_msg} 🔔 {reset}")
 
+    
+
+    def select_radio_button(self, elem, field_name):
+        """
+        Selects a radio button after verifying its visibility and clickability.
+        Provides clear logging and handles errors gracefully.
+
+        Args:
+            elem: Playwright locator for the radio button.
+            field_name (str): Descriptive name of the radio button (for logs).
+        """
+        try:
+            print(f"➡ Step: Selecting '{field_name}' radio button")
+
+            # Ensure the radio button is visible
+            expect(elem).to_be_visible(timeout=5000)
+
+            # Click the radio button
+            elem.click()
+
+            # Optional: Verify it’s selected (if the element has a checked state)
+            is_checked = elem.is_checked() if hasattr(elem, "is_checked") else None
+            if is_checked:
+                print(f"✅ '{field_name}' radio button selected successfully.")
+            else:
+                print(f"✅ Clicked '{field_name}' radio button (selection not verifiable).")
+
+        except TimeoutError as te:
+            print(f"❌ Timeout Error: '{field_name}' radio button not visible.")
+            raise te
+        except Exception as e:
+            print(f"❌ Error while selecting '{field_name}' radio button. Details: {e}")
+            raise e
+        
+    def read_auto_filled_input(self, elem, field_name):
+        """
+        Reads and prints the value of an auto-filled (readonly) input field.
+
+        Args:
+            elem: Playwright locator for the input element.
+            field_name (str): Descriptive name of the field (for logs).
+        """
+        try:
+            print(f"➡ Step: Checking auto-filled value for '{field_name}'")
+
+            # Wait for the input field to be visible
+            expect(elem).to_be_visible(timeout=5000)
+
+            # Get the 'value' attribute from the input
+            field_value = elem.input_value()
+
+            if field_value:
+                print(f"✅ {field_name} is auto-filled with: '{field_value}'")
+            else:
+                print(f"⚠️ {field_name} is empty or not auto-filled.")
+
+        except TimeoutError as te:
+            print(f"❌ Timeout Error: '{field_name}' input field not visible.")
+            raise te
+        except Exception as e:
+            print(f"❌ Error reading '{field_name}' field value. Details: {e}")
+            raise e
+
+
 
     def select_date(self,extra_days: int = 0) -> str:
         # Get current date and add extra days

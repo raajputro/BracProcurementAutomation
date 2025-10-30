@@ -11,8 +11,8 @@ class CreateRequisitionPage(BasicActions):
         # elements for Requisition For?
         self.head_office_selector = page.locator("#self")
         self.other_office_selector = page.locator("#other")
-        self.project_name_dropdown_selector = page.locator("#projectInfoDiv_arrow")
-        self.office_name_dropdown_selector = page.locator("#officeInfoDiv_arrow")
+        self.project_name_selector = page.locator("#projectInfoDiv_input")
+        self.office_name_selector = page.locator("#officeInfoDiv_input")
         self.office_input = page.locator('input#officeName')
         self.office_type_input = page.locator('input#officeTypeName')
         self.office_info_input = page.locator('input#officeName')
@@ -57,156 +57,88 @@ class CreateRequisitionPage(BasicActions):
         """
         Sets Requisition For as Head Office, selects a project, and prints auto-filled values:
         Office Info, Office Type, Program, Project End Date and Department.
-        """
-        try:
-            # Select Requisition For as Head Office
-            expect(self.head_office_selector).to_be_visible(timeout=5000)
-            self.head_office_selector.click()
-            
-            # Get Office Info
-            office_value = self.office_input.input_value()
-            print(f"Office Info is auto-filled with: '{office_value}'")
+        """  
+        self.select_radio_button(self.head_office_selector, "Requisition For - Head Office")
+        self.read_auto_filled_input(self.office_type_input, "Office Type")
+        self.select_option_from_dropdown(self.project_name_selector, project_name, "Project Name")
+        self.read_auto_filled_input(self.office_input, "Office Info")
+        self.read_auto_filled_input(self.program_input, "Program")
+        self.read_auto_filled_input(self.project_end_date_input, "Project End Date")
+        self.read_auto_filled_input(self.department_input, "Department")
 
-            # Get Office Type
-            office_type_value = self.office_type_input.input_value()
-            print(f"Office Type is auto-filled with: '{office_type_value}'")
-
-            # Select project from dropdown
-            expect(self.project_name_dropdown_selector).to_be_visible(timeout=5000)
-            self.project_name_dropdown_selector.click()
-            # Wait for project text to be visible and click
-            project_option = self.page.get_by_text(project_name)
-            expect(project_option).to_be_visible(timeout=5000)
-            project_option.click()
-
-            # Get Program
-            program_value = self.program_input.input_value()
-            print(f"Program is auto-filled with: '{program_value}'")
-
-            # Get Project End Date
-            project_end_date_value = self.project_end_date_input.input_value()
-            print(f"Project End Date is auto-filled with: '{project_end_date_value}'")
-
-            # Get Department
-            Department_value = self.department_input.input_value()
-            print(f"Department is auto-filled with: '{Department_value}'")
-
-        except TimeoutError as te:
-            print(f"❌ Timeout Error: Element not found or not visible. Details: {te}")
-        except Exception as e:
-            print(f"❌ Error while setting requisition for HO. Details: {e}")
-
-        
-
-
-    # def setting_requisition_for_OO(self, project_name, office_name):
-    #     """
-    #     Sets Requisition For as Other Office, selects a project and office, and prints auto-filled values:
-    #     Office Info, Office Type, Program, Project End Date, and Department.
-    #     """
-    #     try:
-    #         # Select Requisition For as Other Office
-    #         expect(self.other_office_selector).to_be_visible(timeout=5000)
-    #         self.other_office_selector.click()
-
-    #         # Select office from dropdown
-    #         # expect(self.officeInfoDiv_arrow).to_be_visible(timeout=5000)
-    #         # self.officeInfoDiv_arrow.click()
-    #         office_option = self.page.get_by_text(office_name)
-    #         expect(office_option).to_be_visible(timeout=5000)
-    #         office_option.click()
-
-    #         # Get Office Info
-    #         office_info_value = self.office_info_input.input_value()
-    #         print(f"Office Info is auto-filled with: '{office_info_value}'")        
-
-    #         # Get Office Type
-    #         office_type_value = self.office_type_input.input_value()
-    #         print(f"Office Type is auto-filled with: '{office_type_value}'")
-
-    #         # Select project from dropdown
-    #         expect(self.project_name_dropdown_selector).to_be_visible(timeout=5000)
-    #         self.project_name_dropdown_selector.click()
-    #         project_option = self.page.get_by_text(project_name)
-    #         expect(project_option).to_be_visible(timeout=5000)
-    #         project_option.click()
-
-    #         # Get Program
-    #         program_value = self.program_input.input_value()
-    #         print(f"Program is auto-filled with: '{program_value}'")
-
-    #         # Get Project End Date
-    #         project_end_date_value = self.project_end_date_input.input_value()
-    #         print(f"Project End Date is auto-filled with: '{project_end_date_value}'")
-
-    #         # Get Department
-    #         Department_value = self.department_input.input_value()
-    #         print(f"Department is auto-filled with: '{Department_value}'")
-
-    #     except TimeoutError as te:
-    #         print(f"❌ Timeout Error: Element not found or not visible. Details: {te}")
-    #     except Exception as e:
-    #         print(f"❌ Error while setting requisition for Other Office. Details: {e}")
-
-    def setting_requisition_for_OO(self, project_name, office_name):
+    def setting_requisition_for_OO(self, office_name, project_name):
         """
         Sets Requisition For as Other Office, selects a project and office, and prints auto-filled values:
         Office Info, Office Type, Program, Project End Date, and Department.
         """
-        try:
-            print("➡ Step 1: Selecting 'Other Office' option")
-            expect(self.other_office_selector).to_be_visible(timeout=8000)
-            self.other_office_selector.click()
-
-            print(f"➡ Step 2: Selecting office '{office_name}' from dropdown")
-            expect(self.office_name_dropdown_selector).to_be_visible(timeout=5000)
-            self.office_name_dropdown_selector.click()
-            office_option = self.page.get_by_text(office_name, exact=True)
-            expect(office_option).to_be_visible(timeout=5000)
-            office_option.click()
-
-            # Fetch auto-filled Office Info and Office Type
-            office_info_value = self.office_info_input.input_value()
-            print(f"✅ Office Info is auto-filled with: '{office_info_value}'")
-
-            office_type_value = self.office_type_input.input_value()
-            print(f"✅ Office Type is auto-filled with: '{office_type_value}'")
-
-            # Select Project
-            print(f"➡ Step 3: Selecting project '{project_name}'")
-            expect(self.project_name_dropdown_selector).to_be_visible(timeout=5000)
-            self.project_name_dropdown_selector.click()
-
-            project_option = self.page.get_by_text(project_name, exact=True)
-            expect(project_option).to_be_visible(timeout=5000)
-            project_option.click()
-
-            # Fetch Program, Project End Date, and Department
-            program_value = self.program_input.input_value()
-            print(f"✅ Program is auto-filled with: '{program_value}'")
-
-            project_end_date_value = self.project_end_date_input.input_value()
-            print(f"✅ Project End Date is auto-filled with: '{project_end_date_value}'")
-
-            department_value = self.department_input.input_value()
-            print(f"✅ Department is auto-filled with: '{department_value}'")
-
-            print("✅ Successfully set requisition for Other Office.")
-
-        except TimeoutError as te:
-            print(f"❌ Timeout Error: Element not found or not visible. Details: {te}")
-            raise te   # <-- Important: stop test if key element not found
-        except Exception as e:
-            print(f"❌ Error while setting requisition for Other Office. Details: {e}")
-            raise e  
+        self.select_radio_button(self.other_office_selector, "Requisition For - Other Office")
+        self.select_option_from_dropdown(self.office_name_selector, office_name, "Office Name")
+        self.read_auto_filled_input(self.office_info_input, "Office Info")
+        self.read_auto_filled_input(self.office_type_input, "Office Type")
+        self.select_option_from_dropdown(self.project_name_selector, project_name, "Project Name")
+        self.read_auto_filled_input(self.program_input, "Program")
+        self.read_auto_filled_input(self.project_end_date_input, "Project End Date")
+        self.read_auto_filled_input(self.department_input, "Department")
         
+        
+
+
+
+    def set_requisition_for(self, requisition_type, project_name, office_name=None):
+        """
+        Handles both Head Office (HO) and Other Office (OO) requisition setup.
+
+        Sequence:
+            ➡ Head Office:
+                1️⃣ Select HO radio button
+                2️⃣ Read auto-filled Office Info, Office Type
+                3️⃣ Select Project
+                4️⃣ Read auto-filled Program, Project End Date, Department
+
+            ➡ Other Office:
+                1️⃣ Select OO radio button
+                2️⃣ Select Office
+                3️⃣ Read auto-filled Office Info, Office Type
+                4️⃣ Select Project
+                5️⃣ Read auto-filled Program, Project End Date, Department
+        """
+
+        # --- Select requisition type ---    
+        if requisition_type == "HO":
+            self.select_radio_button(self.head_office_selector, "Requisition For - Head Office")
+        elif requisition_type == "OO":
+            self.select_radio_button(self.other_office_selector, "Requisition For - Other Office")
+        else:
+            print(f"❌ Invalid requisition type: '{requisition_type}'. Must be 'HO' or 'OO'.")
+            return
+
+        # --- Handle office selection for OO only ---
+        if requisition_type == "OO":
+            self.select_option_from_dropdown(self.office_name_selector, office_name, "Office Name")
+
+        # --- Common auto-filled fields before project selection ---
+        self.read_auto_filled_input(self.office_info_input, "Office Info")
+        self.read_auto_filled_input(self.office_type_input, "Office Type")
+
+        # --- Select project ---
+        self.select_option_from_dropdown(self.project_name_selector, project_name, "Project Name")
+
+        # --- Auto-filled fields after project selection ---
+        self.read_auto_filled_input(self.program_input, "Program")
+        self.read_auto_filled_input(self.project_end_date_input, "Project End Date")
+        self.read_auto_filled_input(self.department_input, "Department")
+
+        print(f"✅ Requisition setup completed successfully for {requisition_type}.\n")
+
     def set_requisition_information(self, source_of_fund, remarks):
         """
-        Sets requisition information by selecting the Source of Fund
-        and entering Remarks.
+        1️⃣ Select Source of Fund from dropdown
+        2️⃣ Enter Remarks text
+        
         """
         self.select_option_from_dropdown(self.fund_source_selector, source_of_fund, "Source of Fund")
         self.input_in_element(self.fund_source_remarks_selector, remarks, "Remarks")
+
 
 
             
