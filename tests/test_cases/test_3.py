@@ -1,8 +1,8 @@
 # this page contains all the test cases for the samplePage
 import os
 import random
+import pytest
 
-from conftest import new_tab
 
 # For validation
 # from playwright.sync_api import expect
@@ -88,8 +88,14 @@ item1 = {
 #======================================================================================================================
 #======================================================================================================================
 # # ============================================ Test Cases onwards =============================================== # #
+
 login_page_obj = None
-def test_1_login_to_create_requisition(page):
+
+@pytest.mark.reporting(
+    functional_specification="test_1",
+    test_description="Verify that staff can successfully login as Requisition Initiator" )
+
+def test_1_login_to_create_requisition(page, logger):
     global login_page_obj
     login_page_obj = LoginPage(page)
     login_page_obj.perform_login(
@@ -98,6 +104,8 @@ def test_1_login_to_create_requisition(page):
         pass_word=proj_pass
     )
 
+    logger.step(f" 📥 Logging in as user: {proj_user}")
+
 
 # def test_2_go_to_procurement_page(page):
     # d_page = DashboardPage(page)
@@ -105,7 +113,11 @@ def test_1_login_to_create_requisition(page):
     # d_page.get_full_page_screenshot('full_page_screenshot_1')
 
 
-def test_3_create_and_submit_requisition(page):
+@pytest.mark.reporting(
+    functional_specification="test_1",
+    test_description="Verify that initiator can successfully Create and Submit Requisition")
+
+def test_3_create_and_submit_requisition(page, logger):
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Create Requisition"]
 
@@ -122,23 +134,26 @@ def test_3_create_and_submit_requisition(page):
     global req_num
     req_num = c_page.submit_requisition()
     print("REQ NUM:", req_num)
+    logger.step(f" 📥 Requisition Created: {req_num}")
     c_page.get_full_page_screenshot('full_page_screenshot_4')
 
 
-def test_4_find_budget_recommender_of_the_requisition(page):
-    print("Test 5: Finding approver of the requisition...")
+@pytest.mark.reporting(
+    functional_specification="test_2",
+    test_description="Verify that the user can Find Budget Recommender of the requisition successfully")
 
+def test_4_find_budget_recommender_of_the_requisition(page, logger):
+    print("Test 5: Finding Budget Recommender of the requisition...")
     r_page = RequisitionList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition List"]
     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-
-    # r_page.navigate_to_url(requisition_list_url)
     r_page.get_full_page_screenshot('full_page_screenshot_5')
     r_page.search_requisition(req_num)
     global approver_id
     approver_id = str(int(r_page.find_approver_id()))
-    print("APPROVER ID:", approver_id)
+    print("Budget Recommender:", approver_id)
+    logger.step(f" 📥 Requisition Budget Recommender is : {approver_id}")
     r_page.get_full_page_screenshot('full_page_screenshot_6')
 
     r2_page = MainNavigationBar(page)
@@ -148,8 +163,12 @@ def test_4_find_budget_recommender_of_the_requisition(page):
     r2_page.wait_for_timeout(5000)
 
 
-def test_5_login_as_budget_recommender_and_approve(page):
-    print("Test 6: Logging in as approver and approving requisition...")
+@pytest.mark.reporting(
+    functional_specification="test_2",
+    test_description="Verify that the Budget Recommender can login and approve the requisition successfully")
+
+def test_5_login_as_budget_recommender_and_approve(page, logger):
+    print("Test 6: Logging in as budget recommender and approving requisition...")
     s_page = LoginPage(page)
     s_page.perform_login(
         given_url=proj_url,
@@ -157,21 +176,19 @@ def test_5_login_as_budget_recommender_and_approve(page):
         pass_word=proj_pass,
         timeout=60000  # Increased timeout for login
     )
-
+    logger.step(f" 📥 Logging in as user: {approver_id}")
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition Approve List"]
     r_page = RequisitionApproveList(page)
     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-
     r_page.get_full_page_screenshot('full_page_screenshot_8')
     print(f"Req Number: {req_num}")
-    # r_page.wait_for_timeout(10000)
     r_page.search_requisition(req_num)
     r_page.select_requisition(req_num)
     r_page.approve_requisition()
     r_page.confirmation_message_approve()
+    logger.step(f" 📥 Requisition Approved Sucessfully: {req_num}")
     r_page.get_full_page_screenshot('full_page_screenshot_9')
-
     r2_page = MainNavigationBar(page)
     r2_page.exit()
     r2_page.logout()
@@ -179,7 +196,11 @@ def test_5_login_as_budget_recommender_and_approve(page):
     r2_page.wait_for_timeout(5000)
 
 
-def test_6_find_approver_of_the_requisition_2(page):
+@pytest.mark.reporting(
+    functional_specification="test_2",
+    test_description="Verify that the requistion initiator can Find approver of the requisition successfully")
+
+def test_6_find_approver_of_the_requisition(page, logger):
     print("Test 6: Finding approver of the requisition again...")
     s_page  = LoginPage(page)
     s_page.perform_login(
@@ -187,17 +208,17 @@ def test_6_find_approver_of_the_requisition_2(page):
         user_name=proj_user,
         pass_word=proj_pass
     )
-
+    logger.step(f" 📥 Logging in as user: {proj_user}")
     r_page = RequisitionList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition List"]
     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-
     r_page.get_full_page_screenshot('full_page_screenshot_11')
     r_page.search_requisition(req_num)
     global approver_id_2
     approver_id_2 = str(int(r_page.find_approver_id()))
     print("APPROVER ID 2:", approver_id_2)
+    logger.step(f" 📥 Requisition Approver is : {approver_id_2}")
     r_page.get_full_page_screenshot('full_page_screenshot_12')
 
     r2_page = MainNavigationBar(page)
@@ -207,7 +228,11 @@ def test_6_find_approver_of_the_requisition_2(page):
     r2_page.wait_for_timeout(5000)
 
 
-def test_7_login_as_approver_and_approve_2(page):
+@pytest.mark.reporting(
+    functional_specification="test_2",
+    test_description="Verify that the requistion approver can login and approve requisition successfully")
+
+def test_7_login_as_approver_and_approve_2(page, logger):
     print("Test 7: Logging in as second approver and approving requisition...")
     s_page = LoginPage(page)
     # s_page.navigate_to_url(proj_url)
@@ -217,17 +242,17 @@ def test_7_login_as_approver_and_approve_2(page):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-
+    logger.step(f" 📥 Logging in as user: {approver_id_2}")
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition Approve List"]
     r_page = RequisitionApproveList(page)
     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
-
     r_page.get_full_page_screenshot('full_page_screenshot_14')
     r_page.search_requisition(req_num)
     r_page.select_requisition(req_num)
     r_page.approve_requisition()
     r_page.confirmation_message_approve()
+    logger.step(f" 📥 Approver successfully approved the requisition")
     r_page.get_full_page_screenshot('full_page_screenshot_15')
 
     r2_page = MainNavigationBar(page)
@@ -237,7 +262,11 @@ def test_7_login_as_approver_and_approve_2(page):
     r2_page.wait_for_timeout(5000)
 
 
-def test_8_check_requisition_approved(page):
+@pytest.mark.reporting(
+    functional_specification="test_2",
+    test_description="Verify that the requistion approved successfully")
+
+def test_8_check_requisition_approved(page, logger):
     print("Test 8: Checking requisition status after approval...")
     s_page  = LoginPage(page)
     # s_page.navigate_to_url(proj_url)
@@ -246,7 +275,7 @@ def test_8_check_requisition_approved(page):
         user_name=proj_user,
         pass_word=proj_pass
     )
-
+    logger.step(f" 📥 Logging in as user: {proj_user}")
     r_page = RequisitionList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition List"]
@@ -258,7 +287,7 @@ def test_8_check_requisition_approved(page):
     r_page.get_full_page_screenshot('full_page_screenshot_18')
     req_status = r_page.find_requisition_status()
     print("REQ STATUS:", req_status)
-    #expect(req_status).to_be_equal("Approved")
+    logger.step(f" 📥 Requisition Status: {req_status}")
 
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -267,7 +296,11 @@ def test_8_check_requisition_approved(page):
     r2_page.wait_for_timeout(5000)
 
 
-def test_9_check_requisition_assign(page):
+@pytest.mark.reporting(
+    functional_specification="test_3",
+    test_description="Verify that the requistion assigned successfully")
+ 
+def test_9_check_requisition_assign(page, logger):
     print("Test 9: Assigning requisition to a person...")
     s_page = LoginPage(page)
     # s_page.navigate_to_url(proj_url)
@@ -277,17 +310,18 @@ def test_9_check_requisition_assign(page):
         given_url=proj_url,
         timeout=60000  # Increased timeout for login
     )
-
+    logger.step(f" 📥 Logging in as user: {admin_user}")
     r_page = AssignRequisition(page)
-    # r_page.navigate_to_url(requisition_assign_url)
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition Assign", "Assign Requisition"]
     r_page.navigate_to_page(main_nav_val=main_menu_item, sub_nav_val=sec__menu_item)
     r_page.assigning_person(assigned_person)
+    logger.step(f" 📥 Assigning requisition to user: {assigned_person}")
     r_page.search_requisition_for_assigning(req_num)
     r_page.add_item_to_assign(req_num)
     r_page.assigning_items()
     r_page.get_full_page_screenshot('full_page_screenshot_22')
+    logger.step(f" 📥 Requisition Assigned successfully: {req_num}")
 
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -295,7 +329,12 @@ def test_9_check_requisition_assign(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_23')
     r2_page.wait_for_timeout(5000)
 
-def test_10_requisition_accept(page):
+
+@pytest.mark.reporting(
+    functional_specification="test_3",
+    test_description="Verify that the assigned person can accept the requisition successfully")
+
+def test_10_requisition_accept(page, logger):
     print("Test 10: Accepting requisition...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -304,7 +343,7 @@ def test_10_requisition_accept(page):
         pass_word=proj_gen_pass,
         timeout=60000  # Increased timeout for login
     )
-
+    logger.step(f" 📥 Logging in as user: {assigned_person}")
     r_page = RequisitionAcceptList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Requisition", "Requisition Assign", "Requisition Accept List"]
@@ -315,9 +354,14 @@ def test_10_requisition_accept(page):
     r_page.accept_requisition()
     r_page.get_full_page_screenshot('full_page_screenshot_24')
     r_page.confirm_acceptance()
+    logger.step(f" 📥 Requisition Accepted successfully: {req_num}")
 
 
-def test_11_create_tender_initiation(page):
+@pytest.mark.reporting(
+    functional_specification="test_4",
+    test_description="Verify that the tender initiation can be created successfully")
+
+def test_11_create_tender_initiation(page, logger):
     print("Test 11: Creating tender initiation...")
     t_page = CreateTenderInitiation(page)
     main_menu_item = "Procurement"
@@ -330,10 +374,15 @@ def test_11_create_tender_initiation(page):
     t_page.fill_remarks("Tender initiation done!")
     t_page.submit_tender_initiation()
     t_page.confirm_submission()
+    logger.step(f" 📥 Tender Initiation created successfully for Requisition: {req_num}")
     t_page.get_full_page_screenshot('full_page_screenshot_25')
 
 
-def test_12_create_direct_purchase(page):
+@pytest.mark.reporting(
+    functional_specification="test_5",
+    test_description="Verify that the direct purchase can be created successfully")
+
+def test_12_create_direct_purchase(page, logger):
     print("Test 12: Creating direct purchase...")
     t_page = CreateDirectPurchase(page)
     main_menu_item = "Procurement"
@@ -361,6 +410,7 @@ def test_12_create_direct_purchase(page):
     t_page.get_full_page_screenshot('full_page_screenshot_26')
     t_page.submit_direct_purchase()
     t_page.confirm_submission()
+    logger.step(f" 📥 Direct Purchase created successfully: {purchase_num}")
     t_page.get_full_page_screenshot('full_page_screenshot_27')
 
     r2_page = MainNavigationBar(page)
@@ -370,7 +420,11 @@ def test_12_create_direct_purchase(page):
     r2_page.wait_for_timeout(5000)
 
 
-def test_13_approve_direct_purchase(page):
+@pytest.mark.reporting(
+    functional_specification="test_6",
+    test_description="Verify that the direct purchase approver can approve direct purchase successfully")
+
+def test_13_approve_direct_purchase(page, logger):
     print("Test 13: Approving direct purchase...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -380,6 +434,7 @@ def test_13_approve_direct_purchase(page):
         timeout=60000  # Increased timeout for login
     )
 
+    logger.step(f" 📥 Logging in as user: {dp_approver}")
     t_page = DirectPurchaseList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Purchase Order", "Direct Purchase", "Direct Purchase List"]
@@ -390,10 +445,13 @@ def test_13_approve_direct_purchase(page):
         t_page.select_direct_purchase_order(purchase_num)
         t_page.approve_direct_purchase()
         t_page.confirmation_message_approve()
+        logger.step(f" 📥 Direct Purchase Approved successfully: {purchase_num}")
         t_page.get_full_page_screenshot('full_page_screenshot_29')
     except Exception as e:
         t_page.get_full_page_screenshot('full_page_screenshot_test_13')
         print(e)
+    
+    logger.step(f" 📥 Direct Purchase created successfully: {purchase_num}")
 
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -401,8 +459,12 @@ def test_13_approve_direct_purchase(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_30')
     r2_page.wait_for_timeout(5000)
 
-#
-def test_14_item_receive(page):
+
+@pytest.mark.reporting(
+    functional_specification="test_7",
+    test_description="Verify that the item receive can be done successfully")
+
+def test_14_item_receive(page, logger):
     print("Test 14: Receiving items...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -411,6 +473,7 @@ def test_14_item_receive(page):
         pass_word=proj_gen_pass,
         timeout=60000
     )
+    logger.step(f" 📥 Logging in as user: {assigned_person}")
     t_page = ItemReceive(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Item Receive", "Item Receive"]
@@ -422,6 +485,7 @@ def test_14_item_receive(page):
     t_page.select_all_items()
     t_page.submit_item_receive()
     t_page.confirm_submission()
+    logger.step(f" 📥 Items received successfully and challan No is : {challan_num}")
     t_page.get_full_page_screenshot('full_page_screenshot_31')
 
     # logout from the page
@@ -432,8 +496,11 @@ def test_14_item_receive(page):
     r2_page.wait_for_timeout(5000)
 
 
+@pytest.mark.reporting(
+    functional_specification="test_8",
+    test_description="Verify that the vendor bill creation and submission can be done successfully and bill recommender1 are identified")
 
-def test_15_bill_creation_and_submit(page):
+def test_15_bill_creation_and_submit(page, logger):
     print("Test 15: Creating and submitting vendor bill payable...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -442,6 +509,7 @@ def test_15_bill_creation_and_submit(page):
         pass_word=proj_gen_pass,
         timeout=60000
     )
+    logger.step(f" 📥 Logging in as user: {bill_creator}")
     t_page = CreateVendorBillPayable(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Bill Payable", "Create Vendor Bill Payable"]
@@ -457,6 +525,7 @@ def test_15_bill_creation_and_submit(page):
     t_page.submit_bill()
     t_page.get_full_page_screenshot('full_page_screenshot_33')
     t_page.confirm_submission()
+    logger.step(f" 📥 Vendor Bill Payable created and submitted successfully: {bill_num}")
     t_page.get_full_page_screenshot('full_page_screenshot_34')
 
     l2_page = BillList(page)
@@ -466,6 +535,7 @@ def test_15_bill_creation_and_submit(page):
     global bill_recommender1
     bill_recommender1 = str(int(l2_page.find_approver_id(bill_num)))
     print(f"Bill Recommender 1: {bill_recommender1}")
+    logger.step(f" 📥 Bill Recommender 1 is : {bill_recommender1}")
 
     # logout from the page
     r2_page = MainNavigationBar(page)
@@ -474,9 +544,12 @@ def test_15_bill_creation_and_submit(page):
     r2_page.get_full_page_screenshot('full_page_screenshot_35')
     r2_page.wait_for_timeout(5000)
 
-# bill_recommender1 = '761'
-# bill_num = '82824'
-def test_16_vendor_bill_recommender1_approval(page, new_tab):
+
+@pytest.mark.reporting(
+    functional_specification="test_9",
+    test_description="Verify that the vendor bill recommender1 can approve the bill successfully and bill recommender2 are identified")
+
+def test_16_vendor_bill_recommender1_approval(page, new_tab, logger):
     print("Test 16: Vendor bill recommender1 approval...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -485,7 +558,7 @@ def test_16_vendor_bill_recommender1_approval(page, new_tab):
         pass_word=proj_gen_pass,
         timeout=60000
     )
-
+    logger.step(f" 📥 Logging in as user: {bill_recommender1}")
     l2_page = BillList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Bill Payable", "Vendor Billing List"]
@@ -510,6 +583,7 @@ def test_16_vendor_bill_recommender1_approval(page, new_tab):
     b_page.select_bill_type("Regular")
     b_page.get_full_page_screenshot('full_page_screenshot_37')
     b_page.approve_bill()
+    logger.step(f" 📥 Vendor Bill Recommender1 approved the bill successfully: {bill_num}")
     b_page.get_full_page_screenshot('full_page_screenshot_38')
 
     # # Closing new tab
@@ -522,7 +596,7 @@ def test_16_vendor_bill_recommender1_approval(page, new_tab):
     global bill_recommender2
     bill_recommender2 = str(int(l3_page.find_approver_id(bill_num)))
     print(f"Bill Recommender 2: {bill_recommender2}")
-
+    logger.step(f" 📥 Bill Recommender 2 is : {bill_recommender2}")
     # logout from the page
     r2_page = MainNavigationBar(page)
     r2_page.exit()
@@ -531,7 +605,11 @@ def test_16_vendor_bill_recommender1_approval(page, new_tab):
     r2_page.wait_for_timeout(5000)
 
 
-def test_17_vendor_bill_recommender2_approval(page, new_tab):
+@pytest.mark.reporting(
+    functional_specification="test_9",
+    test_description="Verify that the vendor bill recommender2 can approve the bill successfully")
+
+def test_17_vendor_bill_recommender2_approval(page, new_tab, logger):
     print("Test 17: Vendor bill recommender2 approval...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -540,6 +618,7 @@ def test_17_vendor_bill_recommender2_approval(page, new_tab):
         pass_word=proj_gen_pass,
         timeout=60000
     )
+    logger.step(f" 📥 Logging in as user: {bill_recommender2}")
     l2_page = BillList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Bill Payable", "Vendor Billing List"]
@@ -550,6 +629,7 @@ def test_17_vendor_bill_recommender2_approval(page, new_tab):
     new_page = new_tab(lambda p:l2_page.click_on_bill_num(bill_num))
     b_page = BillDetails(new_page)
     b_page.approve_bill()
+    logger.step(f" 📥 Vendor Bill Recommender2 approved the bill successfully: {bill_num}")
     b_page.get_full_page_screenshot('full_page_screenshot_40')
     new_page.close()
 
@@ -560,6 +640,7 @@ def test_17_vendor_bill_recommender2_approval(page, new_tab):
     l3_page.get_full_page_screenshot('full_page_screenshot_41')
     global bill_approver_id
     bill_approver_id = str(int(l3_page.find_approver_id(bill_num)))
+    logger.step(f" 📥 Bill Approver is : {bill_approver_id}")
     print(f"Bill Approver : {bill_approver_id}")
 
     # logout from the page
@@ -570,7 +651,11 @@ def test_17_vendor_bill_recommender2_approval(page, new_tab):
     r2_page.wait_for_timeout(5000)
 
 
-def test_18_vendor_bill_approver_approval(page, new_tab):
+@pytest.mark.reporting(
+    functional_specification="test_9",
+    test_description="Verify that the vendor bill approver can approve the bill successfully and bill status is approved")
+
+def test_18_vendor_bill_approver_approval(page, new_tab, logger):
     print("Test 18: Vendor bill approver approval...")
     s_page = LoginPage(page)
     s_page.perform_login(
@@ -579,7 +664,7 @@ def test_18_vendor_bill_approver_approval(page, new_tab):
         pass_word=proj_gen_pass,
         timeout=60000
     )
-
+    logger.step(f" 📥 Logging in as user: {bill_approver_id}")
     l2_page = BillList(page)
     main_menu_item = "Procurement"
     sec__menu_item = ["Bill Payable", "Vendor Billing List"]
@@ -591,6 +676,7 @@ def test_18_vendor_bill_approver_approval(page, new_tab):
     b_page = BillDetails(new_page)
     b_page.wait_for_timeout(5000)
     b_page.approve_bill()
+    logger.step(f" 📥 Vendor Bill Approver approved the bill successfully: {bill_num}")
     b_page.get_full_page_screenshot('full_page_screenshot_42')
     new_page.close()
 
@@ -600,4 +686,5 @@ def test_18_vendor_bill_approver_approval(page, new_tab):
     l3_page.wait_for_timeout(5000)
     bill_status=l3_page.find_bill_status(bill_num)
     print("Bill STATUS:", bill_status)
+    logger.step(f" 📥 Vendor Bill Status after approval: {bill_status}")
     l3_page.get_full_page_screenshot('full_page_screenshot_43')

@@ -1,0 +1,31 @@
+report:
+  title: "Procurement Automation Test for Direct Purchase and Vendor Bill Workflow"
+  report_dir: "artifacts/reports"
+  test_environment: "Staging"
+
+theme:
+  primary_color: "#2E7D32"
+  success_bg: "#E8F5E9"
+  error_bg: "#FFEBEE"
+  warning_bg: "#FFF8E1"
+  info_bg: "#E3F2FD"
+
+display:
+  show_category_filters: false
+  show_categories_in_table: false
+  show_developer: false
+  show_specification_totals: false
+
+# Custom metadata for functional specifications
+# You can define your own feature details here based on your Project.
+# They will be displayed in the report
+functional_specs:
+  test_1: "Requisition Creation and Submission Test"
+  test_2: "Requisition Approval Test"
+  test_3: "Requistion assign and acceptance Test"
+  test_4: "Tender Initiation Creation Test"
+  test_5: "Direct Purchase Creation Test"
+  test_6: "Direct Purchase Approval Test"
+  test_7: "Item Receive Test"
+  test_8: "Vendor Bill Creation and Submission Test"
+  test_9: "Vendor Bill Approval Test"
