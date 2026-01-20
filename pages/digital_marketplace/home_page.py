@@ -3,9 +3,10 @@ from playwright.sync_api import expect
 
 
 class HomePage(BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         # self    = page
+        self.logger = logger
         self.user_homepage_item_show_framework_agreement_list = page.locator(
             'xpath=//*[contains(text(),"All Framework Agreements")]')
         self.user_homepage_item_show_all_vendors = page.locator('xpath=//*[contains(text(),"All Vendors ")]')
@@ -26,6 +27,11 @@ class HomePage(BasicActionsDM):
         self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
                                                     has_text="Pending Approval Orders")
         self.welcome_locator = page.locator("div.topic-block-title >> h2")
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def verify_welcome_message(self):
         # expect(self.welcome_locator).to_have_text("Welcome to BRAC Digital Marketplace")

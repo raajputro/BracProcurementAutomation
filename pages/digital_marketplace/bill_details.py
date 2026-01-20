@@ -4,12 +4,18 @@ from utils.basic_actionsdm import BasicActionsDM
 
 class BillDetails(BasicActionsDM):
 
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         self.document_upload_container = "#selector_fileId_0"
         self.bill_type_selector = page.locator('#billTypeId')
         self.approve_button = page.locator("//input[@type='button' and @value='Approve']")
         self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def upload_document(self, file_path):
         """

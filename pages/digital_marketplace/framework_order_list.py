@@ -4,13 +4,20 @@ from pages.digital_marketplace.procurement_home_page import ProcurementHomePage
 
 
 class FrameworkOrderListPage(ProcurementHomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
 
         self.page = page
+        self.logger = logger
+
         self.search_box = page.locator("input[placeholder='Search Framework Order No']")
         self.search_button = page.locator("span[onclick='getFrameWorkOrderList(true)']")
         self.table_rows = page.locator("#pending-acknowledgement-report-grid tbody tr")
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def search_framework_order(self, fa_order_no: str):
         self.search_box.fill(fa_order_no)

@@ -5,9 +5,10 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class VendorDashboard(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
+        self.logger = logger
         self.dashboard = page.locator('i[class="nav-icon fas fa-desktop"]')
 
         # write down all the elements here with locator format
@@ -21,6 +22,11 @@ class VendorDashboard(HomePage, BasicActionsDM):
         self.card_title = page.locator("div#pending-acknowledgement-report-card h3.card-title")
         self.table_rows = page.locator("#pending-acknowledgement-report-grid tbody tr")
         self.table = page.locator("table#pending-acknowledgement-report-grid")
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def dashboard_heading(self):
         heading = self.page.locator("h1").first.text_content()
@@ -71,5 +77,3 @@ class VendorDashboard(HomePage, BasicActionsDM):
         action_button.click()
         print(f"Clicked '{action}' button for order '{order_reference}'")
         return True
-
-

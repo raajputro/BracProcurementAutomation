@@ -7,8 +7,9 @@ from playwright.sync_api import expect
 
 
 class RequisitionApproveList(ProcurementHomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         # write down all the elements here with locator format
         self.search_box = page.get_by_placeholder("Search Requisition No")
         self.checkbox = page.locator("//*[@class='requisition_proposal_list']")
@@ -19,6 +20,11 @@ class RequisitionApproveList(ProcurementHomePage, BasicActionsDM):
         # self.final_approve_button = page.locator('//span[text()="Approve"]')
         self.final_approve_button = page.locator("//button/span[contains(text(),'Approve')]")
         self.requisition_details_page_approve = page.get_by_role("button", name=re.compile("Approve", re.IGNORECASE))
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def search_requisition(self, requisition_number):
         print("Searching for Requisition Number:", requisition_number)

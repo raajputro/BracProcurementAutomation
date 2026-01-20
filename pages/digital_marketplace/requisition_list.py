@@ -5,8 +5,9 @@ from utils.basic_actionsdm import BasicActionsDM
 
 class RequisitionList(BasicActionsDM):
 
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         self.requisition_list = page.locator(
             '//div[text()="Requisition"]//following-sibling::ul//child::span[text()="Requisition List"]')
 
@@ -16,6 +17,11 @@ class RequisitionList(BasicActionsDM):
         self.logout_btn = page.locator("//a[@id='btn_login']")
         # self.click_requisition_no = page.locator('a[style="text-decoration: underline;"][onclick^="showDetails("]')
         self.requisition_no = page.locator("table tr a")
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def search_requisition(self, requisition_number):
         self.input_in_element(self.requisition_search_box, requisition_number)

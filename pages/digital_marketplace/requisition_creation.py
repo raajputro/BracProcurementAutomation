@@ -8,9 +8,9 @@ import datetime
 
 
 class CreateReqPage(ProcurementHomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
-
+        self.logger = logger
         # Validating page has been redirected correctly
         self.validation_point = page.get_by_role("heading", name="Create Requisition")
 
@@ -78,6 +78,11 @@ class CreateReqPage(ProcurementHomePage, BasicActionsDM):
         self.requisition_list_page = page.locator('/html/body/div[1]/div/div[5]/div[1]/div/ul/li[11]/ul/li[3]/a')
         self.requisition_list = page.locator(
             '//div[text()="Requisition"]//following-sibling::ul//child::span[text()="Requisition List"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def validate(self):
         expect(self.validation_point).to_be_visible()

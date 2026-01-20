@@ -5,8 +5,9 @@ from playwright.sync_api import expect
 
 class CreateVendorBillPayable(ProcurementHomePage, BasicActionsDM):
 
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         self.purchase_order_type = page.locator("#dpmNo")
         self.vendor_info = page.get_by_role("textbox", name="Search by vendor name(Example")
         self.order_no = page.locator("#woIdDiv_input")
@@ -25,7 +26,10 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActionsDM):
         self.toast_msg = page.locator('//*[@id="jGrowl"]/div[2]/div[3]')
         self.framework_order_no = page.locator('input[id="fwoNo"]')
 
-
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def vendor_bill_payable_information_for_framework_order(self):
         self.wait_for_timeout(7000)
@@ -217,5 +221,3 @@ class CreateVendorBillPayable(ProcurementHomePage, BasicActionsDM):
         self.page.keyboard.press(' ')
         self.wait_for_timeout(1000)
         self.page.keyboard.press('Enter')
-
-

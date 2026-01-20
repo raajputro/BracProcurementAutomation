@@ -5,8 +5,9 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class LoginPage(BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         # write down all the elements here with locator format
         self.first_common_login_btn = page.locator("//button[@type='button']")
         self.userName = page.get_by_label('Username')
@@ -24,6 +25,11 @@ class LoginPage(BasicActionsDM):
         self.vendor_user_name_1 = page.locator("//input[@id='Username']")
         self.vendor_password = page.locator("//input[@id='Password']")
         self.second_vendor_login_btn = page.locator("//button[@type='submit']")
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     # write down all the necessary actions performed in this page as def
     def perform_login_for_common_login(self, user_name, pass_word):

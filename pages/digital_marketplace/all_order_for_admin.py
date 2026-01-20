@@ -7,10 +7,10 @@ from playwright.sync_api import expect
 
 
 class AllOrderForAdminPage(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
-
+        self.logger = logger
         # Search order reference number
         # self.search_order_number = page.get_by_placeholder('Order Number/Reference No')
         self.search_order_number = page.locator('input[class="searchOrderInput"]')
@@ -23,6 +23,11 @@ class AllOrderForAdminPage(HomePage, BasicActionsDM):
 
         self.click_administration_link = page.locator('a[class="administration"]')
         self.admin_view_toggle_button = page.locator('button[class="toggle-button collapsed-button btn"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def admin_order_search(self, search_number):
         self.search_order_number.click()

@@ -678,7 +678,7 @@ def test_10_vendor_acknowledges_marketplace_order(page):
     order_details_administration.get_full_page_screenshot('full_page_screenshot_45')
 
     order_list = OrderManagement(page)
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     order_list.fill_date_range(start_date=current_date, end_date=current_date)
     order_list.search_order(order_no=framework_order_no)
     order_list.get_full_page_screenshot('full_page_screenshot_46')
@@ -781,7 +781,7 @@ def test_12_receiver_receives_marketplace_item(page):
 
     receivable_order_list_page = ReceivableOrderListPage(page)
     receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_53')
@@ -808,7 +808,7 @@ def test_12_receiver_receives_marketplace_item(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_56')
 
     item_receive_list_page = ItemReceivedList(page)
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     item_receive_list_page.search_received_order(received_order_number=framework_order_no)
     item_receive_list_page.searched_received_order(
@@ -866,7 +866,7 @@ def test_13_order_initiator_receives_marketplace_item(page):
 
     receivable_order_list_page = ReceivableOrderListPage(page)
     receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_60')
@@ -895,7 +895,7 @@ def test_13_order_initiator_receives_marketplace_item(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_63')
 
     item_receive_list_page = ItemReceivedList(page)
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     item_receive_list_page.search_received_order(received_order_number=framework_order_no)
     item_receive_list_page.searched_received_order(
@@ -910,7 +910,7 @@ def test_13_order_initiator_receives_marketplace_item(page):
 
     receivable_order_list_page = ReceivableOrderListPage(page)
     receivable_order_list_page.goto_receivable_order_list()
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_66')
@@ -937,7 +937,7 @@ def test_13_order_initiator_receives_marketplace_item(page):
     receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_69')
 
     item_receive_list_page = ItemReceivedList(page)
-    current_date = datetime.today().strftime("%d-%m-%Y")
+    current_date = datetime.today().strftime("%m-%d-%Y")
     item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
     item_receive_list_page.search_received_order(received_order_number=framework_order_no)
     item_receive_list_page.searched_received_order(

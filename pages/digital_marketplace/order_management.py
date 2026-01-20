@@ -4,10 +4,10 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class OrderManagement(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
-
+        self.logger = logger
         self.order_management_menu = page.locator('i[class="nav-icon fas fa-shopping-cart"]')
         self.orders_submenu = page.locator('a[href="/Admin/Order/List"][class="nav-link"]')
         self.vendor_send_backs_submenu = page.locator('a[href="/Admin/Order/VendorSendBackList"]')
@@ -38,6 +38,11 @@ class OrderManagement(HomePage, BasicActionsDM):
 
         # self.framework_order_no = page.locator('h1[class="float-left"]')
 
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
+
     def goto_administration_order_list(self):
         self.click_on_btn(self.order_management_menu)
         self.click_on_btn(self.orders_submenu)
@@ -55,15 +60,15 @@ class OrderManagement(HomePage, BasicActionsDM):
     def vendor_acknowledgment(self):
         self.click_on_btn(self.acknowledge_button)
 
-    # def confirmation_acknowledgment_by_yes(self):
-    #     self.click_on_btn(self.acknowledge_button)
-    #     self.click_on_btn(self.confirm_acknowledge_yes_button)
-    #     self.wait_for_timeout(5000)
-    #     # framework_order_number = self.page.locator("text=Order Details -").text_content()
-    #     # # self.wait_to_load_element(self.order_locator)
-    #     # get_framework_order_number = framework_order_number.split("-")[-1].strip()
-    #     # print(get_framework_order_number)
-    #     # return get_framework_order_number
+        # def confirmation_acknowledgment_by_yes(self):
+        #     self.click_on_btn(self.acknowledge_button)
+        #     self.click_on_btn(self.confirm_acknowledge_yes_button)
+        #     self.wait_for_timeout(5000)
+        #     # framework_order_number = self.page.locator("text=Order Details -").text_content()
+        #     # # self.wait_to_load_element(self.order_locator)
+        #     # get_framework_order_number = framework_order_number.split("-")[-1].strip()
+        #     # print(get_framework_order_number)
+        #     # return get_framework_order_number
 
         framework_order_number = self.page.locator(
             'div.card-body:nth-child(6) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1)').text_content()

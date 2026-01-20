@@ -7,9 +7,10 @@ from playwright.sync_api import expect
 
 
 class OrderListPublicSide(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
+        self.logger = logger
         #   Write down all the elements here with locator format
         # Goto order list page
         self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
@@ -52,6 +53,11 @@ class OrderListPublicSide(HomePage, BasicActionsDM):
         self.order_3 = page.locator('input[type="checkbox"][value="2467"]')
         # Select approve button for multiselect approval
         self.click_multiselect_approve = page.locator('button[id="pendingApprovalOrder-selected"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def goto_pending_approval_orders_list(self):
         self.click_on_btn(self.pending_approval_orders)

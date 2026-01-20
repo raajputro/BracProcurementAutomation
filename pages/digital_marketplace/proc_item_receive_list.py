@@ -4,13 +4,18 @@ from playwright.sync_api import expect
 
 
 class ProcItemReceiveListPage(ProcurementHomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
-
+        self.logger = logger
         self.search_input = page.get_by_placeholder("Search Number.")
         self.search_icon = page.locator('//*[@id="layout-body-ajax"]/div[1]/div/div/h3/div/div[2]')
 
         self.mrr_no_hyperlink = page.locator('a[onclick^="gotItemList"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def search_item_receive_order(self, receivable_item):
         self.click_on_btn(self.search_input)

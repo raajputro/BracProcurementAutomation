@@ -6,9 +6,10 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
+        self.logger = logger
 
         # self.order_management_menu = page.locator('i[class="nav-icon fas fa-shopping-cart"]')
         self.receivable_order_list_submenu = page.locator('a[href="/Admin/Order/ReceivableOrderList"]')
@@ -28,6 +29,11 @@ class ReceivableOrderListPage(OrderManagement, BasicActionsDM):
         self.confirm_button = page.locator('button[onclick="confirmReceiveSettlement()"]')
 
         self.receiving_attachment_upload_input = page.locator('input[id="itemAttachment"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def goto_receivable_order_list(self):
         # self.click_on_btn(self.order_management_menu)

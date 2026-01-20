@@ -3,12 +3,18 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class OrdersPublicStore(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         self.search_order_input = page.locator('input[placeholder="Order Number/Reference No"]')
         self.initiator_toggle_button = page.locator('button[class="toggle-button collapsed-button btn"]')
         self.details_button = page.get_by_role("button", name="Details")
         self.order_search_button = page.locator('button[class="search-box-button"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def search_order_no_or_reference_no(self, order_no):
         self.click_on_btn(self.search_order_input)

@@ -4,8 +4,9 @@ from utils.basic_actionsdm import BasicActionsDM
 
 class BillList(BasicActionsDM):
 
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         self.bill_payable_search_box = page.get_by_role('textbox', name='Search Vendor Bill Payable')
         self.bill_search_btn = page.get_by_role("button", name=re.compile("Find", re.IGNORECASE))
         self.bill_payable = page.locator('//div[text()="Bill Payable"]')
@@ -15,6 +16,11 @@ class BillList(BasicActionsDM):
             '//div[text()="Bill Payable"]//following-sibling::ul//child::span[text()="Vendor Billing List"]')
         # self.bill_status = page.locator("//table[@id='jqgrid-grid-thirdPartyBillPayableList']/tbody/tr[2]/td[14]")
         # self.bill_status2 = page.locator("//table[@id='jqgrid-grid-thirdPartyBillPayableList']").get_by_role("link", name=bill_num, exact=True)
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def go_to_billing_list(self):
         self.bill_payable.click()

@@ -5,9 +5,10 @@ from pages.digital_marketplace.home_page import HomePage
 
 
 class PendingApprovalOrders(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
+        self.logger = logger
         #   Write down all the elements here with locator format
         # Goto pending order approval menu/page
         self.pending_approval_orders = page.locator("a[href='/customer/pendingApprovalOrders']",
@@ -51,6 +52,11 @@ class PendingApprovalOrders(HomePage, BasicActionsDM):
         self.pending_order_toggle_button = page.locator('button[class="toggle-button collapsed-button btn"]')
 
         # self.wait_for_timeout(2000)
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def search_order_input(self, reference_number):
         self.search_order_number.click()

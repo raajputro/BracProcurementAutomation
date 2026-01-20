@@ -5,10 +5,10 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class OrderDetailsAdministration(VendorDashboard, OrderManagement, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
-
+        self.logger = logger
         # self.acknowledge_button = page.locator('a[onclick^="openAcknowledgementModal("]')
         self.acknowledge_button = page.get_by_role("link", name="Acknowledge")
         self.acknowledge_popup_title = page.locator("modal-title", has_text="Are you sure?")
@@ -19,6 +19,11 @@ class OrderDetailsAdministration(VendorDashboard, OrderManagement, BasicActionsD
         self.edit_review_button = page.locator('a[class="btn btn-success"][onclick^="setLocation"]')
 
         self.back_to_order_list = page.get_by_role("link", name="back to order list")
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def vendor_acknowledgment(self):
         self.click_on_btn(self.acknowledge_button)

@@ -3,7 +3,7 @@ import os
 import re
 import random
 import string
-from conftest import new_tab
+from conftest_old import new_tab
 from datetime import datetime, timedelta
 
 load_dotenv()

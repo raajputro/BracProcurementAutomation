@@ -7,10 +7,10 @@ from playwright.sync_api import expect
 
 
 class Customers(BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
-
+        self.logger = logger
         self.customers_menu = page.locator('i[class="nav-icon far fa-user"]')
         self.customers_submenu = page.locator('a[href="/Admin/Customer/List"]')
 
@@ -25,6 +25,11 @@ class Customers(BasicActionsDM):
         self.user_group = page.locator('.k-multiselect-wrap')
 
         self.customer_search_button = page.locator('button[id="search-customers"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def view_customers_list(self):
         self.customers_menu.click()

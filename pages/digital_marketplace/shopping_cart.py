@@ -9,9 +9,10 @@ from playwright.sync_api import expect
 
 
 class ShoppingCart(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
+        self.logger = logger
         self.vendor_container = page.locator('div[id^="vendorContainer"]')
         self.selected_vendor_item = page.locator('input[id^="radio"]')
         self.requisition_locator = page.locator('a.item-requisition-link')
@@ -42,6 +43,11 @@ class ShoppingCart(HomePage, BasicActionsDM):
         self.confirm_button = page.get_by_role("button", name="Confirm")
         self.cancel_button = page.get_by_role("button", name="Cancel")
         self.update_shopping_cart = page.locator('button[id="updatecart"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def select_vendor_for_requisition_found(self, requisition_number: str):
         # Locate all matching requisition links

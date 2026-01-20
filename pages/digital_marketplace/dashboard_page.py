@@ -2,8 +2,9 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class DashboardPage(BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
+        self.logger = logger
         # write down all the elements here with locator format
         self.myDashboardItem_modal = page.locator('id=modal')
         self.myDashboardItem_HRM = page.locator('xpath=//*[contains(text(),"HRM")]')
@@ -33,6 +34,11 @@ class DashboardPage(BasicActionsDM):
         self.add_banner = page.locator('#modals')
         self.close_modal = page.locator('button[class="close-button"][data-close-button=""]')
         self.click_procurement_hyperlink = page.locator('a[href="/procurementDashboard/myDashboard"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def closing_add(self) -> None:
         self.wait_to_load_element(self.add_banner)

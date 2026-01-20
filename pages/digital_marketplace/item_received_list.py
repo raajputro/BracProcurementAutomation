@@ -3,16 +3,21 @@ from utils.basic_actionsdm import BasicActionsDM
 
 
 class ItemReceivedList(OrderManagement, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
-
+        self.logger = logger
         self.item_received_list_submenu = page.locator('a[href="/Admin/Order/CompleteOrderItemReceivedList"]')
 
         self.order_number_input = page.locator('#OrderNo')
         self.search_button_for_received_item = page.locator('button[id="search-complete-order-item-received-list"]')
         self.order_view_button = page.get_by_role("link", name="View")
         self.challan_no_input = page.locator('input[id="ChallanNo"]')
+
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     def goto_received_order_list(self):
         # self.click_on_btn(self.order_management_menu)

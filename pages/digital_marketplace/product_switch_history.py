@@ -4,11 +4,15 @@ from playwright.sync_api import expect
 
 
 class ProductSwitchHistory(HomePage, BasicActionsDM):
-    def __init__(self, page):
+    def __init__(self, page, logger=None):
         super().__init__(page)
         self.page = page
+        self.logger = logger
 
-
+    ##################### small helper so we can log easily #####################
+    def _log(self, message: str):
+        if self.logger:
+            self.logger.step(message)
 
     # def view_product_history(self, product_id: str):
     #     # # product_id = "2960"

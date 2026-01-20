@@ -3,7 +3,7 @@ import os
 import re
 import random
 import string
-from conftest import new_tab
+from conftest_old import new_tab
 from datetime import datetime, timedelta
 
 from pages.digital_marketplace.bill_list import BillList
@@ -107,7 +107,8 @@ def test_12_item_receive_by_receiver(page):
     login_page = LoginPage(page)
     login_page.navigate_to_url(marketplace_url_qa)
     login_page.perform_login_for_common_login(
-        user_name=receiving_pin_1,
+        user_name="00260331",
+        # user_name=receiving_pin_1,
         pass_word=marketplace_password
     )
     home_page = HomePage(page)
@@ -122,46 +123,49 @@ def test_12_item_receive_by_receiver(page):
     receivable_order_list_page.goto_receivable_order_list()
     current_date = datetime.today().strftime("%d-%m-%Y")
     receivable_order_list_page.fill_date_range(start_date=current_date, end_date=current_date)
-    receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_53')
-    receivable_order_list_page.receivable_order_view()
-
-    global challan_num_for_receiver
-    receivable_order_list_page.challan_no_input(fill_challan_no=challan_num_for_receiver)
-    print("Print generated challan number for receiver: ", challan_num_for_receiver)
-
-    receivable_order_list_page.all_item_select.click()
-
-    current_dir = os.getcwd()
-    document_location = os.path.join(current_dir, "utils", "upload_file.pdf")
-    assert receivable_order_list_page.receiving_upload_attachment(document_location), "File upload failed"
-
-    receivable_order_list_page.wait_for_timeout(5000)
-
-    receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_54')
-    receivable_order_list_page.open_item_receive_popup()
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_55')
-    receivable_order_list_page.confirm_receivable_order()
-    receivable_order_list_page.wait_for_timeout(5000)
-    receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_56')
-
-    item_receive_list_page = ItemReceivedList(page)
-    current_date = datetime.today().strftime("%d-%m-%Y")
-    item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
-    item_receive_list_page.search_received_order(received_order_number=framework_order_no)
-    item_receive_list_page.searched_received_order(
-        challan_no=challan_num_for_receiver
-    )
-
-    item_receive_list_page.search_button_for_received_item.click()
-    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_57')
-    item_receive_list_page.order_view_button.click()
-    item_receive_list_page.get_full_page_screenshot('full_page_screenshot_58')
-    item_receive_list_page.wait_for_timeout(5000)
-
-    dm_logout = MainNavigationMenu(page)
-    dm_logout.logout_from_administration()
+    receivable_order_list_page.search_receivable_order(receivable_order_number="BPD/2025/FO-2942")
+    receivable_order_list_page.wait_for_timeout(2000)
+    # # receivable_order_list_page.search_receivable_order(receivable_order_number=framework_order_no)
+    # receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_53')
+    # receivable_order_list_page.receivable_order_view()
+    #
+    # global challan_num_for_receiver
+    # receivable_order_list_page.challan_no_input(fill_challan_no=challan_num_for_receiver)
+    # print("Print generated challan number for receiver: ", challan_num_for_receiver)
+    #
+    # receivable_order_list_page.all_item_select.click()
+    #
+    # current_dir = os.getcwd()
+    # document_location = os.path.join(current_dir, "utils", "upload_file.pdf")
+    # assert receivable_order_list_page.receiving_upload_attachment(document_location), "File upload failed"
+    #
+    # receivable_order_list_page.wait_for_timeout(5000)
+    #
+    # receivable_order_list_page.input_received_remarks(receiving_remarks="Received remarks test 123 !@#")
+    # receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_54')
+    # receivable_order_list_page.open_item_receive_popup()
+    # receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_55')
+    # receivable_order_list_page.confirm_receivable_order()
+    # receivable_order_list_page.wait_for_timeout(5000)
+    # receivable_order_list_page.get_full_page_screenshot('full_page_screenshot_56')
+    #
+    # item_receive_list_page = ItemReceivedList(page)
+    # current_date = datetime.today().strftime("%d-%m-%Y")
+    # item_receive_list_page.fill_date_range(start_date=current_date, end_date=current_date)
+    # item_receive_list_page.search_received_order(received_order_number="BPD/2025/FO-2937")
+    # # item_receive_list_page.search_received_order(received_order_number=framework_order_no)
+    # item_receive_list_page.searched_received_order(
+    #     challan_no=challan_num_for_receiver
+    # )
+    #
+    # item_receive_list_page.search_button_for_received_item.click()
+    # item_receive_list_page.get_full_page_screenshot('full_page_screenshot_57')
+    # item_receive_list_page.order_view_button.click()
+    # item_receive_list_page.get_full_page_screenshot('full_page_screenshot_58')
+    # item_receive_list_page.wait_for_timeout(5000)
+    #
+    # dm_logout = MainNavigationMenu(page)
+    # dm_logout.logout_from_administration()
 
 
 def test_13_item_receive_by_order_initiator_as_receiver(page):
