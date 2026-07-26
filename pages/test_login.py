@@ -49,4 +49,14 @@ class ResetHubPage:
  
         self.page.goto(link)
  
-        self.page.wait_for_load_state("networkidle")
+        self.page.wait_for_load_state("domcontentloaded")
+        # popup = self.page.locator("#modals")
+        # try:
+        #     popup.wait_for(state="visible", timeout=60000)
+        #     print("Popup appeared.")
+        # except TimeoutError:
+        #      print("Popup did not appear within 6 seconds.")
+
+        print("Refreshing page...")
+        self.page.wait_for_timeout(5000)  # Wait for 2 seconds before refreshing
+        self.page.reload(wait_until="domcontentloaded")
